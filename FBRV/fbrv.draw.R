@@ -1,6 +1,6 @@
 fbrv.draw <- function(coor,size=1,outfilename,width=10,height=10,ticklabel=FALSE,
-                      correlation_labels="all",correlation_arrows=F,subfactor_correlation_labels="none",
-                      subfactor_correlation_arrows=F,mycol="black",mysubcol="black",extra_arrows=F,tick=.1){
+                      correlation_labels="all",subfactor_correlation_labels="none",
+                      mycol="black",mysubcol="black",extra_arrow=F,tick=.1){
   ## (gg-)plotting function creating all plots
   # coor is the list returned by the function fbrv.calc containing all coordinates for all plots
   
@@ -62,14 +62,11 @@ fbrv.draw <- function(coor,size=1,outfilename,width=10,height=10,ticklabel=FALSE
   
   if(!is.null(subfactor_inner_cors)){globalplot <- globalplot +
     geom_text(data = subfactor_inner_cors,aes(x=x,y=y,label=label),family = "serif",size = 1.5*sqrt(size))}
-  if(subfactor_correlation_arrows==TRUE) {globalplot <- globalplot +
-    geom_segment(data = coor$global$nested$subfactor_cor_arrows,aes(x=x1,y=y1,xend=x2,yend=y2),arrow = arrow(ends = "both",length = unit(.003*sqrt(size),"native"),type = "closed"),size=.25*size)+
-    geom_text(data = coor$global$nested$subfactor_cor_labels,aes(x,y,label = cor),family = "serif",size = 1.5*sqrt(size)) } 
   if(!is.null(inner_cors)){globalplot$layers <- c(geom_circle(data=coor$global$cart_inner_ring,aes(x0=x,y0=y,r=radius),size=.5*size,color="gray90"),globalplot$layers)
     globalplot <-  globalplot + geom_text(data = inner_cors,aes(x=x,y=y,label=label),family = "serif",size = coor$global$correlation_spacing*5*size,fontface="bold")}
-  if(extra_arrows==TRUE){globalplot <- globalplot +
-    geom_segment(data = coor$global$extra_arrows,aes(x=x1,y=y1,xend=x2,yend=y2),arrow = arrow(ends = "both",length = unit(.003*sqrt(size),"native"),type = "closed"),size=.25*size,linetype = "dotted",color="gray20")+
-    geom_text(data = coor$global$extra_arrows,aes(x=xlabel,y=ylabel,label=label),size=2*sqrt(size),family="serif",color="gray20")}
+  if(extra_arrow==TRUE){globalplot <- globalplot +
+    geom_segment(data = coor$global$arrows,aes(x=x1,y=y1,xend=x2,yend=y2),arrow = arrow(ends = "both",length = unit(.003*sqrt(size),"native"),type = "closed"),size=.25*size,linetype = "dotted",color="gray20")+
+    geom_text(data = coor$global$arrows,aes(x=xlabel,y=ylabel,label=label),size=2*sqrt(size),family="serif",color="gray20")}
     
   ggsave(paste(outfilename,".pdf",sep = ""),globalplot,width = width ,height = height, units = "in",dpi = 3000)
   

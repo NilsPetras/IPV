@@ -1,4 +1,5 @@
-fbrv.plot <- function(coor,size=1,outfilename,width=10,height=10,mycol="black",ticklabel=FALSE,correlation_arrows=FALSE,correlation_labels="all",tick=.1){
+fbrv.plot <- function(coor,size=1,outfilename,
+                      width=10,height=10,mycol="black",ticklabel=FALSE,correlation_labels="all",tick=.1){
   ## (gg-)plotting function creating single factor plots
   # coor is the list returned by the function fbrv.model (or a part of the output of fbrv.calc) containing the coordinates for one factor
   graphics.off()
@@ -37,10 +38,6 @@ fbrv.plot <- function(coor,size=1,outfilename,width=10,height=10,mycol="black",t
     # adding optional inner cors
   if(!is.null(inner_cors))myfbrv <- myfbrv +
     geom_text(data = inner_cors,aes(x=x,y=y,label=label),family = "serif",size = 4*sqrt(size))
-  if(correlation_arrows==TRUE) myfbrv <- myfbrv +
-    geom_segment(data = coor$subfactor_cor_arrows,aes(x=x1,y=y1,xend=x2,yend=y2),arrow = arrow(ends = "both",length = unit(.007*sqrt(size),"native"),type = "closed"),size=size)+
-    geom_text(data = coor$subfactor_cor_labels,aes(x,y,label = cor),family = "serif",size = 6*sqrt(size))
-    
   
   ggsave(paste(outfilename,".pdf",sep = ""),myfbrv,width = width ,height = height, units = "in",dpi = 3000)
   

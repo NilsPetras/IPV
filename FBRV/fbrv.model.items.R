@@ -10,6 +10,7 @@ fbrv.model.items <- function(data, rotate = 0){
   
   #polcoor of axes and axes labels
   pol_axes <- data.frame(phi = rep(NA, cplx), rho = rep(NA, cplx), rholabel = rep(NA, cplx))
+  row.names(pol_axes) <- levels(data$center_distances$subfactor)
   pol_axes$rho <- maxcd * 1.2
   pol_axes$phi <- c(2 * pi / cplx * c(1:cplx)) + rotate
   pol_axes$rholabel <- pol_axes$rho * 1.1
@@ -26,6 +27,7 @@ fbrv.model.items <- function(data, rotate = 0){
   # coor of items
   n <- length(data$center_distances$item)
   items <- data.frame(rho = rep(NA, n), phi = rep(NA, n), x = rep(NA, n), y = rep(NA, n), x1 = rep(NA, n), y1 = rep(NA, n), x2 = rep(NA, n), y2 = rep(NA, n), width = rep(NA, n))
+  row.names(items) <- data$center_distances$item
   items$phi <- pol_axes$phi[data$center_distances$subfactor]
   items$rho <- data$center_distances$center_distance + .01
   items <- items[order(items$phi, items$rho), ]
@@ -40,7 +42,7 @@ fbrv.model.items <- function(data, rotate = 0){
   
   #coor of main grid
   n <- trunc(maxcd * 10)
-  maingrid <- data.frame(x = rep(NA, n), y = rep(NA, n), r = rep(NA, n), alpha = rep(NA, n))
+  maingrid <- data.frame(x = rep(0, n), y = rep(0, n), r = rep(NA, n), alpha = rep(NA, n))
   maingrid$r <- seq(from = .1, by = .1, to = round(maxcd, digits = 2))
   maingrid$alpha <- .5
   maingrid$alpha[seq(from = 5, by = 5, to = length(maingrid$alpha))] <- 1

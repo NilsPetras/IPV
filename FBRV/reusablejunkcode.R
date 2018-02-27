@@ -120,3 +120,21 @@ for(i in 1:cplx)  subfactor_cor_labels$cor[i] <- data$subfactor_cors[subfactor_c
 subfactor_cor_labels$cor <- as.character(subfactor_cor_labels$cor)
 subfactor_cor_labels$cor[subfactor_cor_labels$cor<1] <- substr(subfactor_cor_labels$cor,2,4)
 
+# correlation arrows in draw function
+if(subfactor_correlation_arrows==TRUE) {globalplot <- globalplot +
+  geom_segment(data = coor$global$nested$subfactor_cor_arrows,aes(x=x1,y=y1,xend=x2,yend=y2),arrow = arrow(ends = "both",length = unit(.003*sqrt(size),"native"),type = "closed"),size=.25*size)+
+  geom_text(data = coor$global$nested$subfactor_cor_labels,aes(x,y,label = cor),family = "serif",size = 1.5*sqrt(size)) } 
+
+# changing the shift to expand the circle, making room for correlation labels
+if(expand!=0){
+  ynew <- y+sqrt(expand^2/(x/y+1))
+  x <- x+sqrt(expand^2/(y/x+1))
+  y <- ynew
+  rm(ynew)
+}
+
+# correlation arrows in plot function
+if(correlation_arrows==TRUE) myfbrv <- myfbrv +
+  geom_segment(data = coor$subfactor_cor_arrows,aes(x=x1,y=y1,xend=x2,yend=y2),arrow = arrow(ends = "both",length = unit(.007*sqrt(size),"native"),type = "closed"),size=size)+
+  geom_text(data = coor$subfactor_cor_labels,aes(x,y,label = cor),family = "serif",size = 6*sqrt(size))
+

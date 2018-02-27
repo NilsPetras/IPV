@@ -1,4 +1,6 @@
-fbrv.calc <- function(data,subrad,rotate=0,subrotate=0,items=FALSE,correlations=TRUE,correlation_spacing=.3,relative_scaling=1.5,extra_arrows=NULL){
+fbrv.calc <- function(data,subrad,
+                      rotate=0,subrotate=0,
+                      items=FALSE,correlations=TRUE,correlation_spacing=.3,relative_scaling=1.5,extra_arrow=NULL){
   
   # generates the full plotting data using the full input
   # full input consists of all factors as a list and the overarching model where the factors are treated as subfactors of the global factor
@@ -45,89 +47,80 @@ fbrv.calc <- function(data,subrad,rotate=0,subrotate=0,items=FALSE,correlations=
   circsize <- circsize+correlations*correlation_spacing
   
   # pol coors of circles
-  polcoor <- as.matrix(rep(0,3*(1+cplx)))
-  dim(polcoor) <- c(3,1+cplx)
-  polcoor <- data.frame(t(polcoor),row.names = c(levels(data$global$center_distances$factor),nam))
-  names(polcoor) <- c("phi","rho","radius")
-  polcoor[names(circsize),"radius"] <- circsize
-  polcoor$radius[1] <- max(data$global$center_distances[nam==names(circsize),"center_distance"]*relative_scaling+circsize*2)
-  polcoor[names(circsize),"rho"] <- c(data$global$center_distances[nam==names(circsize),"center_distance"]*relative_scaling+circsize)
-  polcoor$phi <- c(0,2*pi/cplx*c(1:cplx))+rotate
-  polcoor$rho[-1] <- polcoor$rho[-1]
-  globalcoors <- list(pol_circles = polcoor)
-  rm(polcoor)
+  pol_circles <- data.frame(phi=rep(NA,cplx+1),rho=rep(0,cplx+1),radius=rep(NA,cplx+1))
+  row.names(pol_circles) <- c(levels(data$global$center_distances$factor),nam)
+  pol_circles[names(circsize),"radius"] <- circsize
+  pol_circles$radius[1] <- max(data$global$center_distances[nam==names(circsize),"center_distance"]*relative_scaling+circsize*2)
+  pol_circles[names(circsize),"rho"] <- c(data$global$center_distances[nam==names(circsize),"center_distance"]*relative_scaling+circsize)
+  pol_circles$phi <- c(0,2*pi/cplx*c(1:cplx))+rotate
+  pol_circles$rho[-1] <- pol_circles$rho[-1]
+
   
   # cart coors of circles
     # x=cos(phi)*rho; y=sin(phi)*rho
-  globalcoors$cart_circles <- globalcoors$pol_circles
-  globalcoors$cart_circles[,1] <- cos(globalcoors$pol_circles$phi) * globalcoors$pol_circles$rho
-  globalcoors$cart_circles[,2] <- sin(globalcoors$pol_circles$phi) * globalcoors$pol_circles$rho
-  names(globalcoors$cart_circles) <- c("x","y","radius")
-  row.names(globalcoors$cart_circles)[1] <- ""
+  cart_circles <- pol_circles
+  cart_circles[,1] <- cos(pol_circles$phi) * pol_circles$rho
+  cart_circles[,2] <- sin(pol_circles$phi) * pol_circles$rho
+  names(cart_circles) <- c("x","y","radius")
+  row.names(cart_circles)[1] <- ""
   
   # pol coors of inner ring for correlation spacing
   if(correlations==T){
-    polcoor <- as.matrix(rep(0,3*(1+cplx)))
-    dim(polcoor) <- c(3,1+cplx)
-    polcoor <- data.frame(t(polcoor),row.names = c(levels(data$global$center_distances$factor),nam))
-    names(polcoor) <- c("phi","rho","radius")
-    polcoor[names(circsize),"radius"] <- circsize-correlations*correlation_spacing
-    polcoor[names(circsize),"rho"] <- c(data$global$center_distances[nam==names(circsize),"center_distance"]*relative_scaling+circsize)
-    polcoor$phi <- c(0,2*pi/cplx*c(1:cplx))+rotate
-    polcoor$rho[-1] <- polcoor$rho[-1]
-    polcoor <- polcoor[-1,]
-    globalcoors$pol_inner_ring <- polcoor
-    rm(polcoor)
+    pol_inner_ring <- data.frame(phi=rep(NA,cplx+1),rho=rep(NA,cplx+1),radius=rep(NA,cplx+1))
+    row.names(pol_inner_ring) <- c(levels(data$global$center_distances$factor),nam)
+    pol_inner_ring[names(circsize),"radius"] <- circsize-correlations*correlation_spacing
+    pol_inner_ring[names(circsize),"rho"] <- c(data$global$center_distances[nam==names(circsize),"center_distance"]*relative_scaling+circsize)
+    pol_inner_ring$phi <- c(0,2*pi/cplx*c(1:cplx))+rotate
+    pol_inner_ring$rho[-1] <- pol_inner_ring$rho[-1]
+    pol_inner_ring <- pol_inner_ring[-1,]
+    pol_inner_ring <- pol_inner_ring
   }
+  else pol_inner_ring <- NULL
 
   # cart coors of inner ring for correlation spacing
   if(correlations==T){
-    globalcoors$cart_inner_ring <- globalcoors$pol_inner_ring
-    globalcoors$cart_inner_ring[,1] <- cos(globalcoors$pol_inner_ring$phi) * globalcoors$pol_inner_ring$rho
-    globalcoors$cart_inner_ring[,2] <- sin(globalcoors$pol_inner_ring$phi) * globalcoors$pol_inner_ring$rho
-    names(globalcoors$cart_inner_ring) <- c("x","y","radius")
+    cart_inner_ring <- pol_inner_ring
+    cart_inner_ring[,1] <- cos(pol_inner_ring$phi) * pol_inner_ring$rho
+    cart_inner_ring[,2] <- sin(pol_inner_ring$phi) * pol_inner_ring$rho
+    names(cart_inner_ring) <- c("x","y","radius")
   }
+  else cart_inner_ring <- NULL
   
   # pol coor of axes
-  globalcoors$pol_axes <- as.matrix(rep(0,5*(cplx)))
-  dim(globalcoors$pol_axes) <- c(5,cplx)
-  globalcoors$pol_axes <- data.frame(t(globalcoors$pol_axes),row.names = nam)
-  names(globalcoors$pol_axes) <- c("rho0","rho1","rho2","rho3","phi") # center, inner and outer intersection of axes and circles, intersection of axes and outer circle
-  globalcoors$pol_axes$phi <- tail(globalcoors$pol_circles$phi,cplx)
-  globalcoors$pol_axes$rho1 <- tail(globalcoors$pol_circles$rho,cplx)-tail(globalcoors$pol_circles$radius,cplx)
-  globalcoors$pol_axes$rho2 <- globalcoors$pol_axes$rho1 + 2 * tail(globalcoors$pol_circles$radius,cplx)
-  globalcoors$pol_axes$rho3 <- rep(globalcoors$pol_circles$radius[1])
+    # center, inner and outer intersection of axes and circles, intersection of axes and outer circle
+  pol_axes <- data.frame(rho0=rep(0,cplx),rho1=rep(NA,cplx),rho2=rep(NA,cplx),rho3=rep(NA,cplx),phi=rep(NA,cplx))
+  row.names(pol_axes) <- nam
+  pol_axes$phi <- tail(pol_circles$phi,cplx)
+  pol_axes$rho1 <- tail(pol_circles$rho,cplx)-tail(pol_circles$radius,cplx)
+  pol_axes$rho2 <- pol_axes$rho1 + 2 * tail(pol_circles$radius,cplx)
+  pol_axes$rho3 <- rep(pol_circles$radius[1])
   
   # cart coor of axes
-  globalcoors$cart_axes <- as.matrix(rep(0,8*cplx))
-  dim(globalcoors$cart_axes) <- c(8,cplx)
-  globalcoors$cart_axes <- data.frame(t(globalcoors$cart_axes),row.names = nam)
-  names(globalcoors$cart_axes) <- c("x0","y0","x1","y1","x2","y2","x3","y3")
-  globalcoors$cart_axes$x0 <- cos(globalcoors$pol_axes$phi) * globalcoors$pol_axes$rho0
-  globalcoors$cart_axes$x1 <- cos(globalcoors$pol_axes$phi) * globalcoors$pol_axes$rho1
-  globalcoors$cart_axes$x2 <- cos(globalcoors$pol_axes$phi) * globalcoors$pol_axes$rho2
-  globalcoors$cart_axes$x3 <- cos(globalcoors$pol_axes$phi) * globalcoors$pol_axes$rho3
-  globalcoors$cart_axes$y0 <- sin(globalcoors$pol_axes$phi) * globalcoors$pol_axes$rho0
-  globalcoors$cart_axes$y1 <- sin(globalcoors$pol_axes$phi) * globalcoors$pol_axes$rho1
-  globalcoors$cart_axes$y2 <- sin(globalcoors$pol_axes$phi) * globalcoors$pol_axes$rho2
-  globalcoors$cart_axes$y3 <- sin(globalcoors$pol_axes$phi) * globalcoors$pol_axes$rho3
+  cart_axes <- data.frame(x0=rep(NA,cplx),y0=rep(NA,cplx),x1=rep(NA,cplx),y1=rep(NA,cplx),
+                          x2=rep(NA,cplx),y2=rep(NA,cplx),x3=rep(NA,cplx),y3=rep(NA,cplx))
+  row.names(cart_axes) <- nam
+  cart_axes$x0 <- cos(pol_axes$phi) * pol_axes$rho0
+  cart_axes$x1 <- cos(pol_axes$phi) * pol_axes$rho1
+  cart_axes$x2 <- cos(pol_axes$phi) * pol_axes$rho2
+  cart_axes$x3 <- cos(pol_axes$phi) * pol_axes$rho3
+  cart_axes$y0 <- sin(pol_axes$phi) * pol_axes$rho0
+  cart_axes$y1 <- sin(pol_axes$phi) * pol_axes$rho1
+  cart_axes$y2 <- sin(pol_axes$phi) * pol_axes$rho2
+  cart_axes$y3 <- sin(pol_axes$phi) * pol_axes$rho3
 
   # coor of axis tick label
 
   # coor of factor name (currently counter-clockwise to smalles circle)
-  globalcoors$factor_label <- data.frame(x = NA,y = NA,label = row.names(globalcoors$pol_circles)[1],phi=NA,rho=NA)
-  globalcoors$factor_label$phi <- globalcoors$pol_circles[min(globalcoors$pol_circles$radius),"phi"]-pi/cplx
-  globalcoors$factor_label$rho <- 2/3*max(globalcoors$pol_circles$radius)
-  globalcoors$factor_label$x <- cos(globalcoors$factor_label$phi)*globalcoors$factor_label$rho
-  globalcoors$factor_label$y <- sin(globalcoors$factor_label$phi)*globalcoors$factor_label$rho
-  if(cplx==2){
-    globalcoors$factor_label$x <- globalcoors$factor_label$x*2
-    globalcoors$factor_label$y <- globalcoors$factor_label$y*2
-  }  
+  factor_label <- data.frame(x = NA,y = NA,label = row.names(pol_circles)[1],phi=NA,rho=NA)
+  factor_label$phi <- pol_circles[which.min(pol_circles$radius),"phi"]-pi/cplx
+  factor_label$rho <- 2/3*max(pol_circles$radius)
+  factor_label$x <- cos(factor_label$phi)*factor_label$rho
+  factor_label$y <- sin(factor_label$phi)*factor_label$rho
   
   # coor of inner cors as text
   n <- cplx*(cplx-1)
-  globalcoors$inner_cors <- data.frame(x=rep(NA,n),y=rep(NA,n),V1=rep(NA,n),V2=rep(NA,n),label=rep(NA,n),xnew=rep(NA,n),ynew=rep(NA,n))
+  inner_cors <- data.frame(x=rep(NA,n),y=rep(NA,n),V1=rep(NA,n),V2=rep(NA,n),
+                           label=rep(NA,n),xnew=rep(NA,n),ynew=rep(NA,n))
   # subfactor list 1
   a <- row.names(data$global$subfactor_cors)
   a <- c(a,a[1])
@@ -139,85 +132,92 @@ fbrv.calc <- function(data,subrad,rotate=0,subrotate=0,items=FALSE,correlations=
     a <- a[-1]
     a <- c(a,a[1])
   }
-  globalcoors$inner_cors$V1 <- b
-  globalcoors$inner_cors$V2 <- unlist(lapply(row.names(data$global$subfactor_cors),FUN=rep,times=cplx-1))
-  for(k in 1:n) globalcoors$inner_cors$label[k] <- data$global$subfactor_cors[globalcoors$inner_cors$V1[k],globalcoors$inner_cors$V2[k]]
-  globalcoors$inner_cors$label <- as.character(globalcoors$inner_cors$label)
-  globalcoors$inner_cors$label[globalcoors$inner_cors$label<1] <- substr(globalcoors$inner_cors$label,2,4)
-  globalcoors$inner_cors$x <- globalcoors$cart_circles[globalcoors$inner_cors$V2,"x"]
-  globalcoors$inner_cors$y <- globalcoors$cart_circles[globalcoors$inner_cors$V2,"y"]
+  inner_cors$V1 <- b
+  inner_cors$V2 <- unlist(lapply(row.names(data$global$subfactor_cors),FUN=rep,times=cplx-1))
+  for(k in 1:n) inner_cors$label[k] <- data$global$subfactor_cors[inner_cors$V1[k],inner_cors$V2[k]]
+  inner_cors$label <- as.character(inner_cors$label)
+  inner_cors$label[inner_cors$label<1] <- substr(inner_cors$label,2,4)
+  inner_cors$x <- cart_circles[inner_cors$V2,"x"]
+  inner_cors$y <- cart_circles[inner_cors$V2,"y"]
   # scatter as list and anchor towards the center
   # scatter width resembles the angles of an even n-sided polygon for n subfactors (e.g. 90° = pi/2 for 4 subfactors)
   scatter <- rep(seq(from = (-pi+2*pi/cplx)/2,to = (pi-2*pi/cplx)/2,by = (pi-2*pi/cplx)/(cplx-2)),cplx)
-  globalcoors$inner_cors$xnew <- globalcoors$inner_cors$x + cos(globalcoors$pol_circles[globalcoors$inner_cors$V2,"phi"]+pi+scatter)*(globalcoors$pol_circles[globalcoors$inner_cors$V2,"radius"]-correlations*.5*correlation_spacing)
-  globalcoors$inner_cors$ynew <- globalcoors$inner_cors$y + sin(globalcoors$pol_circles[globalcoors$inner_cors$V2,"phi"]+pi+scatter)*(globalcoors$pol_circles[globalcoors$inner_cors$V2,"radius"]-correlations*.5*correlation_spacing)
-  globalcoors$inner_cors$x <- globalcoors$inner_cors$xnew
-  globalcoors$inner_cors$y <- globalcoors$inner_cors$ynew
-  globalcoors$inner_cors[6:7] <- list(NULL)
-  if(cplx>2)globalcoors$inner_cors$isneighbour <- rep(c(TRUE,rep(FALSE,times = max(0,cplx-3)),TRUE),times = cplx)
-  else globalcoors$inner_cors$isneighbour <- TRUE
+  inner_cors$xnew <- inner_cors$x + cos(pol_circles[inner_cors$V2,"phi"]+pi+scatter)*(pol_circles[inner_cors$V2,"radius"]-correlations*.5*correlation_spacing)
+  inner_cors$ynew <- inner_cors$y + sin(pol_circles[inner_cors$V2,"phi"]+pi+scatter)*(pol_circles[inner_cors$V2,"radius"]-correlations*.5*correlation_spacing)
+  inner_cors$x <- inner_cors$xnew
+  inner_cors$y <- inner_cors$ynew
+  inner_cors[6:7] <- list(NULL)
+  if(cplx>2)inner_cors$isneighbour <- rep(c(TRUE,rep(FALSE,times = max(0,cplx-3)),TRUE),times = cplx)
+  else inner_cors$isneighbour <- TRUE
   
   
     ## subcircles in nested plot
   # shifted coors of subcircles
-  for(i in 1:cplx) globalcoors$subcircles[[nam[i]]] <- fbrv.shift(factorcoors[[nam[i]]],globalcoors$cart_circles[nam[i],"x"],globalcoors$cart_circles[nam[i],"y"])
+  subcircles <- list()
+  for(i in 1:cplx) subcircles[[nam[i]]] <- fbrv.shift(factorcoors[[nam[i]]],cart_circles[nam[i],"x"],cart_circles[nam[i],"y"])
   
   # coor of circles
-  for(i in 1:cplx) globalcoors$nested$circles[[nam[i]]] <- globalcoors$subcircles[[c(i,1)]]
-  globalcoors$nested$circles <- lapply(globalcoors$nested$circles,tail,n=-1)
-  globalcoors$nested$circles <- do.call("rbind",globalcoors$nested$circles)
-  globalcoors$nested$circles$labels <- substr(row.names(globalcoors$nested$circles),unlist(gregexpr(pattern = "\\.",row.names(globalcoors$nested$circles)))+1,nchar(row.names(globalcoors$nested$circles)))
+  nested <- list()
+  for(i in 1:cplx) nested$circles[[nam[i]]] <- subcircles[[c(i,1)]]
+  nested$circles <- lapply(nested$circles,tail,n=-1)
+  nested$circles <- do.call("rbind",nested$circles)
+  nested$circles$labels <- substr(row.names(nested$circles),unlist(gregexpr(pattern = "\\.",row.names(nested$circles)))+1,nchar(row.names(nested$circles)))
   
   # coor of axes
-  for(i in 1:cplx) globalcoors$nested$axes[[nam[i]]] <- globalcoors$subcircles[[c(i,2)]]
-  globalcoors$nested$axes <- do.call("rbind",globalcoors$nested$axes)
+  for(i in 1:cplx) nested$axes[[nam[i]]] <- subcircles[[c(i,2)]]
+  nested$axes <- do.call("rbind",nested$axes)
   
   # coor of factor name
-  for(i in 1:cplx) globalcoors$nested$factor_label[[nam[i]]] <- globalcoors$subcircles[[c(i,7)]]
-  globalcoors$nested$factor_label <- do.call("rbind",globalcoors$nested$factor_label)
+  for(i in 1:cplx) nested$factor_label[[nam[i]]] <- subcircles[[c(i,5)]]
+  nested$factor_label <- do.call("rbind",nested$factor_label)
   
   # coor of inner correlations
-  for(i in 1:cplx) globalcoors$nested$inner_cors[[nam[i]]] <- globalcoors$subcircles[[c(i,8)]]
-  globalcoors$nested$inner_cors <- do.call("rbind",globalcoors$nested$inner_cors)
-  
-  # coor of correlation arrows and labels
-  for(i in 1:cplx) globalcoors$nested$subfactor_cor_arrows[[nam[i]]] <- globalcoors$subcircles[[c(i,5)]]
-  globalcoors$nested$subfactor_cor_arrows <- do.call("rbind",globalcoors$nested$subfactor_cor_arrows)
-  for(i in 1:cplx) globalcoors$nested$subfactor_cor_labels[[nam[i]]] <- globalcoors$subcircles[[c(i,6)]]
-  globalcoors$nested$subfactor_cor_labels <- do.call("rbind",globalcoors$nested$subfactor_cor_labels)
+  for(i in 1:cplx) nested$inner_cors[[nam[i]]] <- subcircles[[c(i,6)]]
+  nested$inner_cors <- do.call("rbind",nested$inner_cors)
   
     ## custom correlation arrows in nested plot
-  if(!is.null(extra_arrows)){
-    n <- dim(extra_arrows)[1]
-    globalcoors$extra_arrows <- data.frame(x1=rep(NA,n),x2=rep(NA,n),y1=rep(NA,n),y2=rep(NA,n),label=rep(NA,n),xlabel=rep(NA,n),ylabel=rep(NA,n))
-    globalcoors$extra_arrows$label <- extra_arrows$value
-    globalcoors$extra_arrows$x1 <- globalcoors$nested$circles[paste(extra_arrows$V1_factor,extra_arrows$V1_subfactor,sep = "."),"x"]
-    globalcoors$extra_arrows$y1 <- globalcoors$nested$circles[paste(extra_arrows$V1_factor,extra_arrows$V1_subfactor,sep = "."),"y"]
-    globalcoors$extra_arrows$x2 <- globalcoors$nested$circles[paste(extra_arrows$V2_factor,extra_arrows$V2_subfactor,sep = "."),"x"]
-    globalcoors$extra_arrows$y2 <- globalcoors$nested$circles[paste(extra_arrows$V2_factor,extra_arrows$V2_subfactor,sep = "."),"y"]
-    globalcoors$extra_arrows$x1new <- globalcoors$extra_arrows$x1+subrad/sqrt((globalcoors$extra_arrows$x2-globalcoors$extra_arrows$x1)^2+(globalcoors$extra_arrows$y2-globalcoors$extra_arrows$y1)^2)*(globalcoors$extra_arrows$x2-globalcoors$extra_arrows$x1)
-    globalcoors$extra_arrows$x2new <- globalcoors$extra_arrows$x2+subrad/sqrt((globalcoors$extra_arrows$x2-globalcoors$extra_arrows$x1)^2+(globalcoors$extra_arrows$y2-globalcoors$extra_arrows$y1)^2)*(globalcoors$extra_arrows$x1-globalcoors$extra_arrows$x2)
-    globalcoors$extra_arrows$y1new <- globalcoors$extra_arrows$y1+subrad/sqrt((globalcoors$extra_arrows$x2-globalcoors$extra_arrows$x1)^2+(globalcoors$extra_arrows$y2-globalcoors$extra_arrows$y1)^2)*(globalcoors$extra_arrows$y2-globalcoors$extra_arrows$y1)
-    globalcoors$extra_arrows$y2new <- globalcoors$extra_arrows$y2+subrad/sqrt((globalcoors$extra_arrows$x2-globalcoors$extra_arrows$x1)^2+(globalcoors$extra_arrows$y2-globalcoors$extra_arrows$y1)^2)*(globalcoors$extra_arrows$y1-globalcoors$extra_arrows$y2)
-    globalcoors$extra_arrows$x1 <- globalcoors$extra_arrows$x1new
-    globalcoors$extra_arrows$x2 <- globalcoors$extra_arrows$x2new
-    globalcoors$extra_arrows$y1 <- globalcoors$extra_arrows$y1new
-    globalcoors$extra_arrows$y2 <- globalcoors$extra_arrows$y2new
-    globalcoors$extra_arrows$xlabel <- (globalcoors$extra_arrows$x1+globalcoors$extra_arrows$x2)/2
-    globalcoors$extra_arrows$ylabel <- (globalcoors$extra_arrows$y1+globalcoors$extra_arrows$y2)/2
+  if(!is.null(extra_arrow)){
+    n <- dim(extra_arrow)[1]
+    arrows <- data.frame(x1=rep(NA,n),x2=rep(NA,n),y1=rep(NA,n),y2=rep(NA,n),label=rep(NA,n),xlabel=rep(NA,n),ylabel=rep(NA,n))
+    arrows$label <- extra_arrow$value
+    arrows$x1 <- nested$circles[paste(extra_arrow$V1_factor,extra_arrow$V1_subfactor,sep = "."),"x"]
+    arrows$y1 <- nested$circles[paste(extra_arrow$V1_factor,extra_arrow$V1_subfactor,sep = "."),"y"]
+    arrows$x2 <- nested$circles[paste(extra_arrow$V2_factor,extra_arrow$V2_subfactor,sep = "."),"x"]
+    arrows$y2 <- nested$circles[paste(extra_arrow$V2_factor,extra_arrow$V2_subfactor,sep = "."),"y"]
+    arrows$x1new <- arrows$x1+subrad/sqrt((arrows$x2-arrows$x1)^2+(arrows$y2-arrows$y1)^2)*(arrows$x2-arrows$x1)
+    arrows$x2new <- arrows$x2+subrad/sqrt((arrows$x2-arrows$x1)^2+(arrows$y2-arrows$y1)^2)*(arrows$x1-arrows$x2)
+    arrows$y1new <- arrows$y1+subrad/sqrt((arrows$x2-arrows$x1)^2+(arrows$y2-arrows$y1)^2)*(arrows$y2-arrows$y1)
+    arrows$y2new <- arrows$y2+subrad/sqrt((arrows$x2-arrows$x1)^2+(arrows$y2-arrows$y1)^2)*(arrows$y1-arrows$y2)
+    arrows$x1 <- arrows$x1new
+    arrows$x2 <- arrows$x2new
+    arrows$y1 <- arrows$y1new
+    arrows$y2 <- arrows$y2new
+    arrows$xlabel <- (arrows$x1+arrows$x2)/2
+    arrows$ylabel <- (arrows$y1+arrows$y2)/2
     # letting the correlation labels dodge their arrow
-    globalcoors$extra_arrows$xlabel <- globalcoors$extra_arrows$xlabel+.1/sqrt((globalcoors$extra_arrows$x2-globalcoors$extra_arrows$x1)^2+(globalcoors$extra_arrows$y2-globalcoors$extra_arrows$y1)^2)*(globalcoors$extra_arrows$y2-globalcoors$extra_arrows$y1)
-    globalcoors$extra_arrows$ylabel <- globalcoors$extra_arrows$ylabel+.1/sqrt((globalcoors$extra_arrows$x2-globalcoors$extra_arrows$x1)^2+(globalcoors$extra_arrows$y2-globalcoors$extra_arrows$y1)^2)*(globalcoors$extra_arrows$x1-globalcoors$extra_arrows$x2)
-    globalcoors$extra_arrows[8:11] <- list(NULL)
+    arrows$xlabel <- arrows$xlabel+.1/sqrt((arrows$x2-arrows$x1)^2+(arrows$y2-arrows$y1)^2)*(arrows$y2-arrows$y1)
+    arrows$ylabel <- arrows$ylabel+.1/sqrt((arrows$x2-arrows$x1)^2+(arrows$y2-arrows$y1)^2)*(arrows$x1-arrows$x2)
+    arrows[8:11] <- list(NULL)
     rm(n)
-    }
-  
+  }
+  else arrows <- NULL
+
   rm(nam,cplx)
   
-  globalcoors$relative_scaling <- relative_scaling
-  globalcoors$correlation_spacing <- correlation_spacing
+  global <- list(pol_circles = pol_circles,
+                      cart_circles = cart_circles,
+                      pol_inner_ring = pol_inner_ring,
+                      cart_inner_ring = cart_inner_ring,
+                      pol_axes = pol_axes,
+                      cart_axes = cart_axes,
+                      factor_label = factor_label,
+                      inner_cors = inner_cors,
+                      nested = nested,
+                      relative_scaling = relative_scaling,
+                      correlation_spacing = correlation_spacing,
+                      arrows = arrows)
     
-  mycoor <- list(factor=factorcoors,global=globalcoors)
+  mycoor <- list(factor=factorcoors,global=global)
   if(items==T)mycoor$items <- itemcoors
   
   return(mycoor)
