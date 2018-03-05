@@ -138,3 +138,6 @@ if(correlation_arrows==TRUE) myfbrv <- myfbrv +
   geom_segment(data = coor$subfactor_cor_arrows,aes(x=x1,y=y1,xend=x2,yend=y2),arrow = arrow(ends = "both",length = unit(.007*sqrt(size),"native"),type = "closed"),size=size)+
   geom_text(data = coor$subfactor_cor_labels,aes(x,y,label = cor),family = "serif",size = 6*sqrt(size))
 
+# mark neighbours to only display inner correlations in arrow mode (discontinued)
+if(cplx>2)inner_cors$isneighbour <- rep(c(TRUE,rep(FALSE,times = max(0,cplx-3)),TRUE),times = cplx)
+else inner_cors$isneighbour <- TRUE

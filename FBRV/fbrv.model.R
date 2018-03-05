@@ -1,8 +1,8 @@
-fbrv.model <- function(data,subrad,rotate=0) {
+fbrv.model <- function(data,subradius,rotate=0) {
   
   ## modelling function building coor
   # data is a list with a specific structure
-  # subrad is the radius of the inner circles
+  # subradius is the radius of the inner circles
   # rotate is an angle to rotate the whole graphic by
 
   # some useful variables
@@ -11,16 +11,16 @@ fbrv.model <- function(data,subrad,rotate=0) {
   # pol coor of circles (center of main circle is (0,0), coor are centers of circles, phi refers to the angle, rho to the distance)
   pol_circles <- data.frame(phi=rep(NA,cplx+1),rho=rep(NA,cplx+1),radius=rep(NA,cplx+1))
   row.names(pol_circles) <- c(levels(data$center_distances$factor),levels(data$center_distances$subfactor))
-  pol_circles$radius[1] <- max(data$center_distances$mean_center_distance)+2*subrad
-  pol_circles$radius[2:length(pol_circles$radius)] <- subrad
-  pol_circles$rho <- c(0,tapply(data$center_distances$center_distance,data$center_distances$subfactor,mean)+subrad)
+  pol_circles$radius[1] <- max(data$center_distances$mean_center_distance)+2*subradius
+  pol_circles$radius[2:length(pol_circles$radius)] <- subradius
+  pol_circles$rho <- c(0,tapply(data$center_distances$center_distance,data$center_distances$subfactor,mean)+subradius)
   pol_circles$phi <- c(0,2*pi/cplx*c(1:cplx))+rotate
   
   # cart coor of circles
     # x=cos(phi)*rho; y=sin(phi)*rho
   cart_circles <- pol_circles
-  cart_circles[,1] <- cos(pol_circles$phi) * pol_circles$rho
-  cart_circles[,2] <- sin(pol_circles$phi) * pol_circles$rho
+  cart_circles[,1] <- round(cos(pol_circles$phi) * pol_circles$rho, digits = 7)
+  cart_circles[,2] <- round(sin(pol_circles$phi) * pol_circles$rho, digits = 7)
   names(cart_circles) <- c("x","y","radius")
   row.names(cart_circles)[1] <- ""
   
@@ -29,29 +29,29 @@ fbrv.model <- function(data,subrad,rotate=0) {
   pol_axes <- data.frame(rho0=rep(0,cplx),rho1=rep(NA,cplx),rho2=rep(NA,cplx),rho3=rep(NA,cplx),phi=rep(NA,cplx))
   row.names(pol_axes) <- c(levels(data$center_distances$subfactor))
   pol_axes$phi <- tail(pol_circles$phi,cplx)
-  pol_axes$rho1 <- tail(pol_circles$rho,cplx)-subrad
-  pol_axes$rho2 <- pol_axes$rho1 + 2 * subrad
+  pol_axes$rho1 <- tail(pol_circles$rho,cplx)-subradius
+  pol_axes$rho2 <- pol_axes$rho1 + 2 * subradius
   pol_axes$rho3 <- rep(max(pol_circles$radius))
   
   # cart coor of axes
   cart_axes <- data.frame(x0=rep(NA,cplx),y0=rep(NA,cplx),x1=rep(NA,cplx),y1=rep(NA,cplx),
                           x2=rep(NA,cplx),y2=rep(NA,cplx),x3=rep(NA,cplx),y3=rep(NA,cplx))
   row.names(cart_axes) <- c(levels(data$center_distances$subfactor))
-  cart_axes$x0 <- cos(pol_axes$phi) * pol_axes$rho0
-  cart_axes$x1 <- cos(pol_axes$phi) * pol_axes$rho1
-  cart_axes$x2 <- cos(pol_axes$phi) * pol_axes$rho2
-  cart_axes$x3 <- cos(pol_axes$phi) * pol_axes$rho3
-  cart_axes$y0 <- sin(pol_axes$phi) * pol_axes$rho0
-  cart_axes$y1 <- sin(pol_axes$phi) * pol_axes$rho1
-  cart_axes$y2 <- sin(pol_axes$phi) * pol_axes$rho2
-  cart_axes$y3 <- sin(pol_axes$phi) * pol_axes$rho3
+  cart_axes$x0 <- round(cos(pol_axes$phi) * pol_axes$rho0, digits = 7)
+  cart_axes$x1 <- round(cos(pol_axes$phi) * pol_axes$rho1, digits = 7)
+  cart_axes$x2 <- round(cos(pol_axes$phi) * pol_axes$rho2, digits = 7)
+  cart_axes$x3 <- round(cos(pol_axes$phi) * pol_axes$rho3, digits = 7)
+  cart_axes$y0 <- round(sin(pol_axes$phi) * pol_axes$rho0, digits = 7)
+  cart_axes$y1 <- round(sin(pol_axes$phi) * pol_axes$rho1, digits = 7)
+  cart_axes$y2 <- round(sin(pol_axes$phi) * pol_axes$rho2, digits = 7)
+  cart_axes$y3 <- round(sin(pol_axes$phi) * pol_axes$rho3, digits = 7)
   
   # coor of factor name
   factor_label <- data.frame(x = NA,y = NA,label = row.names(pol_circles)[1],phi=NA,rho=NA)
   factor_label$phi <- pol_circles[which.min(pol_circles$rho),"phi"]-pi/cplx
   factor_label$rho <- 2/3*max(pol_circles$radius)
-  factor_label$x <- cos(factor_label$phi)*factor_label$rho
-  factor_label$y <- sin(factor_label$phi)*factor_label$rho
+  factor_label$x <- round(cos(factor_label$phi)*factor_label$rho, digits = 7)
+  factor_label$y <- round(sin(factor_label$phi)*factor_label$rho, digits = 7)
   
   # coor of inner cors as text
   n <- cplx*(cplx-1)
@@ -78,8 +78,8 @@ fbrv.model <- function(data,subrad,rotate=0) {
   # scatter as list and anchor towards the center
   # scatter width resembles the angles of an even n-sided polygon for n subfactors (e.g. 90° = pi/2 for 4 subfactors)
   scatter <- rep(seq(from = (-pi+2*pi/cplx)/2,to = (pi-2*pi/cplx)/2,by = (pi-2*pi/cplx)/(cplx-2)),cplx)
-  inner_cors$xnew <- inner_cors$x + cos(pol_circles[inner_cors$V2,"phi"]+pi+scatter)*pol_circles[inner_cors$V2,"radius"]*.75
-  inner_cors$ynew <- inner_cors$y + sin(pol_circles[inner_cors$V2,"phi"]+pi+scatter)*pol_circles[inner_cors$V2,"radius"]*.75
+  inner_cors$xnew <- inner_cors$x + round(cos(pol_circles[inner_cors$V2,"phi"]+pi+scatter), digits = 7)*pol_circles[inner_cors$V2,"radius"]*.75
+  inner_cors$ynew <- inner_cors$y + round(sin(pol_circles[inner_cors$V2,"phi"]+pi+scatter), digits = 7)*pol_circles[inner_cors$V2,"radius"]*.75
   inner_cors$x <- inner_cors$xnew
   inner_cors$y <- inner_cors$ynew
   inner_cors[6:7] <- list(NULL)

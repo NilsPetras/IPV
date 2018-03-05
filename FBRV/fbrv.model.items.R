@@ -18,10 +18,10 @@ fbrv.model.items <- function(data, rotate = 0){
   #cartcoor of axes and axes labels
   # x = cos(phi) * rho;y = sin(phi) * rho
   cart_axes <- pol_axes
-  cart_axes[, 1] <- cos(pol_axes$phi) * pol_axes$rho
-  cart_axes[, 2] <- sin(pol_axes$phi) * pol_axes$rho
-  cart_axes[, 3] <- cos(pol_axes$phi) * pol_axes$rholabel
-  cart_axes[, 4] <- sin(pol_axes$phi) * pol_axes$rholabel
+  cart_axes[, 1] <- round(cos(pol_axes$phi) * pol_axes$rho, digits = 7)
+  cart_axes[, 2] <- round(sin(pol_axes$phi) * pol_axes$rho, digits = 7)
+  cart_axes[, 3] <- round(cos(pol_axes$phi) * pol_axes$rholabel, digits = 7)
+  cart_axes[, 4] <- round(sin(pol_axes$phi) * pol_axes$rholabel, digits = 7)
   names(cart_axes) <- c("x", "y", "xlabel", "ylabel")
   
   # coor of items
@@ -31,8 +31,8 @@ fbrv.model.items <- function(data, rotate = 0){
   items$phi <- pol_axes$phi[data$center_distances$subfactor]
   items$rho <- data$center_distances$center_distance + .01
   items <- items[order(items$phi, items$rho), ]
-  items$x <- cos(items$phi) * items$rho
-  items$y <- sin(items$phi) * items$rho
+  items$x <- round(cos(items$phi) * items$rho, digits = 7)
+  items$y <- round(sin(items$phi) * items$rho, digits = 7)
   items$width <- .9 * maxcd
   items$width[seq(from = 1, by = 2, to = length(items$width))] <- 1.1 * maxcd
   items$x1 <- items$x-items$y / items$rho * .03 * items$width
@@ -50,16 +50,16 @@ fbrv.model.items <- function(data, rotate = 0){
   # coor of axis tick label
   axis_tick <- data.frame(rho = .54, phi = NA, x = NA, y = NA)
   axis_tick$phi <- min(pol_axes$phi[pol_axes$rho>.1] %% (2 * pi)) + pi / 16
-  axis_tick$x <- cos(axis_tick$phi) * axis_tick$rho
-  axis_tick$y <- sin(axis_tick$phi) * axis_tick$rho
+  axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
+  axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
   
   #coor of factor name
   factor_label <- data.frame(phi = mean(pol_axes$phi[1:2]), 
                              rho = .5 * maxcd, 
                              label = data$center_distances$factor[1], 
                              x = NA, y = NA)
-  factor_label$x <- cos(factor_label$phi) * factor_label$rho
-  factor_label$y <- sin(factor_label$phi) * factor_label$rho
+  factor_label$x <- round(cos(factor_label$phi) * factor_label$rho, digits = 7)
+  factor_label$y <- round(sin(factor_label$phi) * factor_label$rho, digits = 7)
   
   coor <- list(pol_axes = pol_axes, 
                cart_axes = cart_axes, 

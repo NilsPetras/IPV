@@ -6,8 +6,6 @@ fbrv.shift <- function(data,x,y){
   # stripping off superfluous information
   data_shifted <- data[c("cart_circles",
                          "cart_axes",
-                         "axis_tick",
-                         "axis_tick_label",
                          "factor_label",
                          "inner_cors")]
   data_shifted$axis_tick[1:2] <- list(NULL)
@@ -20,10 +18,6 @@ fbrv.shift <- function(data,x,y){
   data_shifted$cart_axes$x1 <- data_shifted$cart_axes$x1+x
   data_shifted$cart_axes$x2 <- data_shifted$cart_axes$x2+x
   data_shifted$cart_axes$x3 <- data_shifted$cart_axes$x3+x
-  data_shifted$axis_tick$x <- data_shifted$axis_tick$x+x
-  data_shifted$axis_tick$x1 <- data_shifted$axis_tick$x1+x
-  data_shifted$axis_tick$x2 <- data_shifted$axis_tick$x2+x
-  data_shifted$axis_tick_label$x <- data_shifted$axis_tick_label$x+x
   data_shifted$factor_label$x <- data_shifted$factor_label$x+x
   data_shifted$inner_cors$x <- data_shifted$inner_cors$x+x
   
@@ -33,10 +27,6 @@ fbrv.shift <- function(data,x,y){
   data_shifted$cart_axes$y1 <- data_shifted$cart_axes$y1+y
   data_shifted$cart_axes$y2 <- data_shifted$cart_axes$y2+y
   data_shifted$cart_axes$y3 <- data_shifted$cart_axes$y3+y
-  data_shifted$axis_tick$y <- data_shifted$axis_tick$y+y
-  data_shifted$axis_tick$y1 <- data_shifted$axis_tick$y1+y
-  data_shifted$axis_tick$y2 <- data_shifted$axis_tick$y2+y
-  data_shifted$axis_tick_label$y <- data_shifted$axis_tick_label$y+y
   data_shifted$factor_label$y <- data_shifted$factor_label$y+y
   data_shifted$inner_cors$y <- data_shifted$inner_cors$y+y
   
