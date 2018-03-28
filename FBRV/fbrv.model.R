@@ -46,6 +46,12 @@ fbrv.model <- function(data,subradius,rotate=0) {
   cart_axes$y2 <- round(sin(pol_axes$phi) * pol_axes$rho2, digits = 7)
   cart_axes$y3 <- round(sin(pol_axes$phi) * pol_axes$rho3, digits = 7)
   
+  # coor of axis tick label (actual tick defined in plot function)
+  axis_tick <- data.frame(rho = 1, phi = NA, x = NA, y = NA)
+  axis_tick$phi <- min(pol_axes$phi) - pi / cplx
+  axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
+  axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
+  
   # coor of factor name
   factor_label <- data.frame(x = NA,y = NA,label = row.names(pol_circles)[1],phi=NA,rho=NA)
   factor_label$phi <- pol_circles[which.min(pol_circles$rho),"phi"]-pi/cplx
@@ -83,13 +89,12 @@ fbrv.model <- function(data,subradius,rotate=0) {
   inner_cors$x <- inner_cors$xnew
   inner_cors$y <- inner_cors$ynew
   inner_cors[6:7] <- list(NULL)
-  if(cplx>2)inner_cors$isneighbour <- rep(c(TRUE,rep(FALSE,times = max(0,cplx-3)),TRUE),times = cplx)
-  else inner_cors$isneighbour <- TRUE
   
   coor <- list(pol_circles = pol_circles,
                cart_circles = cart_circles,
                pol_axes = pol_axes,
                cart_axes = cart_axes,
+               axis_tick = axis_tick,
                factor_label = factor_label,
                inner_cors = inner_cors)
     

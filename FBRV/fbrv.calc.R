@@ -1,5 +1,5 @@
 fbrv.calc <- function(data,subradius,
-                      rotate=0,subrotate=0,
+                      rotate=0,subrotate=0,rotate_title=0,
                       items=FALSE,cors=TRUE,cor_spacing=.3,relative_scaling=1.5,extra_arrows=NULL){
   
   # generates the full plotting data using the full input
@@ -10,13 +10,14 @@ fbrv.calc <- function(data,subradius,
   
     ## listwise calculation for single factors
   
-    if(length(subrotate==1)){
+    if(length(subrotate)==1){
       factorcoors <- lapply(X = data$factors,FUN = fbrv.model,subradius=subradius,rotate=subrotate)
-      if(items==TRUE){
-        itemcoors <- lapply(data$factors,fbrv.model.items,rotate=subrotate)
-      }
+      names(factorcoors) <- names(data$factors)
     }
-  
+    if(length(subrotate)==1 & items==TRUE){
+      itemcoors <- lapply(data$factors,fbrv.model.items,rotate=subrotate)
+      names(itemcoors) <- names(data$factors)
+    }
   # as loop passing varying parameters to subcircles
   if(length(subrotate)==length(data$factors)){
     factorcoors <- list()
@@ -24,18 +25,20 @@ fbrv.calc <- function(data,subradius,
       factorcoors[[i]] <- fbrv.model(data$factors[[i]],subradius=subradius,rotate=subrotate[i])
     }
     names(factorcoors) <- names(data$factors)
-    if(items==TRUE){
-      itemcoors <- list()
-      for(i in 1:length(data$factors)){
-        itemcoors[[i]] <- fbrv.model.items(data$factors[[i]],rotate=subrotate[i])
-      }
+    
+  }
+  if(length(subrotate)==length(data$factors) & items==TRUE){
+    itemcoors <- list()
+    for(i in 1:length(data$factors)){
+      itemcoors[[i]] <- fbrv.model.items(data$factors[[i]],rotate=subrotate[i])
     }
+    names(itemcoors) <- names(data$factors)
   }
   
   
     ## global coors for nested plot
   # some useful variables
-  nam <- as.character(data$global$center_distances$subfactor)
+  nam <- levels(data$global$center_distances$subfactor)
   cplx <- data$global$parameters$complexity
   
   # retrieving the size of the subcircles
@@ -46,12 +49,17 @@ fbrv.calc <- function(data,subradius,
   circsize <- unlist(lapply(factorcoors,getcircsize))
   circsize <- circsize+cors*cor_spacing
   
+  # matching global subfactors with their mean center distance
+  global_center_distances <- data.frame(lapply(split(data$global$center_distances,data$global$center_distances$subfactor),function(x)y <- x$mean_center_distance[1]))
+  global_center_distances <- t(global_center_distances)
+  global_center_distances <- data.frame(global_center_distances)
+  
   # pol coors of circles
   pol_circles <- data.frame(phi=rep(NA,cplx+1),rho=rep(0,cplx+1),radius=rep(NA,cplx+1))
   row.names(pol_circles) <- c(levels(data$global$center_distances$factor),nam)
   pol_circles[names(circsize),"radius"] <- circsize
-  pol_circles$radius[1] <- max(data$global$center_distances[nam==names(circsize),"center_distance"]*relative_scaling+circsize*2)
-  pol_circles[names(circsize),"rho"] <- c(data$global$center_distances[nam==names(circsize),"center_distance"]*relative_scaling+circsize)
+  pol_circles$radius[1] <- max(global_center_distances[nam,]*relative_scaling+circsize[nam]*2)
+  pol_circles[nam,"rho"] <- c(global_center_distances[nam,]*relative_scaling+circsize[nam])
   pol_circles$phi <- c(0,2*pi/cplx*c(1:cplx))+rotate
   pol_circles$rho[-1] <- pol_circles$rho[-1]
 
@@ -69,7 +77,7 @@ fbrv.calc <- function(data,subradius,
     pol_inner_ring <- data.frame(phi=rep(NA,cplx+1),rho=rep(NA,cplx+1),radius=rep(NA,cplx+1))
     row.names(pol_inner_ring) <- c(levels(data$global$center_distances$factor),nam)
     pol_inner_ring[names(circsize),"radius"] <- circsize-cors*cor_spacing
-    pol_inner_ring[names(circsize),"rho"] <- c(data$global$center_distances[nam==names(circsize),"center_distance"]*relative_scaling+circsize)
+    pol_inner_ring[nam,"rho"] <- c(global_center_distances[nam,]*relative_scaling+circsize[nam])
     pol_inner_ring$phi <- c(0,2*pi/cplx*c(1:cplx))+rotate
     pol_inner_ring$rho[-1] <- pol_inner_ring$rho[-1]
     pol_inner_ring <- pol_inner_ring[-1,]
@@ -107,10 +115,16 @@ fbrv.calc <- function(data,subradius,
   cart_axes$y1 <- round(sin(pol_axes$phi) * pol_axes$rho1, digits = 7)
   cart_axes$y2 <- round(sin(pol_axes$phi) * pol_axes$rho2, digits = 7)
   cart_axes$y3 <- round(sin(pol_axes$phi) * pol_axes$rho3, digits = 7)
+  
+  # coor of axis tick label (actual tick defined in plot function)
+  axis_tick <- data.frame(rho = 1, phi = NA, x = NA, y = NA)
+  axis_tick$phi <- min(pol_axes$phi %% (2*pi)) + pi / cplx
+  axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
+  axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
 
-  # coor of factor name (currently counter-clockwise to smalles circle)
+  # coor of factor name (currently counter-clockwise to smallest circle)
   factor_label <- data.frame(x = NA,y = NA,label = row.names(pol_circles)[1],phi=NA,rho=NA)
-  factor_label$phi <- pol_circles[which.min(pol_circles$radius),"phi"]-pi/cplx
+  factor_label$phi <- pol_circles[which.min(pol_circles$radius),"phi"]+pi/cplx+rotate_title
   factor_label$rho <- 2/3*max(pol_circles$radius)
   factor_label$x <- round(cos(factor_label$phi)*factor_label$rho, digits = 7)
   factor_label$y <- round(sin(factor_label$phi)*factor_label$rho, digits = 7)
@@ -206,6 +220,7 @@ fbrv.calc <- function(data,subradius,
                       cart_inner_ring = cart_inner_ring,
                       pol_axes = pol_axes,
                       cart_axes = cart_axes,
+                      axis_tick = axis_tick,
                       factor_label = factor_label,
                       inner_cors = inner_cors,
                       nested = nested,
@@ -213,8 +228,8 @@ fbrv.calc <- function(data,subradius,
                       cor_spacing = cor_spacing,
                       arrows = arrows)
     
-  mycoor <- list(factor=factorcoors,global=global)
-  if(items==T)mycoor$items <- itemcoors
+  coor <- list(factor=factorcoors,global=global)
+  if(items==T)coor$items <- itemcoors
   
-  return(mycoor)
+  return(coor)
 }

@@ -18,6 +18,7 @@ fbrv.shift <- function(data,x,y){
   data_shifted$cart_axes$x1 <- data_shifted$cart_axes$x1+x
   data_shifted$cart_axes$x2 <- data_shifted$cart_axes$x2+x
   data_shifted$cart_axes$x3 <- data_shifted$cart_axes$x3+x
+  data_shifted$axis_tick$x <- data_shifted$axis_tick$x+x
   data_shifted$factor_label$x <- data_shifted$factor_label$x+x
   data_shifted$inner_cors$x <- data_shifted$inner_cors$x+x
   

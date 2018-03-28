@@ -33,8 +33,8 @@ fbrv.model.items <- function(data, rotate = 0){
   items <- items[order(items$phi, items$rho), ]
   items$x <- round(cos(items$phi) * items$rho, digits = 7)
   items$y <- round(sin(items$phi) * items$rho, digits = 7)
-  items$width <- .9 * maxcd
-  items$width[seq(from = 1, by = 2, to = length(items$width))] <- 1.1 * maxcd
+  items$width <- 0.85 * maxcd
+  items$width[seq(from = 1, by = 2, to = length(items$width))] <- 1.15 * maxcd
   items$x1 <- items$x-items$y / items$rho * .03 * items$width
   items$y1 <- items$y + items$x / items$rho * .03 * items$width
   items$x2 <- items$x + items$y / items$rho * .03 * items$width
@@ -45,11 +45,12 @@ fbrv.model.items <- function(data, rotate = 0){
   maingrid <- data.frame(x = rep(0, n), y = rep(0, n), r = rep(NA, n), alpha = rep(NA, n))
   maingrid$r <- seq(from = .1, by = .1, to = round(maxcd, digits = 2))
   maingrid$alpha <- .5
-  maingrid$alpha[seq(from = 5, by = 5, to = length(maingrid$alpha))] <- 1
+  if(n>4)maingrid$alpha[seq(from = 5, by = 5, to = n)] <- 1
+  maingrid$alpha[1] <- 1
   
   # coor of axis tick label
-  axis_tick <- data.frame(rho = .54, phi = NA, x = NA, y = NA)
-  axis_tick$phi <- min(pol_axes$phi[pol_axes$rho>.1] %% (2 * pi)) + pi / 16
+  axis_tick <- data.frame(rho = 0.14,label = "0.1", phi = NA, x = NA, y = NA)
+  axis_tick$phi <- min(pol_axes$phi[pol_axes$rho>.1] %% (2 * pi)) + pi / 32 / axis_tick$rho
   axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
   axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
   
