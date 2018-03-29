@@ -1,5 +1,5 @@
 fbrv.plot <- function(coor,size=1,file_name,
-                      width=10,height=10,colour="black",cor_labels=TRUE,tick=.1,font="serif",
+                      width=10,height=10,colour="black",cor_labels=TRUE,tick=.1,font="Helvetica",
                       size_title=1,size_subfactor_labels=1,width_axes=1,width_circles=1,size_tick=1,size_tick_label=1,size_cor_labels=1,size_center_dot=1){
   ## (gg-)plotting function creating single factor plots
   # coor is the list returned by the function fbrv.model (or a part of the output of fbrv.calc) containing the coordinates for one factor

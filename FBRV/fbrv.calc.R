@@ -122,7 +122,7 @@ fbrv.calc <- function(data,subradius,
   axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
   axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
 
-  # coor of factor name (currently counter-clockwise to smallest circle)
+  # coor of factor name (default counter-clockwise to smallest circle)
   factor_label <- data.frame(x = NA,y = NA,label = row.names(pol_circles)[1],phi=NA,rho=NA)
   factor_label$phi <- pol_circles[which.min(pol_circles$radius),"phi"]+pi/cplx+rotate_title
   factor_label$rho <- 2/3*max(pol_circles$radius)

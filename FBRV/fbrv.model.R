@@ -1,4 +1,4 @@
-fbrv.model <- function(data,subradius,rotate=0) {
+fbrv.model <- function(data,subradius,rotate=0,rotate_title=0) {
   
   ## modelling function building coor
   # data is a list with a specific structure
@@ -52,9 +52,9 @@ fbrv.model <- function(data,subradius,rotate=0) {
   axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
   axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
   
-  # coor of factor name
+  # coor of factor name (default counter-clockwise to smallest circle)
   factor_label <- data.frame(x = NA,y = NA,label = row.names(pol_circles)[1],phi=NA,rho=NA)
-  factor_label$phi <- pol_circles[which.min(pol_circles$rho),"phi"]-pi/cplx
+  factor_label$phi <- pol_circles[which.min(pol_circles$rho),"phi"]+pi/cplx+rotate_title
   factor_label$rho <- 2/3*max(pol_circles$radius)
   factor_label$x <- round(cos(factor_label$phi)*factor_label$rho, digits = 7)
   factor_label$y <- round(sin(factor_label$phi)*factor_label$rho, digits = 7)

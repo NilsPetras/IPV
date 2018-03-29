@@ -1,6 +1,6 @@
 fbrv.draw <- function(coor,size=1,file_name,width=10,height=10,
                       cor_labels=TRUE,subfactor_cor_labels=FALSE,
-                      colour="black",subcolour="black",extra_arrows=FALSE,tick=.1,font="serif",
+                      colour="black",subcolour="black",extra_arrows=FALSE,tick=.1,font="Helvetica",
                       size_title=1,size_subfactor_labels=1,size_subfactor_labels_inner=1,width_axes=1,width_axes_inner=1,
                       width_circles=1,width_circles_inner=1,size_tick=1,size_tick_inner=1,size_tick_label=1,size_cor_labels=1,size_cor_labels_inner=1,
                       size_center_dot=1,size_center_dot_inner=1,size_extra_arrows=1,size_extra_arrow_heads=1,size_extra_labels=1){
