@@ -1,0 +1,21 @@
+Package: FBRV
+Type: Package
+Version: 0.1
+Title: Visualize Factor Structures
+Description: Sayin this and that cause this and that was missing.
+Authors@R: c(
+    person("Nils", "Petras", , "my@email.com", c("aut", "cre"))
+Depends:
+    R (>= 3.0.0),
+Imports:
+    ggplot
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr    
+Date: 2018-03-30
+License: GPL-2
+LazyData: true
+Maintainer: Nils Petras <my@email.com>
+RoxygenNote: 6.0.1
