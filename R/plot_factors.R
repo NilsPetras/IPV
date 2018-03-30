@@ -1,4 +1,26 @@
-fbrv.plot <- function(coor,size=1,file_name,
+#' Plot Factors
+#'
+#' This function plots factors and its loadings. Nils can do a 
+#' better description, cause he invented it. 
+#'
+#' @param coor what type, what it does?
+#' @param size integer relative plot size, defaults to one.
+#' @param file_name character string denoting the name of the file the plot is written to.
+#' @param width integer, defaults to 10.
+#' @param height integer, defaults to 10.
+#' @param colour character
+#' @param cor_labels logical defaults to TRUE.
+#' @param tick numeric defaults to .1
+#' @param font character defaults to 'serif'.
+#' @param size_title integer, defaults to 1.
+#' @param size_subfactor_label integer defaults to 1.
+#' @param width_circles integer defaults to 1. 
+#' @param size_tick integer defaults to 1. 
+#' @param size_tick_label integer defaults to 1. 
+#' @param size_cor_labels integer defaults to 1. 
+#' @param size_center_dot integer defaults to 1. 
+#' @export
+plot_factors <- function(coor,size=1,file_name,
                       width=10,height=10,colour="black",cor_labels=TRUE,tick=.1,font="serif",
                       size_title=1,size_subfactor_labels=1,width_axes=1,width_circles=1,size_tick=1,size_tick_label=1,size_cor_labels=1,size_center_dot=1){
   ## (gg-)plotting function creating single factor plots
