@@ -1,0 +1,62 @@
+Factor Based Radex Visualization Package
+author: Nils Petras
+
+
+abbreviations used
+
+	as object names or function parameters:
+	coor	=	COORdinates
+	cor	=	CORrelation
+	pol	=	POLar coordinates of
+	cart	=	CARTesian coordinates of
+	V1, V2	=	Variable 1, Variable 2
+	col	=	COLour
+	
+	plural "s" is carried over
+		e.g.: 	one coordinate		= coor
+			several coordinates	= coors
+	
+	only in the code:
+	cplx	=	ComPLeXity, the number of facets of a factor
+	nam	=	NAMes, the names of facets
+	
+	
+naming conventions
+
+	functions
+		all fbrv function names start with "fbrv."
+		words are seperated by dots as in "my.function.name"
+		
+	variables
+		words are seperated by underscores as in "my_variable_name"
+		in lists, some variables are stacked to emphasize relationships
+		 	e.g. in the input data of one factor is listed under its factor name
+	plot parameters
+		parameters that are a combination of an attribute and an object refer to a single object
+			e.g. "size_title"
+		other parameters mostly refer to several elements at once
+			e.g. "size", "mycol"
+
+
+some names explained
+
+	"phi" and "rho" are polar coordinates while "x" and "y" are cartesian coordinates
+		reminder: 	"phi" is the angle and "rho" the distance to the origin
+				angles are given in values between 0 and 2*pi, e.g. pi = 180°
+				polar and cartesian coordinates have the following relationship:
+				x = cos(phi)*rho	y = sin(phi)*rho
+				
+	"x","y" and "rho" coordinates with numbers ("x1", "x2", ...) refer to ends of lines and are named from the center to the periphery if possible
+	"x0" and "y0" coordinates refer to line ends in the center of a circle
+	
+	"global" refers to the overall context while "factor" refers to a single factor context
+	"factor" refers to a more general factor while "subfactor" refers to the factors facets
+		a "subfactor" of an overall "factor" can itself be a "factor" to its own "subfactor"s, these names are used relative to each other
+	the prefix "sub-" refers to something that is nested within something else
+		e.g. "rotate" is a parameter to rotate the overall plot while "subrotate" rotates the parts of the plot
+	
+	"label" refers to a text that is displayed in the graphic as geom_text (ggplot2)
+	
+	"inner_cors" refers to the correlations between facets of a factor
+	
+	

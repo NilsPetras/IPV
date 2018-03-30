@@ -1,0 +1,11 @@
+functions to be included in the package are:
+
+fbrv.calc
+fbrv.draw
+fbrv.input.factor
+fbrv.input
+fbrv.model.items
+fbrv.model
+fbrv.plot.items
+fbrv.plot
+fbrv.shift
