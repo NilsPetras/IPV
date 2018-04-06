@@ -1,14 +1,21 @@
-Package: FBRV
+Package: IPV
 Type: Package
 Version: 0.1
-Title: Visualize Factor Structures
-Description: Sayin this and that cause this and that was missing.
+Title: Item Pool Visualization
+Description: This package is used to generate plots based on the IPV concept.
+IPVs are visualizations derived from multiple structure equation models (SEMs) of the same item pool.
+IPVs are used to show the conceptual structure of item pools. They examine relationships between correlated
+factor models and general factor models as well as between correlated factors of the same model.
+For a detailed introduction, see: \url{weneedtopublish}
 Authors@R: c(
-    person("Nils", "Petras", , "my@email.com", c("aut", "cre"))
+    person("Nils", "Petras", , "nils.petras@uni-konstanz.de", c("aut", "cre"))
 Depends:
     R (>= 3.0.0),
 Imports:
-    ggplot
+    ggplot2
+    ggforce
+    extrafont
+    readxl
 Suggests:
     knitr,
     rmarkdown,
@@ -17,5 +24,5 @@ VignetteBuilder: knitr
 Date: 2018-03-30
 License: GPL-2
 LazyData: true
-Maintainer: Nils Petras <my@email.com>
+Maintainer: Nils Petras <nils.petras@uni-konstanz.de>
 RoxygenNote: 6.0.1

@@ -142,3 +142,6 @@ if(correlation_arrows==TRUE) myfbrv <- myfbrv +
 if(cplx>2)inner_cors$isneighbour <- rep(c(TRUE,rep(FALSE,times = max(0,cplx-3)),TRUE),times = cplx)
 else inner_cors$isneighbour <- TRUE
 
+# unknown grid option in item plot function
+if(max(coor$maingrid$alpha)==.5) myfbrv <- myfbrv + geom_circle(data = coor$maingrid[coor$maingrid$alpha==.5,],aes(x0=x,y0=y,r=r),col = "gray45",linetype = "dotted",size=min(c(size,.75))*size_grid)
+

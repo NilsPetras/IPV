@@ -1,3 +1,0 @@
-http://adv-r.had.co.nz/Functions.html
-https://cran.r-project.org/doc/manuals/R-intro.html
-http://ggplot2.tidyverse.org/reference/
