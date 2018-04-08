@@ -12,13 +12,14 @@
 #' @param tick numeric; axis tick position; defaults to .1.
 #' @param font character; text font; defaults to 'Helvetica'.
 #' @param size_title integer; font size of the factor label (relative to default).
-#' @param size_subfactor_label integer; font size of the subfactor label (relative to default).
+#' @param size_subfactor_labels integer; font size of the subfactor label (relative to default).
+#' @param width_axes integer; width of the radial axis lines (relative to default).
 #' @param width_circles integer; width of the circle outlines (relative to default). 
 #' @param size_tick integer; width of the dotted axis tick line (relative to default). 
 #' @param size_tick_label integer; font size of the axis tick label (relative to default). 
-#' @param size_cor_labels integer; font size of the latent correlations between facets. 
+#' @param size_cor_labels integer; font size of the latent correlations between facets (relative to default). 
 #' @param size_center_dot integer; size of the center dot marking the origin (relative to default).
-#'  
+#'   
 #' @details Facets are displayed using the average center distance of their items
 #' as distance from the origin to the circle's edge.
 #' 

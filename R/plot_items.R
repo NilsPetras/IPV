@@ -13,7 +13,7 @@
 #' @param tick_label logical; if TRUE, plots a text label for the axis tick
 #' @param size_title integer; font size of the factor label (relative to default).
 #' @param size_axis_labels integer; font size of the axis labels (relative to default).
-#' @param width_axes integer; width of the axis lines (relative to default).
+#' @param width_axes integer; width of the radial axis lines (relative to default).
 #' @param size_arrow_heads integer; length of the arrow heads (relative to default).
 #' @param width_items integer; width of the item bars (relative to default). Currently not supported!
 #' @param size_grid integer; width of the dotted grid lines (relative to default).
