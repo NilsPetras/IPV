@@ -25,7 +25,7 @@
 #' 
 #' @return an object of the class "ggplot" and the same object as a .pdf file.
 #' 
-#' 
+#' @export
 plot_facets <- function(coor,size=1,filename,
                       width=10,height=10,colour="black",cor_labels=TRUE,tick=.1,font="Helvetica",
                       size_title=1,size_subfactor_labels=1,width_axes=1,width_circles=1,size_tick=1,size_tick_label=1,size_cor_labels=1,size_center_dot=1){

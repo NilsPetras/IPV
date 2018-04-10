@@ -36,6 +36,8 @@
 #' The nested plot nests facet plots for each factor similar to \code{\link{plot_facets}} within one global facet plot.
 #'
 #' @return an object of the class "ggplot" and the same object as a .pdf file.
+#' 
+#' @export
 plot_nested <- function(coor,size=1,filename,width=10,height=10,
                       cor_labels=TRUE,subfactor_cor_labels=FALSE,
                       colour="black",subcolour="black",extra_arrows=FALSE,tick=.1,font="serif",

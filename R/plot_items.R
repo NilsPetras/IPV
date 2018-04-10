@@ -21,6 +21,8 @@
 #' @param size_center_dot integer; size of the center dot marking the origin (relative to default).
 #'
 #' @return an object of the class "ggplot" and the same object as a .pdf file.
+#'  
+#' @export
 plot_items <- function(coor,size=1,filename,
                             width=10,height=10,font="serif",
                             colour="black",colour2="black",tick_label=TRUE,
