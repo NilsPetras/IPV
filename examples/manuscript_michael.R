@@ -1,6 +1,6 @@
 
 # Abbildungen Michael Manuskript 05.03.2018
-# alle schwarzwei√ü
+# alle schwarzweiﬂ
 
 rm(list = ls())
 library("ggplot2")
