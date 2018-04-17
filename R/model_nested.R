@@ -9,8 +9,8 @@
 #' @param rotate_title integer; radian angle to rotate the overall general factor label counter-clockwise by (between 0 and 2*pi).
 #' @param items logical; if TRUE, generates the coordinates for item plots for all factors using \code{\link{model_items}}.
 #' @param cors logical; if TRUE, generates coordinates for latent correlations between factors and sets up a ring to plot them in.
-#' @param cor_spacing integer; width of the ring the latent correlations between factors are plotted in; defaults to 0.3.
-#' @param relative_scaling integer; relative size of the global to the nested plots; defaults to 1.5.
+#' @param cor_spacing integer; width of the ring the latent correlations between factors are plotted in; defaults to 0.4.
+#' @param relative_scaling integer; relative size of the global to the nested plots; defaults to 3.
 #' @param extra_arrows a data frame containing information about additional correlation arrows between facets of different factors; see examples.
 #'
 #' @details Use this function to be able to create a plot with \code{\link{plot_nested}}
@@ -32,7 +32,7 @@
 #' @export
 model_nested <- function(data,subradius,
                       rotate=0,subrotate=0,rotate_title=0,
-                      items=FALSE,cors=TRUE,cor_spacing=.3,relative_scaling=1.5,extra_arrows=NULL){
+                      items=FALSE,cors=TRUE,cor_spacing=.4,relative_scaling=3,extra_arrows=NULL){
 
 
     ## listwise calculation for single factors using mode_facets and model_items
