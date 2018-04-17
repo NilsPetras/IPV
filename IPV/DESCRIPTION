@@ -1,0 +1,22 @@
+Package: IPV
+Title: Item Pool Visualization
+Type: Package
+Version: 0.1
+Authors@R: person("Nils", "Petras", , "nils.petras@uni-konstanz.de", c("aut", "cre"))
+Description: This package is used to generate plots based on the IPV concept. IPVs are visualizations derived from multiple structure equation models (SEMs) of the same item pool. IPVs are used to show the conceptual structure of item pools. They examine relationships between correlated factor models and general factor models as well as between correlated factors of the same model. For a detailed introduction, see: \url{weneedtopublish}
+Depends:R (>= 3.0.0),
+Imports:
+    ggplot2,
+    ggforce,
+    extrafont,
+    readxl
+Suggests:
+    knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr    
+Date: 2018-03-30
+License: GPL-2
+LazyData: true
+Maintainer: Nils Petras <nils.petras@uni-konstanz.de>
+RoxygenNote: 6.0.1
