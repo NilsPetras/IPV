@@ -5,8 +5,10 @@ rm(list = ls())
 library("readxl")
 devtools::load_all()
 
+# to see how the excel files have to be structured, open one of the example files
+
 # read data for a single factor by ignoring the "global" parameter of input_excel
-DSSEI <- input_excel(factors="inst/extdata/DSSEI.xlsx")
+DSSEI <- input_excel(factors = "inst/extdata/DSSEI.xlsx")
 SMTQ <- input_excel(factors = "inst/extdata/IPV_SMTQ.xlsx")
 
 # read data for a nested factor model
