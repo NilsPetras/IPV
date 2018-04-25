@@ -13,7 +13,6 @@ devtools::load_all()
 # tasks will be on the creation of facet plots, the second part on nested
 # plots.
 
-## Task 0/10:
 # Have a look at the first set of example data:
 SMTQ
 # The input of the data using excel sheets is omitted here for brevity. If you
@@ -37,7 +36,7 @@ coord <-
 task3 <-
 
 ## Task 4/10:
-# Call the functions again, but this time use your favorite colour.
+# Call the functions again, but this time add some colour.
 task4 <-
 
 ## Good job, you are done with the first part!
@@ -93,5 +92,4 @@ task9 <-
 ## Task 10/10:
 # Before you go back to the instructions in the MS Word document, make sure that
 # you added your code for each task and save the script so you can later send it
-# back via e-mail. You do not need to save the .pdf files, since they can be re-
-# created from this script at any time.
+# back via e-mail.

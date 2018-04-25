@@ -51,8 +51,8 @@ model_facets <- function(data,subradius,rotate=0) {
     # intersection of axes and main circle (rho3)
   pol_axes <- data.frame(rho0=rep(0,cplx),rho1=rep(NA,cplx),rho2=rep(NA,cplx),rho3=rep(NA,cplx),phi=rep(NA,cplx))
   row.names(pol_axes) <- c(levels(data$center_distances$subfactor))
-  pol_axes$phi <- tail(pol_circles$phi,cplx)
-  pol_axes$rho1 <- tail(pol_circles$rho,cplx)-subradius
+  pol_axes$phi <- utils::tail(pol_circles$phi,cplx)
+  pol_axes$rho1 <- utils::tail(pol_circles$rho,cplx)-subradius
   pol_axes$rho2 <- pol_axes$rho1 + 2 * subradius
   pol_axes$rho3 <- rep(max(pol_circles$radius))
 

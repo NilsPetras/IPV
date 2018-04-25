@@ -5,9 +5,9 @@
 \title{Plot Nested}
 \usage{
 plot_nested(coor, size = 1, filename, width = 10, height = 10,
-  cor_labels = TRUE, subfactor_cor_labels = FALSE, colour = "black",
-  subcolour = "black", extra_arrows = FALSE, tick = 0.1, font = "serif",
-  size_title = 1, size_subfactor_labels = 1,
+  cor_labels = TRUE, subfactor_cor_labels = TRUE, colour = "black",
+  subcolour = "black", extra_arrows = FALSE, tick = 0.1,
+  font = "Helvetica", size_title = 1, size_subfactor_labels = 1,
   size_subfactor_labels_inner = 1, width_axes = 1, width_axes_inner = 1,
   width_circles = 1, width_circles_inner = 1, size_tick = 1,
   size_tick_inner = 1, size_tick_label = 1, size_cor_labels = 1,

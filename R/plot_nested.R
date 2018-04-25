@@ -45,8 +45,6 @@ plot_nested <- function(coor,size=1,filename,width=10,height=10,
                       width_circles=1,width_circles_inner=1,size_tick=1,size_tick_inner=1,size_tick_label=1,size_cor_labels=1,size_cor_labels_inner=1,
                       size_center_dot=1,size_center_dot_inner=1,size_extra_arrows=1,size_extra_arrow_heads=1,size_extra_labels=1){
 
-  graphics.off()
-
     ## nested plot
 
   # preparing cor labels
@@ -62,45 +60,45 @@ plot_nested <- function(coor,size=1,filename,width=10,height=10,
   else subfactor_inner_cors <- NULL
 
   # plot layers
-  globalplot <- ggplot(coor$global$cart_circles)+
-    coord_fixed()+
-    theme_minimal()+
-    aes()+
-    geom_text(data=coor$global$axis_tick,aes(x=coor$global$relative_scaling*(x*tick+sign(x)*.02),y=coor$global$relative_scaling*(y*tick+sign(y)*.02),label=as.character(tick)),angle = (coor$global$axis_tick$phi-pi/48-pi/2)*180/pi,family = font,size = 1.95*sqrt(size)*size_tick_label)+
-    geom_circle(aes(x0=0,y0=0,r=coor$global$relative_scaling*tick),linetype = "dotted",size=coor$global$relative_scaling*.5*min(c(size,.25))*size_tick)+
-    geom_segment(data = coor$global$cart_axes,aes(x=x2,y=y2,xend=x3,yend=y3),size=.5*size*width_axes,color="gray90")+
-    geom_circle(data=coor$global$cart_circles[1,],aes(x0=x,y0=y,r=radius),size=.5*size*width_axes,color="gray90")+
-    geom_point(aes(x=0,y=0),size=size*size_center_dot)+
-    geom_segment(data = coor$global$nested$axes,aes(x=x2,y=y2,xend=x3,yend=y3),size=.3*size*width_axes_inner,color="gray90")+
-    geom_point(data=coor$global$cart_circles,aes(x=x,y=y),size=.5*size*size_center_dot_inner)+
-    geom_circle(data=coor$global$cart_circles[-1,],aes(x0=x,y0=y,r=radius),size=.5*size*width_circles,color=colour)+
-    geom_circle(data=coor$global$cart_circles[-1,],aes(x0=x,y0=y,r=tick),size=0.5*min(c(size,.25))*size_tick_inner,linetype = "dotted")+
-    geom_segment(data = coor$global$cart_axes,aes(x=x0,y=y0,xend=x1,yend=y1),size=.5*(sqrt(size)+size)*width_axes,color=colour)+
-    geom_circle(data=coor$global$nested$circles,aes(x0=x,y0=y,r=radius),size=.25*size*width_circles_inner,color=subcolour)+
-    geom_text(data=coor$global$nested$circles,aes(x,y,label = label),family = font,size = 3.125*sqrt(size)*size_subfactor_labels_inner)+
-    geom_segment(data = coor$global$nested$axes,aes(x=x0,y=y0,xend=x1,yend=y1),size=.25*(sqrt(size)+size)*width_axes_inner,color=subcolour)+
-    geom_text(data = coor$global$factor_label,aes(x=x,y=y,label=label),family = font,size = 16/3*sqrt(size)*size_title,fontface="bold")+
-    geom_text(data = coor$global$nested$factor_label,aes(x=x,y=y,label=label),family = font,size = 4*sqrt(size)*size_subfactor_labels,fontface="bold")+
-    theme(axis.line=element_blank(),axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks=element_blank(),
-          axis.title.x=element_blank(),axis.title.y=element_blank(),legend.position = "none",
-          panel.background=element_blank(),panel.border=element_blank(),panel.grid.major=element_blank(),
-          panel.grid.minor=element_blank(),plot.background=element_blank(),text = element_text(size = 16,family = font),plot.margin = margin(1,1,1,1,"in"))
+  globalplot <- ggplot2::ggplot(coor$global$cart_circles)+
+    ggplot2::coord_fixed()+
+    ggplot2::theme_minimal()+
+    ggplot2::aes()+
+    ggplot2::geom_text(data=coor$global$axis_tick,ggplot2::aes(x=coor$global$relative_scaling*(x*tick+sign(x)*.02),y=coor$global$relative_scaling*(y*tick+sign(y)*.02),label=as.character(tick)),angle = (coor$global$axis_tick$phi-pi/48-pi/2)*180/pi,family = font,size = 1.95*sqrt(size)*size_tick_label)+
+    ggforce::geom_circle(ggplot2::aes(x0=0,y0=0,r=coor$global$relative_scaling*tick),linetype = "dotted",size=coor$global$relative_scaling*.5*min(c(size,.25))*size_tick)+
+    ggplot2::geom_segment(data = coor$global$cart_axes,ggplot2::aes(x=x2,y=y2,xend=x3,yend=y3),size=.5*size*width_axes,color="gray90")+
+    ggforce::geom_circle(data=coor$global$cart_circles[1,],ggplot2::aes(x0=x,y0=y,r=radius),size=.5*size*width_axes,color="gray90")+
+    ggplot2::geom_point(ggplot2::aes(x=0,y=0),size=size*size_center_dot)+
+    ggplot2::geom_segment(data = coor$global$nested$axes,ggplot2::aes(x=x2,y=y2,xend=x3,yend=y3),size=.3*size*width_axes_inner,color="gray90")+
+    ggplot2::geom_point(data=coor$global$cart_circles,ggplot2::aes(x=x,y=y),size=.5*size*size_center_dot_inner)+
+    ggforce::geom_circle(data=coor$global$cart_circles[-1,],ggplot2::aes(x0=x,y0=y,r=radius),size=.5*size*width_circles,color=colour)+
+    ggforce::geom_circle(data=coor$global$cart_circles[-1,],ggplot2::aes(x0=x,y0=y,r=tick),size=0.5*min(c(size,.25))*size_tick_inner,linetype = "dotted")+
+    ggplot2::geom_segment(data = coor$global$cart_axes,ggplot2::aes(x=x0,y=y0,xend=x1,yend=y1),size=.5*(sqrt(size)+size)*width_axes,color=colour)+
+    ggforce::geom_circle(data=coor$global$nested$circles,ggplot2::aes(x0=x,y0=y,r=radius),size=.25*size*width_circles_inner,color=subcolour)+
+    ggplot2::geom_text(data=coor$global$nested$circles,ggplot2::aes(x,y,label = label),family = font,size = 3.125*sqrt(size)*size_subfactor_labels_inner)+
+    ggplot2::geom_segment(data = coor$global$nested$axes,ggplot2::aes(x=x0,y=y0,xend=x1,yend=y1),size=.25*(sqrt(size)+size)*width_axes_inner,color=subcolour)+
+    ggplot2::geom_text(data = coor$global$factor_label,ggplot2::aes(x=x,y=y,label=label),family = font,size = 16/3*sqrt(size)*size_title,fontface="bold")+
+    ggplot2::geom_text(data = coor$global$nested$factor_label,ggplot2::aes(x=x,y=y,label=label),family = font,size = 4*sqrt(size)*size_subfactor_labels,fontface="bold")+
+    ggplot2::theme(axis.line=ggplot2::element_blank(),axis.text.x=ggplot2::element_blank(),axis.text.y=ggplot2::element_blank(),axis.ticks=ggplot2::element_blank(),
+          axis.title.x=ggplot2::element_blank(),axis.title.y=ggplot2::element_blank(),legend.position = "none",
+          panel.background=ggplot2::element_blank(),panel.border=ggplot2::element_blank(),panel.grid.major=ggplot2::element_blank(),
+          panel.grid.minor=ggplot2::element_blank(),plot.background=ggplot2::element_blank(),text = ggplot2::element_text(size = 16,family = font),plot.margin = ggplot2::margin(1,1,1,1,"in"))
 
   # adding subfactor cor labels (optional)
   if(!is.null(subfactor_inner_cors)){globalplot <- globalplot +
-    geom_text(data = subfactor_inner_cors,aes(x=x,y=y,label=label),family = font,size = 2.25*sqrt(size)*size_cor_labels_inner)}
+    ggplot2::geom_text(data = subfactor_inner_cors,ggplot2::aes(x=x,y=y,label=label),family = font,size = 2.25*sqrt(size)*size_cor_labels_inner)}
 
   # adding cor labels (optional)
-  if(!is.null(inner_cors)){globalplot$layers <- c(geom_circle(data=coor$global$cart_inner_ring,aes(x0=x,y0=y,r=radius),size=.3*size*width_axes_inner,color="gray90"),globalplot$layers)
-    globalplot <-  globalplot + geom_text(data = inner_cors,aes(x=x,y=y,label=label),family = font,size = coor$global$cor_spacing*6.75*sqrt(size)*size_cor_labels,fontface="bold")}
+  if(!is.null(inner_cors)){globalplot$layers <- c(ggforce::geom_circle(data=coor$global$cart_inner_ring,ggplot2::aes(x0=x,y0=y,r=radius),size=.3*size*width_axes_inner,color="gray90"),globalplot$layers)
+    globalplot <-  globalplot + ggplot2::geom_text(data = inner_cors,ggplot2::aes(x=x,y=y,label=label),family = font,size = coor$global$cor_spacing*6.75*sqrt(size)*size_cor_labels,fontface="bold")}
 
   # adding extra arrows (optional)
   if(extra_arrows==TRUE){globalplot <- globalplot +
-    geom_segment(data = coor$global$arrows,aes(x=x1,y=y1,xend=x2,yend=y2),arrow = arrow(ends = "both",length = unit(.003*sqrt(size)*size_extra_arrow_heads,"native"),type = "closed"),size=.25*size*size_extra_arrows,linetype = "dotted",color="gray20")+
-    geom_text(data = coor$global$arrows,aes(x=xlabel,y=ylabel,label=label),size=2.25*sqrt(size)*size_extra_labels,family=font,color="gray20")}
+    ggplot2::geom_segment(data = coor$global$arrows,ggplot2::aes(x=x1,y=y1,xend=x2,yend=y2),arrow = ggplot2::arrow(ends = "both",length = ggplot2::unit(.003*sqrt(size)*size_extra_arrow_heads,"native"),type = "closed"),size=.25*size*size_extra_arrows,linetype = "dotted",color="gray20")+
+    ggplot2::geom_text(data = coor$global$arrows,ggplot2::aes(x=xlabel,y=ylabel,label=label),size=2.25*sqrt(size)*size_extra_labels,family=font,color="gray20")}
 
   # saving as .pdf file
-  ggsave(paste(filename,".pdf",sep = ""),globalplot,width = width ,height = height, units = "in",dpi = 3000)
+  ggplot2::ggsave(paste(filename,".pdf",sep = ""),globalplot,width = width ,height = height, units = "in",dpi = 3000)
 
   return(globalplot)
 }

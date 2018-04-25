@@ -5,7 +5,7 @@
 \title{Plot Items}
 \usage{
 plot_items(coor, size = 1, filename, width = 10, height = 10,
-  font = "serif", colour = "black", colour2 = "black",
+  font = "Helvetica", colour = "black", colour2 = "black",
   tick_label = TRUE, size_title = 1, size_axis_labels = 1,
   width_axes = 1, size_arrow_heads = 1, width_items = 1, size_grid = 1,
   size_tick_label = 1, size_center_dot = 1)
