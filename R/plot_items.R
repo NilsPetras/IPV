@@ -7,7 +7,7 @@
 #' @param filename character string; name of the .pdf file the plot is written to; filename extension adds automatically.
 #' @param width integer; width of the .pdf file; defaults to 10.
 #' @param height integer; height of the .pdf file; defaults to 10.
-#' @param font character; text font; defaults to 'Helvetica'.
+#' @param font character; text font; defaults to 'Helvetica' (use extrafonts to install fonts you do not have).
 #' @param colour character; name of the accent colour.
 #' @param colour2 character; name of the second accent colour used to better distinguish between similar items
 #' @param tick_label logical; if TRUE, plots a text label for the axis tick
@@ -21,6 +21,13 @@
 #' @param size_center_dot integer; size of the center dot marking the origin (relative to default).
 #'
 #' @return an object of the class "ggplot" and the same object as a .pdf file.
+#'
+#' @seealso \code{\link{model_items}}
+#'
+#' @examples
+#' # creating plots is a two step process, using model_ and plot_ functions:
+#' coord <- model_items(DSSEI)
+#' DSSEI_item_plot <- plot_items(coord,filename = "DSSEI_items")
 #'
 #' @export
 plot_items <- function(coor,size=1,filename,
@@ -37,7 +44,7 @@ plot_items <- function(coor,size=1,filename,
     ggplot2::geom_point(ggplot2::aes(x=0,y=0),size=.5*size*size_center_dot)+
     ggforce::geom_circle(data = coor$maingrid[coor$maingrid$alpha==.5,],ggplot2::aes(x0=x,y0=y,r=r),col = "gray90",linetype = "dotted",size=min(c(size,.75))*size_grid)+
     ggforce::geom_circle(data = coor$maingrid[coor$maingrid$alpha==1,],ggplot2::aes(x0=x,y0=y,r=r),col = "gray20",linetype = "dotted",size=min(c(size,.75))*size_grid)+
-    ggplot2::geom_segment(data = coor$cart_axes,ggplot2::aes(x=0,y=0,xend=x,yend=y),arrow = ggplot2::arrow(ends = "last",length = unit(.02*sqrt(size)*size_arrow_heads,"native"),type = "closed"),size=.5*sqrt(size)*width_axes)+
+    ggplot2::geom_segment(data = coor$cart_axes,ggplot2::aes(x=0,y=0,xend=x,yend=y),arrow = ggplot2::arrow(ends = "last",length = ggplot2::unit(.02*sqrt(size)*size_arrow_heads,"native"),type = "closed"),size=.5*sqrt(size)*width_axes)+
     ggplot2::geom_segment(data = coor$items[coor$items$width==max(coor$items$width),],ggplot2::aes(x=x1,y=y1,xend=x2,yend=y2),size=1,col = colour2)+
     ggplot2::geom_segment(data = coor$items[coor$items$width==min(coor$items$width),],ggplot2::aes(x=x1,y=y1,xend=x2,yend=y2),size=1,col = colour)+
     # width_items currently not supported since it shifts the edge of the bars away from the correct position determined by the center distance

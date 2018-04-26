@@ -21,7 +21,7 @@ plot_items(coor, size = 1, filename, width = 10, height = 10,
 
 \item{height}{integer; height of the .pdf file; defaults to 10.}
 
-\item{font}{character; text font; defaults to 'Helvetica'.}
+\item{font}{character; text font; defaults to 'Helvetica' (use extrafonts to install fonts you do not have).}
 
 \item{colour}{character; name of the accent colour.}
 
@@ -50,4 +50,13 @@ an object of the class "ggplot" and the same object as a .pdf file.
 }
 \description{
 This function plots a factor and its items as bars on radial axes representing its facets.
+}
+\examples{
+# creating plots is a two step process, using model_ and plot_ functions:
+coord <- model_items(DSSEI)
+DSSEI_item_plot <- plot_items(coord,filename = "DSSEI_items")
+
+}
+\seealso{
+\code{\link{model_items}}
 }

@@ -10,7 +10,7 @@
 #' @param colour character; name of the accent colour.
 #' @param cor_labels logical; if TRUE, plots latent correlations between facets as text.
 #' @param tick numeric; axis tick position; defaults to .1.
-#' @param font character; text font; defaults to 'Helvetica'.
+#' @param font character; text font; defaults to 'Helvetica' (use extrafonts to install fonts you do not have).
 #' @param size_title integer; font size of the factor label (relative to default).
 #' @param size_subfactor_labels integer; font size of the subfactor label (relative to default).
 #' @param width_axes integer; width of the radial axis lines (relative to default).
@@ -24,6 +24,13 @@
 #' as distance from the origin to the circle's edge.
 #'
 #' @return an object of the class "ggplot" and the same object as a .pdf file.
+#'
+#' @seealso \code{\link{model_facets}}
+#'
+#' @examples
+#' # creating plots is a two step process, using model_ and plot_ functions:
+#' coord <- model_facets(DSSEI,subradius = .5)
+#' DSSEI_item_plot <- plot_facets(coord,filename = "DSSEI_facets")
 #'
 #' @export
 plot_facets <- function(coor,size=1,filename,

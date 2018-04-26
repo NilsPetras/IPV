@@ -22,7 +22,8 @@ knitr::opts_chunk$set(
 
 ## IPV
 
-Item Pool Visualization (IPV) is an original way to to display factor structures. IPVs enable you to inspect and select a test based on its content. They are a means to assess the content validity of established tests based on the concept of center distence. The original work on IPV is found in
+Item Pool Visualization (IPV) is an original way to to display factor structures. IPV enables you to inspect and select a test based on its content. It is a means to assess the content validity of established tests based on the concept of center distence. The original work on IPV is found in
+
 *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
 
 ### Models
@@ -30,33 +31,40 @@ Item Pool Visualization (IPV) is an original way to to display factor structures
 At the base of any IPV are *at least* two different structure equation models (SEMs) of the same item pool.
 
 - One general factor model. A model that estimates factor loadings for all items on one factor. In this case, all items are associated to one concept (e.g. self-esteem).
-- One correlated factor model. A model that splits the overall item pool into sections. Each section is represented by one factor and factor loadings of the items in the factor's section are estimated for that factor. In this case, items are associated to one of several more specific concepts (e.g. lack of negative self-esteem). In the case of tests, correlated factors are often called facets. 
+- One correlated factor model. A model that splits the overall item pool into sections. Each section is represented by one factor. Factor loadings of the items in each factor's section are estimated for that factor. In this case, items are associated to one of several more specific concepts (e.g. lack of negative self-esteem). In the case of tests, correlated factors are often called facets and item assignments to facets are fixed, based on extensive analysis.
 
-When comparing these two models, the general expectation is that the correlated factor model produces substantially higher factor loadings, because it is more specific. The increase in factor loadings can for example be interpreted as the extend to which the facet of a test is representing its items better than the overall test score.
+When comparing these two models, it is expected that the correlated factor model produces substantially higher factor loadings, because it is more specific. The increase in factor loadings can be interpreted as the extend to which the facet of a test is representing its items better than the overall test score.
 
-There can be more than two models to compare. If you have a large item pool, you can split it into sections and split these sections again into sections. In theory there is no limitation to how often you split your sections into sections. In this package however, you can only split the item pool twice, resulting in three SEMs:
+There can be more than two models to compare. If you have a large item pool, you can split it into sections and split these sections once again. In theory there is no limitation to how often you split your sections into sections. In this package however, you can only split the item pool twice, resulting in three SEMs:
 
 1. A general factor model
 2. A correlated factor model 
 3. A second correlated factor model (the correlated factors are split again)
 
-Within this package, I call this a nested case. With each split you generate a new comparizon. You could compare model 1 and 2 like any other simple case with two models. you could also compare model 2 and 3. As you will see, you can also show both comparizons in one plot. In this case the plots comparing model 2 and 3 factors are nested within the plot comparing model 1 and 2 factors. You will not need any extra fancy footwork to achieve this.
+Within this package, I call this a nested case. With each split you generate a new comparizon. You could compare model 1 and 2 like any other simple case with two models. you could also compare model 2 and 3. As you will see, you can also show both comparizons in one plot. In this case the plots comparing model 2 and 3 factors are nested within the plot comparing model 1 and 2 factors. You will not need any extra fancy footwork to achieve this:
 
-```{r}
+```{r,fig.width=7,fig.height=7}
 coord <- model_nested(self_confidence,subradius = .6)
-sc_plot <- plot_nested(coord,filename = "self_confidence_nested")
+sc_plot <- plot_nested(coord,filename = "self_confidence_nested",font = "sans",size = .5)
 sc_plot
 
 ```
 
+This nested case is fitting well to a test design where multiple similar tests are used to assess one concept. The overall item pool can then be split into these tests, which in turn can be split into facets.
 
 On a semantic level, I think of general and correlated factors as follows: each time you split the item pool, you find more specific concepts and terms to describe the items. While you might only find a general theme in the overall item pool (e.g. self-esteem), you might find more nuanced descriptions for sections of the item pool (e.g. lack of negative self-esteem). This is what I meant, when I said you can inspect a test based on its content using IPV.
 
 ### Center Distance
 
-The center distance is the core feature of IPV. **It is the relative increase in the squared factor loading for the item when using the correlated factor model rather than the general factor model.** For example a center distance of 0.8 indicates, that the correlated factor explains 80% more of the item variance compared to the general factor. It could be, that the overall test score of a *self-esteem* test explains 30% of the variance of that item (squared factor loading = 0.3), while its facet *lack of negative self-esteem* explains 54% of the variance of that item (squared factor loading = 0.54). In IPVs, center distances are displayed as the distance to the center of the plot (that might give you a hint to why they are called center distances...).
+The center distance is the core feature of IPV. **It is the relative increase in the squared factor loading for the item when using the correlated factor model rather than the general factor model.** For example a center distance of 0.8 indicates, that the correlated factor explains 80% more of the item variance compared to the general factor. It could be, that the overall test score of a *self-esteem* test explains 30% of the variance of that item (squared factor loading = 0.3), while its facet *lack of negative self-esteem* explains 54% of the variance of that item (squared factor loading = 0.54). In IPVs, center distances are displayed as the distance to the center of the plot (that might give you a hint to why they are called center distances...). Center distances for facets and factors are the mean center distances of their items.
 
 ## Workflow
+
+The resulting plots are optimized for .pdf output, rather than the plots output within R. This has three advantages:
+
+1. You do not need to worry about the graphic settings in R.
+2. You do not need to worry about saving your plot from the Plots widget.
+3. The plot is saved vector-based: the sweet magic that smoothes curves and fonts and prevents your plot to be compromised by resolution or zoom.
 
 ### Data
 

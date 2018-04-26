@@ -38,7 +38,7 @@ plot_nested(coor, size = 1, filename, width = 10, height = 10,
 
 \item{tick}{numeric; axis tick position; defaults to .1.}
 
-\item{font}{character; text font; defaults to 'Helvetica'.}
+\item{font}{character; text font; defaults to 'Helvetica' (use extrafonts to install fonts you do not have).}
 
 \item{size_title}{integer; font size of the overall general factor label (relative to default).}
 
@@ -83,4 +83,29 @@ This function plots several correlated factors with their facets in one big nest
 \details{
 The nested plot treats factors like facets of a global factor.
 The nested plot nests facet plots for each factor similar to \code{\link{plot_facets}} within one global facet plot.
+}
+\examples{
+# creating plots is a two step process, using model_ and plot_ functions:
+coord <- model_nested(self_confidence,subradius = .6)
+sc_plot <- plot_nested(coord,filename = "self_confidence_nested")
+
+# adding extra arrows
+sc_arrows <- data.frame(V1_factor=rep(NA,3),
+                        V1_subfactor=rep(NA,3),
+                        V2_factor=rep(NA,3),
+                        V2_subfactor=rep(NA,3),
+                        value=rep(NA,3))
+sc_arrows[1,] <- c("DSSEI","Ab","RSES","Ps",".67")
+sc_arrows[2,] <- c("DSSEI","Ab","SMTQ","Cs",".81")
+sc_arrows[3,] <- c("SMTQ","Ct","RSES","Ns",".76")
+coord <- model_nested(self_confidence,subradius = .6,extra_arrows = sc_arrows)
+sc_plot <- plot_nested(coord,filename = "self_confidence_nested",extra_arrows = TRUE)
+
+# rotating the nested facet plots one by one
+coord <- model_nested(self_confidence,subradius = .6,subrotate = c(0,pi/2,0))
+sc_plot <- plot_nested(coord,filename = "self_confidence_nested")
+
+}
+\seealso{
+\code{\link{model_nested}}
 }

@@ -4,10 +4,10 @@
 #'
 #' @param file character; filename of the excel file
 #'
-#' @details Set up the excel file as in the examples.
-#' For nested models use \code{\link{input_excel}}.
+#' @details Do not use this function, always use \code{\link{input_excel}} instead.
 #'
 #' @return list containing formatted data including center distances for use with \code{\link{model_items}}, \code{\link{model_facets}}
+#' @seealso \code{\link{input_excel}}
 input_factor_excel <- function(file){
 
   # reading in excel sheets 1 and 2 as tibbles

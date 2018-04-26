@@ -49,3 +49,28 @@ Increase the value of the \code{relative_scaling} argument to avoid circle overl
 more visible.
 The \code{cor_spacing} argument increases the size of the nested plot's circles, keeping the scale of its inner parts as is.
 }
+\examples{
+# creating plots is a two step process, using model_ and plot_ functions:
+coord <- model_nested(self_confidence,subradius = .6)
+sc_plot <- plot_nested(coord,filename = "self_confidence_nested")
+
+# adding extra arrows
+sc_arrows <- data.frame(V1_factor=rep(NA,3),
+                        V1_subfactor=rep(NA,3),
+                        V2_factor=rep(NA,3),
+                        V2_subfactor=rep(NA,3),
+                        value=rep(NA,3))
+sc_arrows[1,] <- c("DSSEI","Ab","RSES","Ps",".67")
+sc_arrows[2,] <- c("DSSEI","Ab","SMTQ","Cs",".81")
+sc_arrows[3,] <- c("SMTQ","Ct","RSES","Ns",".76")
+coord <- model_nested(self_confidence,subradius = .6,extra_arrows = sc_arrows)
+sc_plot <- plot_nested(coord,filename = "self_confidence_nested",extra_arrows = TRUE)
+
+# rotating the nested facet plots one by one
+coord <- model_nested(self_confidence,subradius = .6,subrotate = c(0,pi/2,0))
+sc_plot <- plot_nested(coord,filename = "self_confidence_nested")
+
+}
+\seealso{
+\code{\link{plot_nested}}
+}

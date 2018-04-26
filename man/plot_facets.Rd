@@ -27,7 +27,7 @@ plot_facets(coor, size = 1, filename, width = 10, height = 10,
 
 \item{tick}{numeric; axis tick position; defaults to .1.}
 
-\item{font}{character; text font; defaults to 'Helvetica'.}
+\item{font}{character; text font; defaults to 'Helvetica' (use extrafonts to install fonts you do not have).}
 
 \item{size_title}{integer; font size of the factor label (relative to default).}
 
@@ -54,4 +54,13 @@ This function plots a factor and its facets as circles.
 \details{
 Facets are displayed using the average center distance of their items
 as distance from the origin to the circle's edge.
+}
+\examples{
+# creating plots is a two step process, using model_ and plot_ functions:
+coord <- model_facets(DSSEI,subradius = .5)
+DSSEI_item_plot <- plot_facets(coord,filename = "DSSEI_facets")
+
+}
+\seealso{
+\code{\link{model_facets}}
 }

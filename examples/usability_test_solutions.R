@@ -1,11 +1,5 @@
 ## Usability Test (sample solution)
 
-# dev
-library("ggplot2")
-library("ggforce")
-library("extrafont")
-devtools::load_all()
-
 ## Hello.
 # In this script, you will be asked to perform several tasks on example data.
 # Please insert your function calls right below each task. Use "task1",
@@ -13,11 +7,14 @@ devtools::load_all()
 # tasks will be on the creation of facet plots, the second part on nested
 # plots.
 
+## Begin by loading the package:
+library(IPV)
+
 # Have a look at the first set of example data:
 SMTQ
-# The input of the data using excel sheets is omitted here for brevity. If you
-# like to see an example on that, open "examples/example_input_excel.R"
-# after(!) you are done with the tasks below.
+# The input of the data using excel sheets is omitted here for brevity. You can
+# check out the documentation here, if you want:
+?input_excel
 
 ## Task 1/10:
 # Use an IPV function to generate the coordinates for a facet plot from 'SMTQ'.
@@ -49,7 +46,8 @@ self_confidence
 coord <- model_nested(self_confidence,subradius = .6)
 # Have a look at the coordinates. You might notice,
 # that the coordinates for the facet plot we created earlier are included.
-coord
+lapply(coord,names)
+coord$factor$SMTQ
 
 ## Task 6/10:
 # Use an IPV function to create the actual plot from coord.
@@ -87,7 +85,8 @@ task9 <- plot_nested(coord,filename = "task9",extra_arrows = T, width_circles = 
 # There are even more options using the "model_" and "plot_" functions. If you
 # are interested, have a short look into the documentation.
 # There is also another plot not included here. If you are interested, have a
-# short look into "examples/example_itemplot".
+# short look into:
+?plot_items
 
 ## Task 10/10:
 # Before you go back to the instructions in the MS Word document, make sure that

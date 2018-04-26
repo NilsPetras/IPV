@@ -14,6 +14,13 @@
 #'
 #' @return A list of dataframes containing the coordinates of the plot objects.
 #'
+#' @seealso \code{\link{plot_facets}}
+#'
+#' @examples
+#' # creating plots is a two step process, using model_ and plot_ functions:
+#' coord <- model_facets(DSSEI,subradius = .5)
+#' DSSEI_item_plot <- plot_facets(coord,filename = "DSSEI_facets")
+#'
 #' @export
 model_facets <- function(data,subradius,rotate=0) {
 

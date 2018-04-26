@@ -16,6 +16,8 @@ list containing formatted data including center distances for use with \code{\li
 This function reads factor loadings and latent correlations for factor and its facets from a single excel file.
 }
 \details{
-Set up the excel file as in the examples.
-For nested models use \code{\link{input_excel}}.
+Do not use this function, always use \code{\link{input_excel}} instead.
+}
+\seealso{
+\code{\link{input_excel}}
 }

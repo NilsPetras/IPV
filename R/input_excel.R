@@ -2,18 +2,32 @@
 #'
 #' This function reads excel files containing factor loadings and latent correlations for IPV plots.
 #'
-#' @param global character; name of the excel file containing data on the overall general factor and the factors; see examples.
-#' @param factors character; name(s) of the excel file(s) containing data on the factor(s) and their/its facets; see examples.
+#' @param global character; name of the excel file containing data on the overall general factor and the factors.
+#' @param factors character; name(s) of the excel file(s) containing data on the factor(s) and its/their facets.
 #'
-#' @details Note that the excel files need a very specific structure, see examples.
+#' @details Note that the excel files need a very specific structure. Use the example files below as templates.
 #' The \code{global} argument defaults to NULL.
 #' This allows to read data on a single factor and its facets to the \code{factors} argument.
 #' The result is a more simple model that can be displayed by an item plot and a facet plot.
 #'
 #' @return list containing formatted data including center distances for use with \code{\link{model_items}}, \code{\link{model_facets}}, and \code{\link{model_nested}}.
+#'
+#' @examples
+#' # read data for a single factor by ignoring the "global" parameter of input_excel
+#' x <- input_excel(factors = system.file("extdata", "DSSEI.xlsx", package = "IPV", mustWork = TRUE))
+#'
+#' # read data for a nested factor model
+#' # note that excel files need to be split as in the example to contain only
+#' # one general factor and one correlated factor model for the same set of items
+#' global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
+#' factors <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+#'              system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
+#'              system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
+#' x <- input_excel(global = global,factors = factors)
+#'
 #' @export
 input_excel <- function(global=NULL,factors){
-  
+
   # the helper function 'input_factor_excel' does most of the dirty work and applies to both the global and the nested scale
   if(is.null(global)){
     mydata <- input_factor_excel(factors)
@@ -26,6 +40,6 @@ input_excel <- function(global=NULL,factors){
     for(i in 1:global_input$parameters$complexity)names(factors_input)[i] <- levels(factors_input[[c(i,1)]]$factor)
     mydata <- list(global=global_input,factors=factors_input)
   }
-  
+
   return(mydata)
 }
