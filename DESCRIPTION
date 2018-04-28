@@ -12,7 +12,6 @@ Description: This package is used to generate plots based on the IPV concept.
     correlated factors of the same model.
 Depends:R (>= 3.0.0),
 Imports:
-    extrafont,
     ggforce,
     ggplot2,
     readxl,
@@ -20,7 +19,8 @@ Imports:
 Suggests:
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    extrafont
 VignetteBuilder: knitr    
 Date: 2018-03-30
 License: GPL-2

@@ -20,56 +20,133 @@ knitr::opts_chunk$set(
 )
 ```
 
-## IPV
+# IPV {#ipv}
 
-Item Pool Visualization (IPV) is an original way to to display factor structures. IPV enables you to inspect and select a test based on its content. It is a means to assess the content validity of established tests based on the concept of center distence. The original work on IPV is found in
+Item Pool Visualization (IPV) is an original way to to display factor structures. IPV enables you to inspect and select a test based on its content. It can be used to assess and display the content validity of established tests in a specific context. At its core is the concept of center distance, a measure to compare factor loadings of different factor models. The original work on IPV is found in
 
 *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
 
-### Models
+**There are three kinds of plots: PROVIDE EXAMPLES HERE**
 
-At the base of any IPV are *at least* two different structure equation models (SEMs) of the same item pool.
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", echo=FALSE}
+coord <- model_nested(self_confidence, subradius = .6)
+sc_plot <- plot_nested(coord,
+                       filename = "self_confidence_nested",
+                       font = "sans",
+                       size = 1.5,
+                       colour = "darkblue",
+                       subcolour = "blue")
+sc_plot
 
-- One general factor model. A model that estimates factor loadings for all items on one factor. In this case, all items are associated to one concept (e.g. self-esteem).
-- One correlated factor model. A model that splits the overall item pool into sections. Each section is represented by one factor. Factor loadings of the items in each factor's section are estimated for that factor. In this case, items are associated to one of several more specific concepts (e.g. lack of negative self-esteem). In the case of tests, correlated factors are often called facets and item assignments to facets are fixed, based on extensive analysis.
+```
+IPV example. All example data in this vignette from: *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
 
-When comparing these two models, it is expected that the correlated factor model produces substantially higher factor loadings, because it is more specific. The increase in factor loadings can be interpreted as the extend to which the facet of a test is representing its items better than the overall test score.
+## Models
 
-There can be more than two models to compare. If you have a large item pool, you can split it into sections and split these sections once again. In theory there is no limitation to how often you split your sections into sections. In this package however, you can only split the item pool twice, resulting in three SEMs:
+Any IPV is based on at least two different *structure equation models* (SEMs) of the same item pool.
 
-1. A general factor model
-2. A correlated factor model 
-3. A second correlated factor model (the correlated factors are split again)
+- One *general factor model*. A model that estimates factor loadings for all items on one factor. In this case, all items are associated to one concept (e.g. self-esteem).
+- One *correlated factor model*. A model that splits the overall item pool into sections. Each section is represented by one factor. Factor loadings of items within each section on its representing factors are estimated. In this case, items are associated to one of several more specific concepts (e.g. lack of negative self-esteem). In the context of tests, correlated factors are generally called *facets*. Item assignments to facets of tests are usually fixed, based on extensive analysis. In IPV they are treated as a given.
 
-Within this package, I call this a nested case. With each split you generate a new comparizon. You could compare model 1 and 2 like any other simple case with two models. you could also compare model 2 and 3. As you will see, you can also show both comparizons in one plot. In this case the plots comparing model 2 and 3 factors are nested within the plot comparing model 1 and 2 factors. You will not need any extra fancy footwork to achieve this:
+When comparing these two models, it is expected that the correlated factor model produces substantially higher factor loadings, because differences between sections of the item pool can be accounted for. The increase in factor loadings can be interpreted as the extend to which the facet of a test is representing its items better than the overall test score. The increase in factor loadings is measured as [*center distance*](#cd).
 
-```{r,fig.width=7,fig.height=7}
-coord <- model_nested(self_confidence,subradius = .6)
-sc_plot <- plot_nested(coord,filename = "self_confidence_nested",font = "sans",size = .5)
+As seen in the [example above](#ipv), you can compare more than two models. You can split the overall item pool into sections and split these sections once again. In theory there is no limitation on how often you split your sections into sections, as long as your initial item pool is sufficiently large. In practice however, you will rarely need more than two splits, resulting in three SEMs (example in brackets):
+
+1. A general factor model (overall concept: self-confidence)
+2. A correlated factor model (tests: DSSEI, SMTQ, RSES)
+3. A second correlated factor model (facets of tests: Pb, Ab, So, Ph, Cf, Ct, Cs, Ns, Ps)
+
+I call this a *nested* case. The nested case with three models is used when multiple tests were used in conjunction. The overall item pool can then be split into tests, which in turn can be split into facets. This enables test comparizon.
+
+With each split you generate a new comparizon of factor loadings. In the nested case you could compare model 1 and 2 like any other simple case with two models. you could also compare model 2 and 3. As you will see, you can also show both comparizons in one plot. In this case the plots comparing model 2 and 3 are nested within the plot comparing model 1 and 2 factors. You will not need any extra fancy footwork to achieve [this](#ipv):
+
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", eval=FALSE}
+coord <- model_nested(self_confidence, subradius = .6)
+sc_plot <- plot_nested(coord,
+                       filename = "self_confidence_nested",
+                       font = "sans",
+                       size = 1.5,
+                       colour = "darkblue",
+                       subcolour = "blue")
 sc_plot
 
 ```
 
-This nested case is fitting well to a test design where multiple similar tests are used to assess one concept. The overall item pool can then be split into these tests, which in turn can be split into facets.
+On a semantic level, I think of general and correlated factors as follows: each time you split the item pool, you can use more specific concepts and terms to describe the items. While you might only find a general theme in the overall item pool (e.g. self-confidence), you might find more nuanced descriptions for sections of the item pool (e.g. lack of negative self-esteem). IPV shows the increase in explanatory power of more specific terms.
 
-On a semantic level, I think of general and correlated factors as follows: each time you split the item pool, you find more specific concepts and terms to describe the items. While you might only find a general theme in the overall item pool (e.g. self-esteem), you might find more nuanced descriptions for sections of the item pool (e.g. lack of negative self-esteem). This is what I meant, when I said you can inspect a test based on its content using IPV.
+## Center Distance {#cd}
 
-### Center Distance
+**The center distance is the relative increase in the squared factor loading for an item when using the correlated factor model compared to the general factor model. Center distances for factors within a larger model are the mean center distances of their items.**
 
-The center distance is the core feature of IPV. **It is the relative increase in the squared factor loading for the item when using the correlated factor model rather than the general factor model.** For example a center distance of 0.8 indicates, that the correlated factor explains 80% more of the item variance compared to the general factor. It could be, that the overall test score of a *self-esteem* test explains 30% of the variance of that item (squared factor loading = 0.3), while its facet *lack of negative self-esteem* explains 54% of the variance of that item (squared factor loading = 0.54). In IPVs, center distances are displayed as the distance to the center of the plot (that might give you a hint to why they are called center distances...). Center distances for facets and factors are the mean center distances of their items.
+For example, a center distance of 0.8 indicates that the correlated factor explains 80% more of the item variance compared to the general factor. It could be, that the overall test score of a *self-esteem* test explains 30% of the variance of that item (squared factor loading = 0.3), while its facet *lack of negative self-esteem* explains 54% of the variance of that item (squared factor loading = 0.54), resulting in a relative increase of 80%. In IPVs, center distances are displayed as the distance to the center of the plot. In the [example at the top](#ipv), the center distances are displayed as the distance from the relative origin to the edge of the circle representing the factor (thick blue lines). Axis scales are indicated by inconspicuous dotted circles, in the example a center distance of 0.1. But you can also display center distances for single items:
 
-## Workflow
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+coord <- model_items(DSSEI)
+DSSEI_item_plot <- plot_items(coord,
+                              filename = "DSSEI_items",
+                              font = "sans",
+                              colour = "darkblue",
+                              colour2 = "darkblue")
+DSSEI_item_plot
 
-The resulting plots are optimized for .pdf output, rather than the plots output within R. This has three advantages:
+```
 
-1. You do not need to worry about the graphic settings in R.
-2. You do not need to worry about saving your plot from the Plots widget.
-3. The plot is saved vector-based: the sweet magic that smoothes curves and fonts and prevents your plot to be compromised by resolution or zoom.
+Bars represent items, dimensions (=arrows) represent correlated factors. Center distances are displayed as the distance from the origin to the inner edge of the bars. Read values from the grid of concentric circles, where steps of 0.5 are highlighted.
 
-### Data
+# Workflow
 
-### Plot Choice
+Before starting, calculate the structure equation models (SEMs) using your preferred statistical software. This package uses the factor loadings of these models. Preparing your data for the use of the plot functions is easiest using Microsoft Excel. Afterwards, creating a plot is a two step process using model_ and plot_ functions. Almost all graphic parameters will work by default. Refine the appearance of the plot by reiteratively changing parameters and inspecting the result.
 
-### Design Choices
+All plots are optimized for .pdf output, rather than output within R. This has three advantages:
 
-### Advanced Options
+1. You do not need to worry about any graphic settings in R.
+2. You do not need to worry about saving your plot by hand.
+3. The plot is saved vector-based: the sweet magic that smoothes curves and fonts, and prevents your plot to be compromised by resolution or zoom.
+
+When using the graphics output within RStudio, always use the zoom popout from the Plots widget.
+
+## Data Preparation
+Currently there are two ways to prepare your data: excel sheets or manual input in R. At the current beta state of this package I recommend using excel sheets.
+
+When using data **input from excel**, you need to set up the cells matching the example files:
+```{r, eval=FALSE}
+system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV")
+```
+The easiest way is to use one of the files as a template by copying it and replacing the values.
+
+On sheet 1 you need to provide the factor loadings from your SEM, on sheet 2 you need to provide latent correlations between the factors. Set up the following columns in sheet 1: "factor", "subfactor", "item", "factor_loading", "subfactor_loading". Each item will be a row. On sheet 2, set up the (named and complete) correlation matrix for the latent correlations between the correlated factors (=subfactors). Omit any empty rows and columns.
+
+"factor" contains the general factor name, "factor_loading" the factor loadings of items on that factor (not squared). "subfactor" contains the correlated factor names, "subfactor_loading" the factor loadings of items on these factors (not squared). "item" contains the item names. Each row contains full information on the respective item: the factors it is associated to, the respective factor loadings, and the item name.
+
+Read excel sheets using input_excel:
+
+```{r,eval=FALSE}
+# simple model
+x <- input_excel(factors = system.file("extdata", "DSSEI.xlsx", package = "IPV", mustWork = TRUE))
+
+# nested model
+global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
+factors <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+             system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
+             system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
+x <- input_excel(global = global,factors = factors)
+```
+
+
+Note, that center distances are calculated automatically. You will be warned if factor loadings or center distances had to be corrected. Factor loadings below 0.1 will be set to 0.1 and center distances below 0 will be set to 0 to ensure sensible plot margins.
+
+When using **manual data input**, set up the data as in the examples:
+
+```{r}
+SMTQ
+```
+
+This is cumbersome, a helper function is planned.
+
+You know your data best. So consider issuing desired input options on [github](https://github.com/NilsPetras/IPV/issues).
+
+## Plot Choice
+
+## Design Choices
+
+## Advanced Options
