@@ -6,8 +6,8 @@
 \usage{
 plot_nested(coor, size = 1, filename, width = 10, height = 10,
   cor_labels = TRUE, subfactor_cor_labels = TRUE, colour = "black",
-  subcolour = "black", extra_arrows = FALSE, tick = 0.1,
-  font = "Helvetica", size_title = 1, size_subfactor_labels = 1,
+  subcolour = "black", extra_arrows = FALSE, tick = 0.1, font = "sans",
+  size_title = 1, size_subfactor_labels = 1,
   size_subfactor_labels_inner = 1, width_axes = 1, width_axes_inner = 1,
   width_circles = 1, width_circles_inner = 1, size_tick = 1,
   size_tick_inner = 1, size_tick_label = 1, size_cor_labels = 1,
@@ -22,23 +22,23 @@ plot_nested(coor, size = 1, filename, width = 10, height = 10,
 
 \item{filename}{character string; name of the .pdf file the plot is written to; filename extension adds automatically.}
 
-\item{width}{integer; width of the .pdf file; defaults to 10.}
+\item{width}{integer; width of the .pdf file; defaults to 10, dpi is 3000.}
 
-\item{height}{integer; height of the .pdf file; defaults to 10.}
+\item{height}{integer; height of the .pdf file; defaults to 10, dpi is 3000.}
 
-\item{cor_labels}{logical; if TRUE, plots latent correlations between factors as text.}
+\item{cor_labels}{logical; if \code{TRUE}, plots latent correlations between factors as text.}
 
-\item{subfactor_cor_labels}{logical; if TRUE, plots latent correlations between facets as text.}
+\item{subfactor_cor_labels}{logical; if \code{TRUE}, plots latent correlations between facets as text.}
 
 \item{colour}{character; name of the global accent colour.}
 
 \item{subcolour}{character; name of the nested accent colour}
 
-\item{extra_arrows}{logical; if TRUE, plots latent correlation arrows between facets of different factors from information provided in coor.}
+\item{extra_arrows}{logical; if \code{TRUE}, plots correlation arrows between facets of different factors.}
 
 \item{tick}{numeric; axis tick position; defaults to .1.}
 
-\item{font}{character; text font; defaults to 'Helvetica' (use extrafonts to install fonts you do not have).}
+\item{font}{character; text font; defaults to 'sans' (use extrafonts to install additional fonts).}
 
 \item{size_title}{integer; font size of the overall general factor label (relative to default).}
 
@@ -75,14 +75,20 @@ plot_nested(coor, size = 1, filename, width = 10, height = 10,
 \item{size_extra_labels}{integer; font size of the latent correlations indicated by extra arrows (relative to default).}
 }
 \value{
-an object of the class "ggplot" and the same object as a .pdf file.
+Object of the class "ggplot" and the same object as a .pdf file.
 }
 \description{
-This function plots several correlated factors with their facets in one big nested plot.
+Plots several correlated factors with their facets in one big nested plot.
 }
 \details{
+Use this function in conjunction with \code{\link{model_nested}} for nested models.
+
 The nested plot treats factors like facets of a global factor.
-The nested plot nests facet plots for each factor similar to \code{\link{plot_facets}} within one global facet plot.
+It uses facet plots for each factor similar to how \code{\link{plot_facets}} uses circles for facets.
+
+Rotate by changing your \code{\link{model_nested}} function call.
+
+To add extra_arrows, you need to provide additional information to \code{\link{model_nested}}.
 }
 \examples{
 # creating plots is a two step process, using model_ and plot_ functions:
@@ -100,10 +106,6 @@ sc_arrows[2,] <- c("DSSEI","Ab","SMTQ","Cs",".81")
 sc_arrows[3,] <- c("SMTQ","Ct","RSES","Ns",".76")
 coord <- model_nested(self_confidence,subradius = .6,extra_arrows = sc_arrows)
 sc_plot <- plot_nested(coord,filename = "self_confidence_nested",extra_arrows = TRUE)
-
-# rotating the nested facet plots one by one
-coord <- model_nested(self_confidence,subradius = .6,subrotate = c(0,pi/2,0))
-sc_plot <- plot_nested(coord,filename = "self_confidence_nested")
 
 }
 \seealso{

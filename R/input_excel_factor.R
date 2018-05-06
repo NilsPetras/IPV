@@ -1,14 +1,14 @@
-#' Input Factor Excel
+#' Input Excel Factor
 #'
-#' This function reads factor loadings and latent correlations for factor and its facets from a single excel file.
+#' Reads factor loadings and latent correlations from an excel file.
 #'
 #' @param file character; filename of the excel file
 #'
-#' @details Do not use this function, always use \code{\link{input_excel}} instead.
+#' @details Helper function of \code{\link{input_excel}}.
 #'
-#' @return list containing formatted data including center distances for use with \code{\link{model_items}}, \code{\link{model_facets}}
+#' @return list containing formatted data including center distances for \code{\link{model_items}}, \code{\link{model_facets}}
 #' @seealso \code{\link{input_excel}}
-input_factor_excel <- function(file){
+input_excel_factor <- function(file){
 
   # reading in excel sheets 1 and 2 as tibbles
   sheet1 <- readxl::read_excel(file,sheet = 1,col_names = T)
