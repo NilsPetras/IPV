@@ -7,30 +7,38 @@
 input_excel(global = NULL, factors)
 }
 \arguments{
-\item{global}{character; name of the excel file containing data on the overall general factor and the factors.}
+\item{global}{character; name of the excel file containing factor loadings
+from the global level and the test level, and latent correlations from the
+test level.}
 
-\item{factors}{character; name(s) of the excel file(s) containing data on the factor(s) and its/their facets.}
+\item{factors}{character; name(s) of the excel file(s) containing factor
+loadings from the test level and the facet level, and latent correlations
+from the facet level.}
 }
 \value{
-list containing formatted data including center distances for \code{\link{model_items}}, \code{\link{model_facets}}, and \code{\link{model_nested}}.
+List containing formatted data including center distances for
+  \code{\link{coord_items}}, \code{\link{coord_facets}}, and
+  \code{\link{coord_nested}}.
 }
 \description{
-Reads excel files containing factor loadings and latent correlations for IPV plots.
+Reads excel files containing factor loadings and latent correlations for IPV
+charts.
 }
 \details{
-Note that the excel files need a very specific structure. Use the example files below as templates.
+Note that the excel files need a very specific structure. Use the
+  example files as templates.
 
-The \code{global} argument defaults to NULL.
-This allows to only use the \code{factors} argument, resulting in a simple model with one factor.
+  The \code{global} argument defaults to NULL. This allows to only use the
+  \code{factors} argument, resulting in a simple model with one test and its
+  facets.
 }
 \examples{
-# read data for a single factor by ignoring the "global" parameter of input_excel
+# read data for a simple model by ignoring the "global" parameter of input_excel
 single_file <- system.file("extdata", "DSSEI.xlsx", package = "IPV", mustWork = TRUE)
 x <- input_excel(factors = single_file)
 
-# read data for a nested factor model
-# note that excel files need to be split as in the example to contain only
-# one general factor model and one correlated factor model for the same set of items
+# read data for a nested model
+# note that the data needs to be split into several excel files as in the example
 global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
 factors <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
              system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),

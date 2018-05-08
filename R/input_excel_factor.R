@@ -6,7 +6,8 @@
 #'
 #' @details Helper function of \code{\link{input_excel}}.
 #'
-#' @return list containing formatted data including center distances for \code{\link{model_items}}, \code{\link{model_facets}}
+#' @return list containing formatted data including center distances for
+#'   \code{\link{coord_items}}, \code{\link{coord_facets}}
 #' @seealso \code{\link{input_excel}}
 input_excel_factor <- function(file){
 

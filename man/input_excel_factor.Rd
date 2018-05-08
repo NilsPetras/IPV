@@ -10,7 +10,8 @@ input_excel_factor(file)
 \item{file}{character; filename of the excel file}
 }
 \value{
-list containing formatted data including center distances for \code{\link{model_items}}, \code{\link{model_facets}}
+list containing formatted data including center distances for
+  \code{\link{coord_items}}, \code{\link{coord_facets}}
 }
 \description{
 Reads factor loadings and latent correlations from an excel file.
