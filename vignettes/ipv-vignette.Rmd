@@ -26,7 +26,7 @@ Item Pool Visualization (IPV) is an original way to to display factor structures
 
 *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
 
-```{r, fig.show='animate', fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", echo=FALSE,}
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", echo=FALSE}
 coord <- coord_nested(self_confidence, subradius = .6)
 sc_nested <- plot_nested(coord,
                        filename = "self_confidence_nested",
@@ -34,19 +34,6 @@ sc_nested <- plot_nested(coord,
                        colour = "darkblue",
                        subcolour = "blue")
 sc_nested
-
-coord <- coord_items(DSSEI)
-DSSEI_items <- plot_items(coord,
-                              filename = "DSSEI_items",
-                              colour = "darkblue",
-                              colour2 = "darkblue")
-DSSEI_items
-
-coord <- coord_facets(DSSEI, subradius = .6)
-DSSEI_facets <- plot_facets(coord,
-                              filename = "DSSEI_facets",
-                              colour = "darkblue")
-DSSEI_facets
 
 ```
 Example for a nested chart. All example data in this vignette from: *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
