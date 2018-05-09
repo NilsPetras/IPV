@@ -6,7 +6,9 @@
 #'   containing formatted data.
 #' @param subradius integer; radius of the circles representing facets (same
 #'   unit as center distances).
-#' @param rotate integer between 0 and 2*pi; radian angle to rotate the chart
+#' @param rotate_radians integer; radian angle to rotate the chart
+#'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
+#' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
 #'
 #' @details Use this function in conjunction with \code{\link{plot_facets}} for
@@ -27,7 +29,7 @@
 #' DSSEI_facets
 #'
 #' @export
-coord_facets <- function(data,subradius,rotate=0) {
+coord_facets <- function(data, subradius, rotate_radians = 0, rotate_degrees = 0) {
 
 
     ## helper variables
@@ -35,6 +37,8 @@ coord_facets <- function(data,subradius,rotate=0) {
   # number of facets
   cplx <- data$parameters$complexity
 
+    # total rotation value in radians
+  rotate <- rotate_radians + rotate_degrees * pi / 180
 
     ## coordinates of plot objects
 

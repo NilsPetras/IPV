@@ -6,12 +6,19 @@
 #'   containing formatted data.
 #' @param subradius integer; radius of the circles representing facets (same
 #'   unit as center distances).
-#' @param rotate integer between 0 and 2*pi; radian angle to rotate the chart
+#' @param rotate_radians integer; radian angle to rotate the chart
+#'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
+#' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
-#' @param subrotate integer between 0 and 2*pi; radian angle or vector of radian
-#'   angles to rotate the nested facet charts counter-clockwise by.
-#' @param rotate_title integer between 0 and 2*pi; radian angle to rotate the
-#'   overall global label counter-clockwise by.
+#' @param subrotate_radians integer; radian angle or vector of radian angles to
+#'   rotate the nested facet charts counter-clockwise by; use fractions of pi
+#'   (e.g. pi/2 = 90 degrees).
+#' @param subrotate_degrees integer; angle in degrees or vector of angles in
+#'   degrees to rotate the nested facet charts counter-clockwise by.
+#' @param rotate_title_radians integer; radian angle to rotate the global label
+#'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
+#' @param rotate_title_degrees integer; angle in degrees to rotate the global label
+#'   counter-clockwise by.
 #' @param items logical; if \code{TRUE}, generates coordinates for item charts
 #'   for all factors by calling \code{\link{coord_items}}.
 #' @param cors logical; if \code{TRUE}, generates coordinates for latent
@@ -28,12 +35,12 @@
 #' @details Use this function in conjunction with \code{\link{plot_nested}} for
 #'   nested models.
 #'
-#'   This function also provides coordinates for facet charts and item charts (if
-#'   \code{items = TRUE}) You can use it in conjunction with
+#'   This function also provides coordinates for facet charts and item charts
+#'   (if \code{items = TRUE}) You can use it in conjunction with
 #'   \code{\link{plot_facets}} or \code{\link{plot_items}}.
 #'
-#'   If you set \code{subrotate} to a single value, all nested facet charts will be
-#'   rotated by the same amount. If you use a vector of values, the nested
+#'   If you set \code{subrotate} to a single value, all nested facet charts will
+#'   be rotated by the same amount. If you use a vector of values, the nested
 #'   facet charts will be rotated one by one by the values from that vector.
 #'
 #'   Increase \code{relative_scaling} to avoid circle overlap. Decrease it to
@@ -66,52 +73,70 @@
 #' sc_nested <- plot_nested(coord,filename = "sc_nested",extra_arrows = TRUE)
 #' sc_nested
 #'
-#' # rotating the nested facet charts one by one (compare to subrotate = 0)
-#' coord <- coord_nested(self_confidence,subradius = .6,subrotate = c(0,pi/2,0))
+#' # rotating the nested facet charts one by one
+#' coord <- coord_nested(self_confidence,subradius = .6,subrotate_radians = c(0,pi/2,0))
 #' sc_nested <- plot_nested(coord,filename = "sc_nested")
 #' sc_nested
 #'
 #' @export
-coord_nested <- function(data,subradius,
-                      rotate=0,subrotate=0,rotate_title=0,
-                      items=FALSE,cors=TRUE,cor_spacing=.4,relative_scaling=3,extra_arrows=NULL){
+coord_nested <- function(data, subradius,
+                      rotate_radians = 0, rotate_degrees = 0,
+                      subrotate_radians = 0, subrotate_degrees = 0,
+                      rotate_title_radians = 0, rotate_title_degrees = 0,
+                      items = FALSE, cors = TRUE, cor_spacing = .4, relative_scaling = 3,
+                      extra_arrows = NULL){
+
+
+    ## helper variabe for facet and item plots
+
+  # total subrotation value in radians
+  subrotate <- subrotate_radians + subrotate_degrees * pi / 180
 
 
     ## listwise calculation for single factors using mode_facets and coord_items
 
-  # with one value for all subrotations (lapply)
+  # with one value for all subrotations
     if(length(subrotate)==1){
-      factorcoors <- lapply(X = data$factors,FUN = coord_facets,subradius=subradius,rotate=subrotate)
+      factorcoors <- lapply(X = data$factors, FUN = coord_facets, subradius = subradius,
+                            rotate_radians = subrotate)
       names(factorcoors) <- names(data$factors)
     }
     if(length(subrotate)==1 & items==TRUE){
-      itemcoors <- lapply(data$factors,coord_items,rotate=subrotate)
+      itemcoors <- lapply(data$factors, coord_items, rotate_radians = subrotate)
       names(itemcoors) <- names(data$factors)
     }
-  # with a vector of values for subrotations (for-loop)
+
+  # with a vector of values for subrotations
   if(length(subrotate)==length(data$factors)){
     factorcoors <- list()
     for(i in 1:length(data$factors)){
-      factorcoors[[i]] <- coord_facets(data$factors[[i]],subradius=subradius,rotate=subrotate[i])
+      factorcoors[[i]] <- coord_facets(data$factors[[i]], subradius = subradius,
+                                       rotate_radians = subrotate[i])
     }
     names(factorcoors) <- names(data$factors)
   }
   if(length(subrotate)==length(data$factors) & items==TRUE){
     itemcoors <- list()
     for(i in 1:length(data$factors)){
-      itemcoors[[i]] <- coord_items(data$factors[[i]],rotate=subrotate[i])
+      itemcoors[[i]] <- coord_items(data$factors[[i]], rotate_radians = subrotate[i])
     }
     names(itemcoors) <- names(data$factors)
   }
 
 
-    ## helper variables
+    ## helper variables for nested plot
 
   # names of factors
   nam <- levels(data$global$center_distances$subfactor)
 
   # number of factors
   cplx <- data$global$parameters$complexity
+
+  # total rotation value in radians
+  rotate <- rotate_radians + rotate_degrees * pi / 180
+
+  # total title rotation value in radians
+  rotate_title <- rotate_title_radians + rotate_title_degrees * pi / 180
 
   # retrieving the size of the factor circles from the coord_facets output
   getcircsize <- function(x){

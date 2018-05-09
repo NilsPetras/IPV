@@ -22,21 +22,37 @@ knitr::opts_chunk$set(
 
 # IPV {#ipv}
 
-Item Pool Visualization (IPV) is an original way to to display factor structures. IPV enables you to inspect and select a test based on its content. It can be used to assess and display the content validity of established tests in a specific context. At its core is the concept of center distance, a measure to compare factor loadings of different factor models. The original work on IPV is found in
+Item Pool Visualization (IPV) is an original way to to display factor structures. IPV enables you to inspect and select an item pool based on its content. It can be used to assess and display the content validity of established tests in a specific context. At its core is the concept of center distance, a measure to compare factor loadings of different factor models. The original work on IPV is found in
 
 *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
 
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", echo=FALSE}
+```{r, fig.show='animate', fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", echo=FALSE,}
 coord <- coord_nested(self_confidence, subradius = .6)
-sc_plot <- plot_nested(coord,
+sc_nested <- plot_nested(coord,
                        filename = "self_confidence_nested",
                        size = 1.5,
                        colour = "darkblue",
                        subcolour = "blue")
-sc_plot
+sc_nested
+
+coord <- coord_items(DSSEI)
+DSSEI_items <- plot_items(coord,
+                              filename = "DSSEI_items",
+                              colour = "darkblue",
+                              colour2 = "darkblue")
+DSSEI_items
+
+coord <- coord_facets(DSSEI, subradius = .6)
+DSSEI_facets <- plot_facets(coord,
+                              filename = "DSSEI_facets",
+                              colour = "darkblue")
+DSSEI_facets
 
 ```
-Example for a nested IPV plot. All example data in this vignette from: *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
+Example for a nested chart. All example data in this vignette from: *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
+
+## Charts
+
 
 ## Models
 
@@ -55,11 +71,11 @@ As seen in the [example above](#ipv), you can compare more than two models. You 
 
 I call this a *nested* case. The nested case with three models is used when multiple tests were used in conjunction. The overall item pool can then be split into tests, which in turn can be split into facets. This enables test comparizon.
 
-With each split you generate a new comparizon of factor loadings. In the nested case you could compare model 1 and 2 like any other simple case with two models. you could also compare model 2 and 3. As you will see, you can also show both comparizons in one plot. In this case the plots comparing model 2 and 3 are nested within the plot comparing model 1 and 2 factors. You will not need any extra fancy footwork to achieve [this](#ipv):
+With each split you generate a new comparizon of factor loadings. In the nested case you could compare model 1 and 2 like any other simple case with two models. you could also compare model 2 and 3. As you will see, you can also show both comparizons in one plot. In this case the plots comparing model 2 and 3 are nested within the chart comparing model 1 and 2 factors. You will not need any extra fancy footwork to achieve [this](#ipv):
 
 ```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", eval=FALSE}
 coord <- coord_nested(self_confidence, subradius = .6)
-sc_plot <- plot_nested(coord,
+sc_nested <- plot_nested(coord,
                        filename = "self_confidence_nested",
                        size = 1.5,
                        colour = "darkblue",
@@ -77,15 +93,15 @@ On a semantic level, I think of general and correlated factors as follows: each 
   cd = \frac{\lambda^2_c}{\lambda^2_g} -1
 \end{equation}
 
-For example, a center distance of 0.5 indicates that the correlated factor explains 50% more of the item variance compared to the general factor. It could be, that the overall test score of a *self-esteem* test explains 20% of the variance of that item (squared factor loading = 0.2), while its facet *lack of negative self-esteem* explains 30% of the variance of that item (squared factor loading = 0.3), resulting in a relative increase of 50%. In IPVs, center distances are displayed as the distance to the center of the plot. In the [example at the top](#ipv), the center distances are displayed as the distance from the relative origin to the edge of the circle representing the factor (thick blue lines). Axis scales are indicated by inconspicuous dotted circles, in the example a center distance of 0.1. But you can also display center distances for single items:
+For example, a center distance of 0.5 indicates that the correlated factor explains 50% more of the item variance compared to the general factor. It could be, that the overall test score of a *self-esteem* test explains 20% of the variance of that item (squared factor loading = 0.2), while its facet *lack of negative self-esteem* explains 30% of the variance of that item (squared factor loading = 0.3), resulting in a relative increase of 50%. In IPVs, center distances are displayed as the distance to the center of the chart. In the [example at the top](#ipv), the center distances are displayed as the distance from the relative origin to the edge of the circle representing the factor (thick blue lines). Axis scales are indicated by inconspicuous dotted circles, in the example a center distance of 0.1. But you can also display center distances for single items:
 
 ```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
 coord <- coord_items(DSSEI)
-DSSEI_item_plot <- plot_items(coord,
+DSSEI_items <- plot_items(coord,
                               filename = "DSSEI_items",
                               colour = "darkblue",
                               colour2 = "darkblue")
-DSSEI_item_plot
+DSSEI_items
 
 ```
 
@@ -93,13 +109,13 @@ Blue bars represent items, dimensions (=arrows) represent correlated factors. Ce
 
 # Workflow
 
-Before starting, calculate the structure equation models (SEMs) using your preferred statistical software. This package uses the factor loadings of these models. Preparing your data for the use of the plot functions is easiest using Microsoft Excel. Afterwards, creating a plot is a two step process using coord_ and plot_ functions. Almost all graphic parameters will work by default. Refine the appearance of the plot by reiteratively changing parameters and inspecting the result.
+Before starting, calculate the structure equation models (SEMs) using your preferred statistical software. This package uses the factor loadings of these models. Preparing your data for the use of the plot functions is easiest using Microsoft Excel. Afterwards, creating a chart is a two step process using coord_ and plot_ functions. Almost all graphic parameters will work by default. Refine the appearance of the chart by reiteratively changing parameters and inspecting the result.
 
-All plots are optimized for .pdf output, rather than output within R. This has three advantages:
+All charts are optimized for .pdf output, rather than output within R. This has three advantages:
 
 1. You do not need to worry about any graphic settings in R.
-2. You do not need to worry about saving your plot by hand.
-3. The plot is saved vector-based: the sweet magic that smoothes curves and fonts, and prevents your plot to be compromised by resolution or zoom.
+2. You do not need to worry about saving your chart by hand.
+3. The chart is saved vector-based: the sweet magic that smoothes curves and fonts, and prevents your chart to be compromised by resolution or zoom.
 
 When using the graphics output within RStudio, always use the zoom popout from the Plots widget.
 
@@ -128,11 +144,11 @@ global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = 
 factors <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
              system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
              system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
-x <- input_excel(global = global,factors = factors)
+x <- input_excel(global = global, factors = factors)
 ```
 
 
-Note, that center distances are calculated automatically. You will be warned if factor loadings or center distances had to be corrected. Factor loadings below 0.1 will be set to 0.1 and center distances below 0 will be set to 0 to ensure sensible plot margins.
+Note, that center distances are calculated automatically. You will be warned if factor loadings or center distances had to be corrected. Factor loadings below 0.1 will be set to 0.1 and center distances below 0 will be set to 0 to ensure sensible chart margins.
 
 When using **manual data input**, set up the data as in the examples:
 
@@ -144,42 +160,42 @@ This is cumbersome, a helper function is planned.
 
 You know your data best. So consider issuing desired input options on [github](https://github.com/NilsPetras/IPV/issues).
 
-## Plot Creation
+## Chart Creation
 
-There are three different plot concepts in this package: *items*, *facets*, and *nested*.
+There are three different chart concepts in this package: *items*, *facets*, and *nested*.
 
-- Item plots show each item for one factor, arranged by facets (see figure below).
-- Facet plots show a factor and its facets.
-- Nested plots show a factor and its facets, which are in turn represented by a facet plot, as seen [above](#ipv).
+- Item charts show each item for one factor, arranged by facets (see figure below).
+- Facet charts show a factor and its facets.
+- Nested charts show a factor and its facets, which are in turn represented by a facet chart, as seen [above](#ipv).
 
-Functions are named according to the plot concept (e.g. coord_items and coord_facets). In any case you will have to use two functions in conjunction. The first function is the *model function* and prepares coordinates and labels for plot objects. The second function is the *plot function* and creates both a ggplot object and a .pdf file, the actual plot. So for each plot concept there are two functions.
+Functions are named according to the chart concept (e.g. coord_items and coord_facets). In any case you will have to use two functions in conjunction. The first function is the *model function* and prepares coordinates and labels for chart objects. The second function is the *plot function* and creates both a ggplot object and a .pdf file, the actual chart. So for each chart concept there are two functions.
 
-For example, creating an item plot works like this:
+For example, creating an item chart works like this:
 
 ```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
 coord <- coord_items(DSSEI)
-DSSEI_item_plot <- plot_items(coord,filename = "DSSEI_items")
-DSSEI_item_plot
+DSSEI_items <- plot_items(coord, filename = "DSSEI_items")
+DSSEI_items
 ```
 
 As you see, almost all function parameters have a default value, so you can start fast and frugal.
 
-There is a useful shortcut if you have a nested model. The function coord_nested always also generates all you need for facet plots of all correlated factors. If you set items = TRUE, you also get all you need for the item plots in one go:
+There is a useful shortcut if you have a nested model. The function coord_nested always also generates all you need for facet charts of all correlated factors. If you set items = TRUE, you also get all you need for the item charts in one go:
 
 ```{r,eval=FALSE}
-coord <- coord_nested(self_confidence,subradius = .6,items = TRUE)
-DSSEI_item_plot <- plot_items(coord$items$DSSEI,filename = "DSSEI_items")
+coord <- coord_nested(self_confidence, subradius = .6, items = TRUE)
+DSSEI_items <- plot_items(coord$items$DSSEI, filename = "DSSEI_items")
 
 ```
 
 ## Design Choices
 
-The vast majority of parameters are size parameters for single elements of the plot, all named size_xyz or width_xyz. Those are pretty straightforward linear scaling sizes defaulting to 1. Some other parameters are self-explanatory. These important parameters are more complex:
+The vast majority of parameters are size parameters for single elements of the chart, all named size_xyz or width_xyz. Those are pretty straightforward linear scaling sizes defaulting to 1. Some other parameters are self-explanatory. These important parameters are more complex:
 
-- *relative_scaling* (coord_nested) Changes the scaling of the nested facet plots within the overall plot. For a clear plot, you need to hit the sweet spot between a) sizing up the nested plots to make them readable and b) retain clarity about their positions relative to one another by making the global scale relatively large.
-- ***size* (plot_)** scales all elements of the plot. Not all elements are scaled linearly, to produce harmonious results across a variety of sizes ("smart scaling"). **If you were limited to one cosmetic parameter, this would be the one**
-- *colour*, *colour2*, *subcolour* (plot_)For a full set of colours including gray, see [here](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). Colours are used to add visual contrast to important parts of the plot, I recommend using colours whenever possible. In the item plot, use *colour2* and *colour* to make overlapping items more visible.
-- *extra_arrows* (_nested) adds custom correlation arrows. Provide information about latent correlations between facets of different factors to the model function (as below). Set *extra_arrows*=TRUE in plot_nested. Straighten out your plot with *subrotate* (coord_nested).
+- *relative_scaling* (coord_nested) Changes the scaling of the nested facet charts within the overall chart. For a clear chart, you need to hit the sweet spot between a) sizing up the nested charts to make them readable and b) retain clarity about their positions relative to one another by making the global scale relatively large.
+- ***size* (plot_)** scales all elements of the chart. Not all elements are scaled linearly, to produce harmonious results across a variety of sizes ("smart scaling"). **If you were limited to one cosmetic parameter, this would be the one**
+- *colour*, *colour2*, *subcolour* (plot_)For a full set of colours including gray, see [here](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). Colours are used to add visual contrast to important parts of the chart, I recommend using colours whenever possible. In the item chart, use *colour2* and *colour* to make overlapping items more visible.
+- *extra_arrows* (_nested) adds custom correlation arrows. Provide information about latent correlations between facets of different factors to the model function (as below). Set *extra_arrows*=TRUE in plot_nested. Straighten out your chart with the subrotate parameters (coord_nested).
 
 ```{r}
 sc_arrows <- data.frame(V1_factor=rep(NA,3),

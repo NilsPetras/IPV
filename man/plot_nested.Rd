@@ -6,7 +6,7 @@
 \usage{
 plot_nested(coor, size = 1, filename, width = 10, height = 10,
   cor_labels = TRUE, subfactor_cor_labels = TRUE, colour = "black",
-  subcolour = "black", extra_arrows = FALSE, tick = 0.1, font = "sans",
+  subcolour = "black", font = "sans", extra_arrows = FALSE, tick = 0.1,
   size_title = 1, size_subfactor_labels = 1,
   size_subfactor_labels_inner = 1, width_axes = 1, width_axes_inner = 1,
   width_circles = 1, width_circles_inner = 1, size_tick = 1,
@@ -37,13 +37,13 @@ correlations between facets as text.}
 
 \item{subcolour}{character; name of the nested accent colour}
 
+\item{font}{character; text font; defaults to 'sans' (use extrafonts to
+install additional fonts).}
+
 \item{extra_arrows}{logical; if \code{TRUE}, draws correlation arrows between
 facets of different tests.}
 
 \item{tick}{numeric; axis tick position; defaults to .1.}
-
-\item{font}{character; text font; defaults to 'sans' (use extrafonts to
-install additional fonts).}
 
 \item{size_title}{integer; font size of the global label (relative to
 default).}
@@ -126,11 +126,11 @@ sc_arrows <- data.frame(V1_factor=rep(NA,3),
                         V2_factor=rep(NA,3),
                         V2_subfactor=rep(NA,3),
                         value=rep(NA,3))
-sc_arrows[1,] <- c("DSSEI","Ab","RSES","Ps",".67")
-sc_arrows[2,] <- c("DSSEI","Ab","SMTQ","Cs",".81")
-sc_arrows[3,] <- c("SMTQ","Ct","RSES","Ns",".76")
-coord <- coord_nested(self_confidence,subradius = .6,extra_arrows = sc_arrows)
-sc_plot <- plot_nested(coord,filename = "self_confidence_nested",extra_arrows = TRUE)
+sc_arrows[1,] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
+sc_arrows[2,] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
+sc_arrows[3,] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
+coord <- coord_nested(self_confidence, subradius = .6, extra_arrows = sc_arrows)
+sc_plot <- plot_nested(coord, filename = "self_confidence_nested", extra_arrows = TRUE)
 sc_plot
 
 }

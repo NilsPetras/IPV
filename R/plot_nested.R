@@ -81,20 +81,24 @@
 #'                         V2_factor=rep(NA,3),
 #'                         V2_subfactor=rep(NA,3),
 #'                         value=rep(NA,3))
-#' sc_arrows[1,] <- c("DSSEI","Ab","RSES","Ps",".67")
-#' sc_arrows[2,] <- c("DSSEI","Ab","SMTQ","Cs",".81")
-#' sc_arrows[3,] <- c("SMTQ","Ct","RSES","Ns",".76")
-#' coord <- coord_nested(self_confidence,subradius = .6,extra_arrows = sc_arrows)
-#' sc_plot <- plot_nested(coord,filename = "self_confidence_nested",extra_arrows = TRUE)
+#' sc_arrows[1,] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
+#' sc_arrows[2,] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
+#' sc_arrows[3,] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
+#' coord <- coord_nested(self_confidence, subradius = .6, extra_arrows = sc_arrows)
+#' sc_plot <- plot_nested(coord, filename = "self_confidence_nested", extra_arrows = TRUE)
 #' sc_plot
 #'
 #' @export
-plot_nested <- function(coor,size=1,filename,width=10,height=10,
-                      cor_labels=TRUE,subfactor_cor_labels=TRUE,
-                      colour="black",subcolour="black",extra_arrows=FALSE,tick=.1,font="sans",
-                      size_title=1,size_subfactor_labels=1,size_subfactor_labels_inner=1,width_axes=1,width_axes_inner=1,
-                      width_circles=1,width_circles_inner=1,size_tick=1,size_tick_inner=1,size_tick_label=1,size_cor_labels=1,size_cor_labels_inner=1,
-                      size_center_dot=1,size_center_dot_inner=1,size_extra_arrows=1,size_extra_arrow_heads=1,size_extra_labels=1){
+plot_nested <- function(coor, size = 1, filename, width = 10, height = 10,
+                      cor_labels = TRUE, subfactor_cor_labels = TRUE,
+                      colour = "black", subcolour = "black", font = "sans",
+                      extra_arrows = FALSE, tick = .1,
+                      size_title = 1, size_subfactor_labels = 1, size_subfactor_labels_inner = 1,
+                      width_axes = 1, width_axes_inner = 1, width_circles = 1, width_circles_inner = 1,
+                      size_tick = 1, size_tick_inner = 1, size_tick_label = 1,
+                      size_cor_labels = 1, size_cor_labels_inner = 1,
+                      size_center_dot = 1, size_center_dot_inner = 1,
+                      size_extra_arrows = 1, size_extra_arrow_heads = 1, size_extra_labels = 1){
 
     ## nested plot
 
