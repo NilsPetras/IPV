@@ -27,84 +27,98 @@ Item Pool Visualization (IPV) is an original way to to display factor structures
 *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
 
 ```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", echo=FALSE}
-coord <- coord_nested(self_confidence, subradius = .6)
+sc_arrows <- data.frame(V1_factor=rep(NA,3),
+                        V1_subfactor=rep(NA,3),
+                        V2_factor=rep(NA,3),
+                        V2_subfactor=rep(NA,3),
+                        value=rep(NA,3))
+sc_arrows[1,] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
+sc_arrows[2,] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
+sc_arrows[3,] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
+coord <- coord_nested(self_confidence,
+                      subradius = .6,
+                      extra_arrows = sc_arrows,
+                      rotate_radians = 4/3*pi,
+                      subrotate_radians = c(pi/2,pi/2,0))
 sc_nested <- plot_nested(coord,
                        filename = "self_confidence_nested",
                        size = 1.5,
-                       colour = "darkblue",
-                       subcolour = "blue")
+                       colour = "red",
+                       subcolour = "darkorange",
+                       extra_arrows = TRUE)
 sc_nested
 
 ```
-Example for a nested chart. All example data in this vignette from: *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
+Example of a nested chart, showing self-confidence measured by three different tests, each with multiple facets. All example data in this vignette from: *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
 
-## Charts
+## Interpreting Charts
 
+There are three chart types in IPV: **nested charts**, **facet charts**, and **item charts**. Nested charts display <span style="color:red">multiple tests</span> and <span style="color:darkorange">their facets</span>. Facet charts are the interior of the <span style="color:red">big circles</span> in the nested chart above, displaying one test and its facets. Item charts display the items of a test arranged by facets. For examples of [*a facet chart*](#fac) and [*an item chart*](#cd) see below.
+
+In IPV, circles represent factors. Each factor represents a part of the item pool. The gray surrounding circle represents a factor estimated from all items of the item pool. Smaller circles represent factors estimated from subpools. In the example above, the self-confidence of 2272 german speaking participants has been measured using three different tests: the *Domain Specific Self-Esteem Inventory (DSSEI)*, the *Sports Mental Toughness Questionnaire (SMTQ)*, and the *Rosenberg Self-Esteem Scale (RSES)*. So the surrounding gray circle is labeled *Self-Confidence*. In nested charts, there are two splits of the item pool. In the example, the overall item pool is split into <span style="color:red">three subpools</span>, which are split into <span style="color:darkorange">nine subpools</span>. Think of the interior of a circle as a further explanation of what that circle stands for. For example, within the DSSEI circle, its four facets are shown.
+
+When splitting an item pool, you get more factors. The more factors are used, the more item variance can be explained. The items are better represented by many factors than by just one. For example, each test represents its items better, than the general *Self-Confidence* factor. The distance of the smaller circles (e.g. *DSSEI*) from the center of the larger circle (*Self-Confidence*) indicates exactly how much more variance is explained. The further away a circle is from the center of its surrounding circle, the more explanatory power it adds. So the *DSSEI* factor represents its 20 items only a little bit better than the general *Self-Confidence* factor. The gain is much more significant for the 10 *RSES* items, indicated by a larger distance of the *RSES* circle from the center. The concept of [*center distance*](#cd) is described in more detail below. In general, the further apart the circles are, the more diverse is the item pool, and the more important is the distinction of subpools.
+
+The numbers indicate latent correlations. Optionally, arrows are drawn for selected latent correlations between facets of different tests. In this example, those exceeding the latent correlations between the tests are indicated.
 
 ## Models
 
-Any IPV is based on at least two different *structure equation models* (SEMs) of the same item pool.
+IPV distinguishes between **simple models** and **nested models**.
 
-- One *general factor model*. A model that estimates factor loadings for all items on one factor. In this case, all items are associated to one concept (e.g. self-esteem).
-- One *correlated factor model*. A model that splits the overall item pool into sections. Each section is represented by one factor. Factor loadings of items within each section on its representing factors are estimated. In this case, items are associated to one of several more specific concepts (e.g. lack of negative self-esteem). In the context of tests, correlated factors are generally called *facets*. Item assignments to facets of tests are usually fixed, based on extensive analysis. In IPV they are treated as a given.
+**Simple models** consist of a single test and have two levels:
 
-When comparing these two models, it is expected that the correlated factor model produces substantially higher factor loadings, because differences between sections of the item pool can be accounted for. The increase in factor loadings can be interpreted as the extend to which the facet of a test is representing its items better than the overall test score. The increase in factor loadings is measured as [*center distance*](#cd).
+- **test level**: one factor representing the test
+- **facet level**: several correlated factors each representing a facet of the test
 
-As seen in the [example above](#ipv), you can compare more than two models. You can split the overall item pool into sections and split these sections once again. In theory there is no limitation on how often you split your sections into sections, as long as your initial item pool is sufficiently large. In practice however, you will rarely need more than two splits, resulting in three SEMs (example in brackets):
+**Nested models** combine multiple tests and have three levels:
 
-1. A general factor model (overall concept: self-confidence)
-2. A correlated factor model (tests: DSSEI, SMTQ, RSES)
-3. A second correlated factor model (facets of tests: Pb, Ab, So, Ph, Cf, Ct, Cs, Ns, Ps)
+- **global level**: one factor representing the overall concept
+- **test level**: several correlated factors, each representing a test
+- **facet level**: several correlated factors each representing a facet of a test
 
-I call this a *nested* case. The nested case with three models is used when multiple tests were used in conjunction. The overall item pool can then be split into tests, which in turn can be split into facets. This enables test comparizon.
+*Structure equation models (SEMs)* enable us to derive factors from the item pool. To estimate these SEMs, the factor structure of the tests has to be known in advance. In IPV, which item belongs to which facet of which test is set in stone. Therefore, IPV is completely confirmatory. Factor loadings on each level are calculated only for the one factor the item is associated to.
 
-With each split you generate a new comparizon of factor loadings. In the nested case you could compare model 1 and 2 like any other simple case with two models. you could also compare model 2 and 3. As you will see, you can also show both comparizons in one plot. In this case the plots comparing model 2 and 3 are nested within the chart comparing model 1 and 2 factors. You will not need any extra fancy footwork to achieve [this](#ipv):
+- **global level**: one factor is estimated from all items combined (a *general factor model*). In the example above, this factor is *Self-Confidence*, estimated from 44 items.
+- **test level**: for each test, one factor is estimated from the items of that test (a *correlated factor model*). In the example above, these three factors are *DSSEI* (estimated from the 20 *DSSEI* items), *SMTQ* (estimated from the 14 *SMTQ* items), and *RSES* (estimated from the 10 *RSES* items).
+- **facet level**: for each facet, one factor is estimated from the items of that facet (a *correlated factor model*). In the example above, these nine factors are *Ab* (5 items), *Pb* (5 items), *Ph* (5 items), *So* (5 items), *Cf* (6 items), *Cs* (4 items), *Ct* (4 items), *Ns* (5 items), *Ps* (5 items).
 
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", eval=FALSE}
-coord <- coord_nested(self_confidence, subradius = .6)
-sc_nested <- plot_nested(coord,
-                       filename = "self_confidence_nested",
-                       size = 1.5,
-                       colour = "darkblue",
-                       subcolour = "blue")
-
-```
-
-On a semantic level, I think of general and correlated factors as follows: each time you split the item pool, you can use more specific concepts and terms to describe the items. While you might only find a general theme in the overall item pool (e.g. self-confidence), you might find more nuanced descriptions for sections of the item pool (e.g. lack of negative self-esteem). IPV shows the increase in explanatory power of more specific terms.
+It can be expected, that from the global to the facet level, factor loadings of items increase. The reason is, that the test level is more specific than the global level, and the facet level is more specific than the test level. The increase in factor loadings between the test and the facet level can be interpreted as the extend to which the facet of a test (e.g. *Ns*) is representing its items better than the overall test (e.g. *RSES*). The increase in factor loadings between the global and the test level can be interpreted as the extend to which the test (e.g. *RSES*) is representing its items better than the overall concept (e.g. *Self-Confidence*). The increase in factor loadings is measured as center distance.
 
 ## Center Distance {#cd}
 
-**The center distance is the relative increase in the squared factor loading for an item when using the correlated factor model compared to the general factor model. Center distances for factors within a larger model are the mean center distances of their items.**
+An item pool can be represented by a general factor or multiple correlated factors for multiple subpools. **The center distance ($cd$) is the relative increase of the squared factor loading of an item on the correlated factor ($\lambda^2_c$) compared to the general factor ($\lambda^2_g$).** The center distance of a factor is the mean center distance of its items.
 
 \begin{equation}
   cd = \frac{\lambda^2_c}{\lambda^2_g} -1
 \end{equation}
 
-For example, a center distance of 0.5 indicates that the correlated factor explains 50% more of the item variance compared to the general factor. It could be, that the overall test score of a *self-esteem* test explains 20% of the variance of that item (squared factor loading = 0.2), while its facet *lack of negative self-esteem* explains 30% of the variance of that item (squared factor loading = 0.3), resulting in a relative increase of 50%. In IPVs, center distances are displayed as the distance to the center of the chart. In the [example at the top](#ipv), the center distances are displayed as the distance from the relative origin to the edge of the circle representing the factor (thick blue lines). Axis scales are indicated by inconspicuous dotted circles, in the example a center distance of 0.1. But you can also display center distances for single items:
+For example, a center distance of 0.5 indicates that the correlated factor, estimated from a subpool, explains 50% more of the item variance compared to the general factor, estimated from the whole item pool. It could be, that the overall test score of a self-esteem test explains 20% of the variance of that item (squared factor loading = 0.2), while its facet explains 30% of the variance of that item (squared factor loading = 0.3), resulting in a relative increase of 50%. In IPVs, center distances are displayed as the distance to the center of the chart. In the [*example at the top*](#ipv), the center distances are displayed as the distance from the edge of the circles to the center. The center distances are marked by a thick radial line ending at the edge of the circle (red or orange). Axis scales are indicated by gray dotted circles, so values of center distances can be read from the chart. 
+
+But you can also display center distances for single items in an item chart:
 
 ```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-coord <- coord_items(DSSEI)
-DSSEI_items <- plot_items(coord,
-                              filename = "DSSEI_items",
-                              colour = "darkblue",
-                              colour2 = "darkblue")
-DSSEI_items
+coord <- coord_items(SMTQ)
+SMTQ_items <- plot_items(coord,
+                         filename = "DSSEI_items",
+                         colour = "darkblue",
+                         colour2 = "darkblue")
+SMTQ_items
 
 ```
 
-Blue bars represent items, dimensions (=arrows) represent correlated factors. Center distances are displayed as the distance from the origin to the inner edge of the bars. Read values from the grid of concentric circles, where steps of 0.5 are highlighted.
+<span style="color:darkblue">Blue bars</span> represent items, dimensions (=arrows) represent correlated factors. Center distances are displayed as the distance from the origin to the inner edge of the bars. Read values from the grid of concentric circles, where steps of 0.5 are highlighted.
 
 # Workflow
 
-Before starting, calculate the structure equation models (SEMs) using your preferred statistical software. This package uses the factor loadings of these models. Preparing your data for the use of the plot functions is easiest using Microsoft Excel. Afterwards, creating a chart is a two step process using coord_ and plot_ functions. Almost all graphic parameters will work by default. Refine the appearance of the chart by reiteratively changing parameters and inspecting the result.
+Before starting, calculate the structure equation models (SEMs) using your preferred statistical software. This package starts with the factor loadings and latent correlations of these models. To enable feeding in your SEM data, you can use the input_ functions. From there, **creating an IPV is a two step process using coord_ and plot_ functions**. Refine the appearance of your chart by reiteratively changing parameters of both of these functions and inspecting the result.
 
 All charts are optimized for .pdf output, rather than output within R. This has three advantages:
 
-1. You do not need to worry about any graphic settings in R.
-2. You do not need to worry about saving your chart by hand.
+1. You do not need to worry about any graphic settings.
+2. You do not need to worry about saving your chart by hand. The chart is saved to your working directory (e.g. your R project within RStudio) on function call.
 3. The chart is saved vector-based: the sweet magic that smoothes curves and fonts, and prevents your chart to be compromised by resolution or zoom.
 
-When using the graphics output within RStudio, always use the zoom popout from the Plots widget.
+When using the graphics output within RStudio, always use the zoom popout from the Plots widget, otherwise charts are heavily distorted.
 
 ## Data Preparation
 
@@ -124,7 +138,8 @@ Read excel sheets using input_excel:
 
 ```{r,eval=FALSE}
 # simple model
-x <- input_excel(factors = system.file("extdata", "DSSEI.xlsx", package = "IPV", mustWork = TRUE))
+testfile <- system.file("extdata", "DSSEI.xlsx", package = "IPV", mustWork = TRUE)
+x <- input_excel(factors = testfile)
 
 # nested model
 global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
@@ -132,37 +147,27 @@ factors <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork 
              system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
              system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
 x <- input_excel(global = global, factors = factors)
+
+# system.file(..., package = "IPV", ...) reads files that are installed with the IPV package to serve as examples
 ```
 
 
 Note, that center distances are calculated automatically. You will be warned if factor loadings or center distances had to be corrected. Factor loadings below 0.1 will be set to 0.1 and center distances below 0 will be set to 0 to ensure sensible chart margins.
 
-When using **manual data input**, set up the data as in the examples:
+For **manual data input**, a helper function is planned.
 
-```{r}
-SMTQ
-```
+Consider issuing desired input options on [github](https://github.com/NilsPetras/IPV/issues).
 
-This is cumbersome, a helper function is planned.
+## Chart Creation {#fac}
 
-You know your data best. So consider issuing desired input options on [github](https://github.com/NilsPetras/IPV/issues).
+Functions are named according to the chart concept, e.g. coord_items is needed to create an item chart. You will have to use two functions in conjunction. The first function is the *coord function* and prepares coordinates and labels for chart objects. The second function is the *plot function* and creates both a ggplot object and a .pdf file, the actual chart. So for each chart concept there are two functions. Call ?IPV for an overview of the functions.
 
-## Chart Creation
+For example, creating a facet chart works like this:
 
-There are three different chart concepts in this package: *items*, *facets*, and *nested*.
-
-- Item charts show each item for one factor, arranged by facets (see figure below).
-- Facet charts show a factor and its facets.
-- Nested charts show a factor and its facets, which are in turn represented by a facet chart, as seen [above](#ipv).
-
-Functions are named according to the chart concept (e.g. coord_items and coord_facets). In any case you will have to use two functions in conjunction. The first function is the *model function* and prepares coordinates and labels for chart objects. The second function is the *plot function* and creates both a ggplot object and a .pdf file, the actual chart. So for each chart concept there are two functions.
-
-For example, creating an item chart works like this:
-
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-coord <- coord_items(DSSEI)
-DSSEI_items <- plot_items(coord, filename = "DSSEI_items")
-DSSEI_items
+```{r,fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+coord <- coord_facets(SMTQ, subradius = .6)
+SMTQ_facets <- plot_facets(coord, filename = "SMTQ_facets")
+SMTQ_facets
 ```
 
 As you see, almost all function parameters have a default value, so you can start fast and frugal.
@@ -177,12 +182,12 @@ DSSEI_items <- plot_items(coord$items$DSSEI, filename = "DSSEI_items")
 
 ## Design Choices
 
-The vast majority of parameters are size parameters for single elements of the chart, all named size_xyz or width_xyz. Those are pretty straightforward linear scaling sizes defaulting to 1. Some other parameters are self-explanatory. These important parameters are more complex:
+The vast majority of parameters are size parameters for single elements of the chart, all named size_xyz or width_xyz. Those are pretty straightforward: linear scaling sizes defaulting to 1. Some other parameters are self-explanatory. These important parameters are more complex:
 
-- *relative_scaling* (coord_nested) Changes the scaling of the nested facet charts within the overall chart. For a clear chart, you need to hit the sweet spot between a) sizing up the nested charts to make them readable and b) retain clarity about their positions relative to one another by making the global scale relatively large.
-- ***size* (plot_)** scales all elements of the chart. Not all elements are scaled linearly, to produce harmonious results across a variety of sizes ("smart scaling"). **If you were limited to one cosmetic parameter, this would be the one**
-- *colour*, *colour2*, *subcolour* (plot_)For a full set of colours including gray, see [here](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). Colours are used to add visual contrast to important parts of the chart, I recommend using colours whenever possible. In the item chart, use *colour2* and *colour* to make overlapping items more visible.
-- *extra_arrows* (_nested) adds custom correlation arrows. Provide information about latent correlations between facets of different factors to the model function (as below). Set *extra_arrows*=TRUE in plot_nested. Straighten out your chart with the subrotate parameters (coord_nested).
+- **size** scales all elements of the chart. Not all elements are scaled linearly to produce harmonious results across a variety of sizes ("smart scaling"). **If you were limited to one cosmetic parameter, this would be the one**
+- **colour**, **colour2**, **subcolour** [full set of colours including gray](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). Colours are used to add visual contrast to important parts of the chart, I recommend using colours whenever possible. In the item chart, use different tones for *colour2* and *colour* to make overlapping items more visible.
+- **relative_scaling** of the global and the test level in nested charts. For a clear chart, you need to hit the sweet spot between a) sizing up for readability and b) emphasize relative positions by creating gaps.
+- **extra_arrows** adds custom correlation arrows to nested charts. Provide information about latent correlations between facets of different factors to the coord_nested (as below). Set *extra_arrows* = TRUE in plot_nested. Straighten out your chart with the subrotate parameters.
 
 ```{r}
 sc_arrows <- data.frame(V1_factor=rep(NA,3),
@@ -195,5 +200,3 @@ sc_arrows[2,] <- c("DSSEI","Ab","SMTQ","Cs",".81")
 sc_arrows[3,] <- c("SMTQ","Ct","RSES","Ns",".76")
 sc_arrows
 ```
-
-
