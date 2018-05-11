@@ -55,11 +55,11 @@ Example of a nested chart, showing self-confidence measured by three different t
 
 There are three chart types in IPV: **nested charts**, **facet charts**, and **item charts**. Nested charts display <span style="color:red">multiple tests</span> and <span style="color:darkorange">their facets</span>. Facet charts are the interior of the <span style="color:red">big circles</span> in the nested chart above, displaying one test and its facets. Item charts display the items of a test arranged by facets. For examples of [*a facet chart*](#fac) and [*an item chart*](#cd) see below.
 
-In IPV, circles represent factors. Each factor represents a part of the item pool. The gray surrounding circle represents a factor estimated from all items of the item pool. Smaller circles represent factors estimated from subpools. In the example above, the self-confidence of 2272 german speaking participants has been measured using three different tests: the *Domain Specific Self-Esteem Inventory (DSSEI)*, the *Sports Mental Toughness Questionnaire (SMTQ)*, and the *Rosenberg Self-Esteem Scale (RSES)*. So the surrounding gray circle is labeled *Self-Confidence*. In nested charts, there are two splits of the item pool. In the example, the overall item pool is split into <span style="color:red">three subpools</span>, which are split into <span style="color:darkorange">nine subpools</span>. Think of the interior of a circle as a further explanation of what that circle stands for. For example, within the DSSEI circle, its four facets are shown.
+In IPV, circles represent item pools. Smaller circles represent subpools. For example, each red circle encompasses several orange circles. The subpools represented by orange circles within a red circle add up to the item pool represented by that red circle. From each item pool, a factor is extracted, so each factor represents a set of items. The gray surrounding circle represents all items of the entire item pool. In the example above, the self-confidence of 2272 german speaking participants has been measured using three different tests: the *Domain Specific Self-Esteem Inventory (DSSEI)*, the *Sports Mental Toughness Questionnaire (SMTQ)*, and the *Rosenberg Self-Esteem Scale (RSES)*. So the surrounding gray circle is labeled *Self-Confidence*. In nested charts, there are two splits of the item pool. In the example, the overall item pool is split into <span style="color:red">three subpools</span>, which are split into <span style="color:darkorange">nine subpools</span>. Think of the interior of a circle as a further explanation of what that circle stands for. For example, within the DSSEI circle, its four facets are shown as a facet chart.
 
-When splitting an item pool, you get more factors. The more factors are used, the more item variance can be explained. The items are better represented by many factors than by just one. For example, each test represents its items better, than the general *Self-Confidence* factor. The distance of the smaller circles (e.g. *DSSEI*) from the center of the larger circle (*Self-Confidence*) indicates exactly how much more variance is explained. The further away a circle is from the center of its surrounding circle, the more explanatory power it adds. So the *DSSEI* factor represents its 20 items only a little bit better than the general *Self-Confidence* factor. The gain is much more significant for the 10 *RSES* items, indicated by a larger distance of the *RSES* circle from the center. The concept of [*center distance*](#cd) is described in more detail below. In general, the further apart the circles are, the more diverse is the item pool, and the more important is the distinction of subpools.
+When splitting an item pool, there are more specified factors. The more factors are used, the more item variance can be explained. The items are better represented by more specific factors. For example, each test represents its items better, than the general *Self-Confidence* factor. The distance of the smaller circles (e.g. *DSSEI*) from the center of the larger circle (*Self-Confidence*) indicates exactly how much more variance is explained. The further away a circle is from the center of its surrounding circle, the more explanatory power it adds. So the *DSSEI* factor represents its 20 items only a little bit better than the general *Self-Confidence* factor. The gain is much more significant for the 10 *RSES* items, indicated by a larger distance of the *RSES* circle from the center. The concept of [*center distance*](#cd) is described in more detail below. In general, the further apart the circles are, the more diverse is the item pool, and the more important is the distinction of subpools.
 
-The numbers indicate latent correlations. Optionally, arrows are drawn for selected latent correlations between facets of different tests. In this example, those exceeding the latent correlations between the tests are indicated.
+Numbers within circles indicate latent correlations between factors. Optionally, arrows are drawn for selected latent correlations between facets of different tests. In this example, those exceeding the latent correlations between the tests are indicated.
 
 ## Models
 
@@ -67,16 +67,16 @@ IPV distinguishes between **simple models** and **nested models**.
 
 **Simple models** consist of a single test and have two levels:
 
-- **test level**: one factor representing the test
-- **facet level**: several correlated factors each representing a facet of the test
+- **test level**: one factor representing the items of a test
+- **facet level**: several correlated factors each representing the items of a facet of the test
 
 **Nested models** combine multiple tests and have three levels:
 
-- **global level**: one factor representing the overall concept
-- **test level**: several correlated factors, each representing a test
-- **facet level**: several correlated factors each representing a facet of a test
+- **global level**: one factor representing items combined from multiple tests
+- **test level**: several correlated factors, each representing the items of a test
+- **facet level**: several correlated factors each representing the items of a facet of a test
 
-*Structure equation models (SEMs)* enable us to derive factors from the item pool. To estimate these SEMs, the factor structure of the tests has to be known in advance. In IPV, which item belongs to which facet of which test is set in stone. Therefore, IPV is completely confirmatory. Factor loadings on each level are calculated only for the one factor the item is associated to.
+*Structure equation models (SEMs)* enable us to derive factors from an item pool. To estimate these SEMs, the factor structure of the tests has to be known in advance. In other words, which item belongs to which item pool has to be known in advance. Therefore, IPV is completely confirmatory. Factor loadings on each level are calculated only for the one factor the item is associated to.
 
 - **global level**: one factor is estimated from all items combined (a *general factor model*). In the example above, this factor is *Self-Confidence*, estimated from 44 items.
 - **test level**: for each test, one factor is estimated from the items of that test (a *correlated factor model*). In the example above, these three factors are *DSSEI* (estimated from the 20 *DSSEI* items), *SMTQ* (estimated from the 14 *SMTQ* items), and *RSES* (estimated from the 10 *RSES* items).
@@ -106,7 +106,7 @@ SMTQ_items
 
 ```
 
-<span style="color:darkblue">Blue bars</span> represent items, dimensions (=arrows) represent correlated factors. Center distances are displayed as the distance from the origin to the inner edge of the bars. Read values from the grid of concentric circles, where steps of 0.5 are highlighted.
+<span style="color:darkblue">Blue bars</span> represent items. Center distances are displayed as the distance from the origin to the inner edge of the bars. The items are arranged by facets on the radial arrows. Read center distance values from the grid of concentric circles, where steps of 0.5 are highlighted.
 
 # Workflow
 
@@ -160,7 +160,9 @@ Consider issuing desired input options on [github](https://github.com/NilsPetras
 
 ## Chart Creation {#fac}
 
-Functions are named according to the chart concept, e.g. coord_items is needed to create an item chart. You will have to use two functions in conjunction. The first function is the *coord function* and prepares coordinates and labels for chart objects. The second function is the *plot function* and creates both a ggplot object and a .pdf file, the actual chart. So for each chart concept there are two functions. Call ?IPV for an overview of the functions.
+Call ?IPV for an overview of the functions.
+
+Functions are named according to the chart concept, e.g. coord_items is needed to create an item chart. You will have to use two functions in conjunction. The first function is the *coord function* and prepares coordinates and labels for chart objects. The second function is the *plot function* and creates both a ggplot object and a .pdf file, the actual chart. So for each chart concept there are two functions.
 
 For example, creating a facet chart works like this:
 
