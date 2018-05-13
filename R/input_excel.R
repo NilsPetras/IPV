@@ -6,7 +6,7 @@
 #' @param global character; name of the excel file containing factor loadings
 #'   from the global level and the test level, and latent correlations from the
 #'   test level.
-#' @param factors character; name(s) of the excel file(s) containing factor
+#' @param tests character; name(s) of the excel file(s) containing factor
 #'   loadings from the test level and the facet level, and latent correlations
 #'   from the facet level.
 #'
@@ -14,7 +14,7 @@
 #'   example files as templates.
 #'
 #'   The \code{global} argument defaults to NULL. This allows to only use the
-#'   \code{factors} argument, resulting in a simple model with one test and its
+#'   \code{tests} argument, resulting in a simple model with one test and its
 #'   facets.
 #'
 #' @return List containing formatted data including center distances for
@@ -24,23 +24,23 @@
 #' @examples
 #' # read data for a simple model by ignoring the "global" parameter of input_excel
 #' single_file <- system.file("extdata", "DSSEI.xlsx", package = "IPV", mustWork = TRUE)
-#' x <- input_excel(factors = single_file)
+#' x <- input_excel(tests = single_file)
 #'
 #' # read data for a nested model
 #' # note that the data needs to be split into several excel files as in the example
 #' global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
-#' factors <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+#' tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
 #'              system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
 #'              system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
-#' x <- input_excel(global = global,factors = factors)
+#' x <- input_excel(global = global,tests = tests)
 #'
 #' @export
-input_excel <- function(global=NULL,factors){
+input_excel <- function(global=NULL,tests){
 
   # the helper function 'input_excel_factor' does most of the dirty work and
   # applies to both the global and the nested scale
   if(is.null(global)){
-    mydata <- input_excel_factor(factors)
+    mydata <- input_excel_factor(tests)
   }else{
     global_input <- input_excel_factor(global)
     # including the factor name in the item name to distinguish between items
@@ -48,10 +48,10 @@ input_excel <- function(global=NULL,factors){
     global_input$center_distances$item <- paste(global_input$center_distances$subfactor,
                                                 global_input$center_distances$item,
                                                 sep = ".")
-    factors_input <- lapply(factors,input_excel_factor)
-    # naming the lists of the factors, which are list elements of the overall list
-    for(i in 1:global_input$parameters$complexity)names(factors_input)[i] <- levels(factors_input[[c(i,1)]]$factor)
-    mydata <- list(global=global_input,factors=factors_input)
+    tests_input <- lapply(tests,input_excel_factor)
+    # naming the lists of the tests, which are list elements of the overall list
+    for(i in 1:global_input$parameters$complexity)names(tests_input)[i] <- levels(tests_input[[c(i,1)]]$factor)
+    mydata <- list(global=global_input,tests=tests_input)
   }
 
   return(mydata)

@@ -4,14 +4,14 @@
 \alias{input_excel}
 \title{Input Excel}
 \usage{
-input_excel(global = NULL, factors)
+input_excel(global = NULL, tests)
 }
 \arguments{
 \item{global}{character; name of the excel file containing factor loadings
 from the global level and the test level, and latent correlations from the
 test level.}
 
-\item{factors}{character; name(s) of the excel file(s) containing factor
+\item{tests}{character; name(s) of the excel file(s) containing factor
 loadings from the test level and the facet level, and latent correlations
 from the facet level.}
 }
@@ -29,20 +29,20 @@ Note that the excel files need a very specific structure. Use the
   example files as templates.
 
   The \code{global} argument defaults to NULL. This allows to only use the
-  \code{factors} argument, resulting in a simple model with one test and its
+  \code{tests} argument, resulting in a simple model with one test and its
   facets.
 }
 \examples{
 # read data for a simple model by ignoring the "global" parameter of input_excel
 single_file <- system.file("extdata", "DSSEI.xlsx", package = "IPV", mustWork = TRUE)
-x <- input_excel(factors = single_file)
+x <- input_excel(tests = single_file)
 
 # read data for a nested model
 # note that the data needs to be split into several excel files as in the example
 global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
-factors <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
              system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
              system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
-x <- input_excel(global = global,factors = factors)
+x <- input_excel(global = global,tests = tests)
 
 }

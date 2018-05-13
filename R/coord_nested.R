@@ -324,21 +324,53 @@ coord_nested <- function(data, subradius,
     arrows$y1 <- nested$circles[paste(extra_arrows$V1_factor,extra_arrows$V1_subfactor,sep = "."),"y"]
     arrows$x2 <- nested$circles[paste(extra_arrows$V2_factor,extra_arrows$V2_subfactor,sep = "."),"x"]
     arrows$y2 <- nested$circles[paste(extra_arrows$V2_factor,extra_arrows$V2_subfactor,sep = "."),"y"]
+
+    # coordinates of the correlation labels
+    # labels are on the intersection between the arrow and an imaginary line halfway between big circles
+
+    # helper variables
+      # x- and y-distances between the centers of the big and the small circles involved
+    xdist_big <- NULL
+    ydist_big <- NULL
+    for(i in 1:n){
+      xdist_big[i] <- cart_circles[extra_arrows$V2_factor[i],"x"]-cart_circles[extra_arrows$V1_factor[i],"x"]
+      ydist_big[i] <- cart_circles[extra_arrows$V2_factor[i],"y"]-cart_circles[extra_arrows$V1_factor[i],"y"]
+    }
+    xdist_small <- arrows$x2-arrows$x1
+    ydist_small <- arrows$y2-arrows$y1
+      # total distances between the centers of the big and the small circles involved
+    dist_big <- sqrt(xdist_big^2+ydist_big^2)
+    dist_small <- sqrt(xdist_small^2+ydist_small^2)
+      # points halfway between the big circles
+    halfwaypoint <- data.frame(x=rep(NA,n),y=rep(NA,n))
+    for(i in 1:n){
+        halfwaypoint$x[i] <- (cart_circles[extra_arrows$V1_factor[i],"x"]+cart_circles[extra_arrows$V2_factor[i],"x"])/2+xdist_big[i]/dist_big[i]/2*(cart_circles[extra_arrows$V1_factor[i],"radius"]-cart_circles[extra_arrows$V2_factor[i],"radius"])
+        halfwaypoint$y[i] <- (cart_circles[extra_arrows$V1_factor[i],"y"]+cart_circles[extra_arrows$V2_factor[i],"y"])/2+ydist_big[i]/dist_big[i]/2*(cart_circles[extra_arrows$V1_factor[i],"radius"]-cart_circles[extra_arrows$V2_factor[i],"radius"])
+    }
+
+    # label "moves" a distance of "d" from the center of the first small circle towards the other small circle
+    d <- NULL
+    for(i in 1:n){
+      d[i] <- dist_small[i]*(((arrows$x1[i]-halfwaypoint$x[i])*-xdist_big[i])-((arrows$y1[i]-halfwaypoint$y[i])*ydist_big[i]))/(ydist_small[i]*ydist_big[i]-xdist_small[i]*-xdist_big[i])
+    }
+    # placing the labels a distance of "d" away from the center of the first circle alongside the arrow
+    arrows$xlabel <- arrows$x1+d/dist_small*xdist_small
+    arrows$ylabel <- arrows$y1+d/dist_small*ydist_small
+
+    # letting the correlation labels dodge their arrow by 0.1 sideways
+    arrows$xlabel <- arrows$xlabel+.1/dist_small*ydist_small
+    arrows$ylabel <- arrows$ylabel+.1/dist_small*-xdist_small
+
     # shift arrow ends from center to edge of facet circles
-    arrows$x1new <- arrows$x1+subradius/sqrt((arrows$x2-arrows$x1)^2+(arrows$y2-arrows$y1)^2)*(arrows$x2-arrows$x1)
-    arrows$x2new <- arrows$x2+subradius/sqrt((arrows$x2-arrows$x1)^2+(arrows$y2-arrows$y1)^2)*(arrows$x1-arrows$x2)
-    arrows$y1new <- arrows$y1+subradius/sqrt((arrows$x2-arrows$x1)^2+(arrows$y2-arrows$y1)^2)*(arrows$y2-arrows$y1)
-    arrows$y2new <- arrows$y2+subradius/sqrt((arrows$x2-arrows$x1)^2+(arrows$y2-arrows$y1)^2)*(arrows$y1-arrows$y2)
+    arrows$x1new <- arrows$x1+subradius/dist_small*xdist_small
+    arrows$x2new <- arrows$x2+subradius/dist_small*(-xdist_small)
+    arrows$y1new <- arrows$y1+subradius/dist_small*ydist_small
+    arrows$y2new <- arrows$y2+subradius/dist_small*(-ydist_small)
     arrows$x1 <- arrows$x1new
     arrows$x2 <- arrows$x2new
     arrows$y1 <- arrows$y1new
     arrows$y2 <- arrows$y2new
-    # coordinates of the correlation labels
-    arrows$xlabel <- (arrows$x1+arrows$x2)/2
-    arrows$ylabel <- (arrows$y1+arrows$y2)/2
-    # letting the correlation labels dodge their arrow by 0.1 sideways
-    arrows$xlabel <- arrows$xlabel+.1/sqrt((arrows$x2-arrows$x1)^2+(arrows$y2-arrows$y1)^2)*(arrows$y2-arrows$y1)
-    arrows$ylabel <- arrows$ylabel+.1/sqrt((arrows$x2-arrows$x1)^2+(arrows$y2-arrows$y1)^2)*(arrows$x1-arrows$x2)
+
     arrows[8:11] <- list(NULL)
     rm(n)
   }
@@ -365,7 +397,8 @@ coord_nested <- function(data, subradius,
                       nested = nested,
                       relative_scaling = relative_scaling,
                       cor_spacing = cor_spacing,
-                      arrows = arrows)
+                      arrows = arrows
+                 )
 
   coor <- list(factor=factorcoors,global=global)
   if(items==T)coor$items <- itemcoors

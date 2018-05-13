@@ -41,10 +41,10 @@ coord <- coord_nested(self_confidence,
                       rotate_radians = 4/3*pi,
                       subrotate_radians = c(pi/2,pi/2,0))
 sc_nested <- plot_nested(coord,
-                       filename = "self_confidence_nested",
+                       filesave = FALSE,
                        size = 1.5,
-                       colour = "red",
-                       subcolour = "darkorange",
+                       colour_tests = "red",
+                       colour_facets = "darkorange",
                        extra_arrows = TRUE)
 sc_nested
 
@@ -99,7 +99,7 @@ But you can also display center distances for single items in an item chart:
 ```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
 coord <- coord_items(SMTQ)
 SMTQ_items <- plot_items(coord,
-                         filename = "DSSEI_items",
+                         filesave = FALSE,
                          colour = "darkblue",
                          colour2 = "darkblue")
 SMTQ_items
@@ -127,6 +127,8 @@ Currently there are two ways to prepare your data: excel sheets or manual input 
 When using data **input from excel**, you need to set up the cells matching the example files:
 ```{r, eval=FALSE}
 system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV")
+
+# system.file(..., package = "IPV", ...) reads files that are installed with the IPV package to serve as examples
 ```
 The easiest way is to use one of the files as a template by copying it and replacing the values.
 
@@ -139,14 +141,14 @@ Read excel sheets using input_excel:
 ```{r,eval=FALSE}
 # simple model
 testfile <- system.file("extdata", "DSSEI.xlsx", package = "IPV", mustWork = TRUE)
-x <- input_excel(factors = testfile)
+x <- input_excel(tests = testfile)
 
 # nested model
 global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
-factors <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
              system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
              system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
-x <- input_excel(global = global, factors = factors)
+x <- input_excel(global = global, tests = tests)
 
 # system.file(..., package = "IPV", ...) reads files that are installed with the IPV package to serve as examples
 ```
@@ -168,26 +170,27 @@ For example, creating a facet chart works like this:
 
 ```{r,fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
 coord <- coord_facets(SMTQ, subradius = .6)
-SMTQ_facets <- plot_facets(coord, filename = "SMTQ_facets")
+SMTQ_facets <- plot_facets(coord, filesave = FALSE)
 SMTQ_facets
 ```
 
-As you see, almost all function parameters have a default value, so you can start fast and frugal.
+As you can see, almost all function parameters have a default value, so you can start fast and frugal. The chart is saved to a nameless .pdf file in your working directory by default. Provide a filename using the filename parameter. You can suppress file creation using the filesave parameter.
 
-There is a useful shortcut if you have a nested model. The function coord_nested always also generates all you need for facet charts of all correlated factors. If you set items = TRUE, you also get all you need for the item charts in one go:
+There is a useful shortcut for nested models. The function coord_nested always also generates coordinates for facet charts. If you set items = TRUE, you also get coordinates for the item charts in one go:
 
 ```{r,eval=FALSE}
 coord <- coord_nested(self_confidence, subradius = .6, items = TRUE)
-DSSEI_items <- plot_items(coord$items$DSSEI, filename = "DSSEI_items")
+DSSEI_items <- plot_items(coord$items$DSSEI, filesave = FALSE)
 
 ```
+Note that item chart coordinates are living in coord\$items and facet chart coordinates in coord\$factors
 
 ## Design Choices
 
 The vast majority of parameters are size parameters for single elements of the chart, all named size_xyz or width_xyz. Those are pretty straightforward: linear scaling sizes defaulting to 1. Some other parameters are self-explanatory. These important parameters are more complex:
 
 - **size** scales all elements of the chart. Not all elements are scaled linearly to produce harmonious results across a variety of sizes ("smart scaling"). **If you were limited to one cosmetic parameter, this would be the one**
-- **colour**, **colour2**, **subcolour** [full set of colours including gray](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). Colours are used to add visual contrast to important parts of the chart, I recommend using colours whenever possible. In the item chart, use different tones for *colour2* and *colour* to make overlapping items more visible.
+- **colour**, **colour2**, **colour_tests**,**colour_facets** [full set of colours including gray](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). Colours are used to add visual contrast to important parts of the chart, I recommend using colours whenever possible. In the item chart, use different tones for *colour2* and *colour* to make overlapping items more visible.
 - **relative_scaling** of the global and the test level in nested charts. For a clear chart, you need to hit the sweet spot between a) sizing up for readability and b) emphasize relative positions by creating gaps.
 - **extra_arrows** adds custom correlation arrows to nested charts. Provide information about latent correlations between facets of different factors to the coord_nested (as below). Set *extra_arrows* = TRUE in plot_nested. Straighten out your chart with the subrotate parameters.
 

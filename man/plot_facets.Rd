@@ -4,10 +4,10 @@
 \alias{plot_facets}
 \title{Plot Facets}
 \usage{
-plot_facets(coor, size = 1, filename, width = 10, height = 10,
-  colour = "black", cor_labels = TRUE, tick = 0.1, font = "sans",
-  size_title = 1, size_subfactor_labels = 1, width_axes = 1,
-  width_circles = 1, size_tick = 1, size_tick_label = 1,
+plot_facets(coor, size = 1, filesave = TRUE, filename = NULL,
+  filewidth = 10, fileheight = 10, colour = "black", cor_labels = TRUE,
+  tick = 0.1, font = "sans", size_test_label = 1, size_facet_labels = 1,
+  width_axes = 1, width_circles = 1, size_tick = 1, size_tick_label = 1,
   size_cor_labels = 1, size_center_dot = 1)
 }
 \arguments{
@@ -16,12 +16,15 @@ plot_facets(coor, size = 1, filename, width = 10, height = 10,
 
 \item{size}{integer; smartly scaled size of chart objects.}
 
+\item{filesave}{logical, if TRUE, saves the chart to the working directory as
+[filename].pdf}
+
 \item{filename}{character string; name of the .pdf file the chart is written
-to; filename extension added automatically.}
+to; filename extension added automatically: [filename].pdf.}
 
-\item{width}{integer; width of the .pdf file; defaults to 10, dpi is 3000.}
+\item{filewidth}{integer; width of the .pdf file; defaults to 10, dpi is 3000.}
 
-\item{height}{integer; height of the .pdf file; defaults to 10, dpi is 3000.}
+\item{fileheight}{integer; height of the .pdf file; defaults to 10, dpi is 3000.}
 
 \item{colour}{character; name of the accent colour.}
 
@@ -33,10 +36,10 @@ facets as text.}
 \item{font}{character; text font; defaults to 'sans' (use extrafonts to
 install additional fonts).}
 
-\item{size_title}{integer; font size of the test label (relative to
+\item{size_test_label}{integer; font size of the test label (relative to
 default).}
 
-\item{size_subfactor_labels}{integer; font size of the facet labels
+\item{size_facet_labels}{integer; font size of the facet labels
 (relative to default).}
 
 \item{width_axes}{integer; width of the radial axis lines (relative to

@@ -4,11 +4,12 @@
 \alias{plot_nested}
 \title{Plot Nested}
 \usage{
-plot_nested(coor, size = 1, filename, width = 10, height = 10,
-  cor_labels = TRUE, subfactor_cor_labels = TRUE, colour = "black",
-  subcolour = "black", font = "sans", extra_arrows = FALSE, tick = 0.1,
-  size_title = 1, size_subfactor_labels = 1,
-  size_subfactor_labels_inner = 1, width_axes = 1, width_axes_inner = 1,
+plot_nested(coor, size = 1, filesave = TRUE, filename = NULL,
+  filewidth = 10, fileheight = 10, cor_labels_tests = TRUE,
+  cor_labels_facets = TRUE, colour_tests = "black",
+  colour_facets = "black", font = "sans", extra_arrows = FALSE,
+  tick = 0.1, size_title = 1, size_test_labels = 1,
+  size_facet_labels = 1, width_axes = 1, width_axes_inner = 1,
   width_circles = 1, width_circles_inner = 1, size_tick = 1,
   size_tick_inner = 1, size_tick_label = 1, size_cor_labels = 1,
   size_cor_labels_inner = 1, size_center_dot = 1,
@@ -20,22 +21,25 @@ plot_nested(coor, size = 1, filename, width = 10, height = 10,
 
 \item{size}{integer; smartly scaled size of chart objects.}
 
+\item{filesave}{logical, if TRUE, saves the chart to the working directory as
+[filename].pdf}
+
 \item{filename}{character string; name of the .pdf file the chart is written
-to; filename extension adds automatically.}
+to; filename extension added automatically: [filename].pdf.}
 
-\item{width}{integer; width of the .pdf file; defaults to 10, dpi is 3000.}
+\item{filewidth}{integer; width of the .pdf file; defaults to 10, dpi is 3000.}
 
-\item{height}{integer; height of the .pdf file; defaults to 10, dpi is 3000.}
+\item{fileheight}{integer; height of the .pdf file; defaults to 10, dpi is 3000.}
 
-\item{cor_labels}{logical; if \code{TRUE}, draws latent correlations between
+\item{cor_labels_tests}{logical; if \code{TRUE}, draws latent correlations between
 tests as text.}
 
-\item{subfactor_cor_labels}{logical; if \code{TRUE}, draws latent
+\item{cor_labels_facets}{logical; if \code{TRUE}, draws latent
 correlations between facets as text.}
 
-\item{colour}{character; name of the global accent colour.}
+\item{colour_tests}{character; name of the global accent colour.}
 
-\item{subcolour}{character; name of the nested accent colour}
+\item{colour_facets}{character; name of the nested accent colour}
 
 \item{font}{character; text font; defaults to 'sans' (use extrafonts to
 install additional fonts).}
@@ -48,10 +52,10 @@ facets of different tests.}
 \item{size_title}{integer; font size of the global label (relative to
 default).}
 
-\item{size_subfactor_labels}{integer; font size of the test labels (relative
+\item{size_test_labels}{integer; font size of the test labels (relative
 to default).}
 
-\item{size_subfactor_labels_inner}{integer; font size of the facet labels
+\item{size_facet_labels}{integer; font size of the facet labels
 (relative to default).}
 
 \item{width_axes}{integer; width of the global radial axis lines (relative to
