@@ -7,12 +7,12 @@
 plot_nested(coor, size = 1, filesave = TRUE, filename = NULL,
   filewidth = 10, fileheight = 10, cor_labels_tests = TRUE,
   cor_labels_facets = TRUE, colour_tests = "black",
-  colour_facets = "black", font = "sans", extra_arrows = FALSE,
-  tick = 0.1, size_title = 1, size_test_labels = 1,
-  size_facet_labels = 1, width_axes = 1, width_axes_inner = 1,
-  width_circles = 1, width_circles_inner = 1, size_tick = 1,
-  size_tick_inner = 1, size_tick_label = 1, size_cor_labels = 1,
-  size_cor_labels_inner = 1, size_center_dot = 1,
+  colour_facets = "black", fade = 90, font = "sans",
+  extra_arrows = FALSE, tick = 0.1, size_title = 1,
+  size_test_labels = 1, size_facet_labels = 1, width_axes = 1,
+  width_axes_inner = 1, width_circles = 1, width_circles_inner = 1,
+  size_tick = 1, size_tick_inner = 1, size_tick_label = 1,
+  size_cor_labels = 1, size_cor_labels_inner = 1, size_center_dot = 1,
   size_center_dot_inner = 1, size_extra_arrows = 1,
   size_extra_arrow_heads = 1, size_extra_labels = 1)
 }
@@ -39,7 +39,10 @@ correlations between facets as text.}
 
 \item{colour_tests}{character; name of the global accent colour.}
 
-\item{colour_facets}{character; name of the nested accent colour}
+\item{colour_facets}{character; name of the nested accent colour.}
+
+\item{fade}{integer; brightness of the gray tones between 0 (black) and 100
+(white) in steps of 1; defaults to 90.}
 
 \item{font}{character; text font; defaults to 'sans' (use extrafonts to
 install additional fonts).}

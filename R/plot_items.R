@@ -11,12 +11,14 @@
 #'   to; filename extension added automatically: [filename].pdf.
 #' @param filewidth integer; width of the .pdf document; defaults to 10; dpi is
 #'   3000.
-#' @param fileheight integer; height of the .pdf document; defaults to 10, dpi is
-#'   3000.
+#' @param fileheight integer; height of the .pdf document; defaults to 10, dpi
+#'   is 3000.
 #' @param font character; text font; defaults to 'sans' (use extrafonts to
 #'   install additional fonts).
 #' @param colour character; name of the first accent colour.
 #' @param colour2 character; name of the second accent colour.
+#' @param fade integer; brightness of minor grid lines, gray tones between 0
+#'   (black) and 100 (white) in steps of 1; defaults to 90.
 #' @param tick_label logical; if \code{TRUE}, draws a text label for the axis
 #'   tick
 #' @param size_title integer; font size of the test label (relative to default).
@@ -54,7 +56,7 @@
 #' @export
 plot_items <- function(coor,size=1,filesave=TRUE,filename=NULL,
                             filewidth=10,fileheight=10,font="sans",
-                            colour="black",colour2="black",tick_label=TRUE,
+                            colour="black",colour2="black",fade=90,tick_label=TRUE,
                             size_title=1,size_axis_labels=1,width_axes=1,size_arrow_heads=1,width_items=1,width_grid=1,size_tick_label=1,size_center_dot=1){
 
   # empty filename warning
@@ -67,7 +69,7 @@ plot_items <- function(coor,size=1,filesave=TRUE,filename=NULL,
     ggplot2::theme_minimal()+
     ggplot2::aes()+
     ggplot2::geom_point(ggplot2::aes(x=0,y=0),size=.5*size*size_center_dot)+
-    ggforce::geom_circle(data = coor$maingrid[coor$maingrid$alpha==.5,],ggplot2::aes(x0=x,y0=y,r=r),col = "gray90",linetype = "dotted",size=min(c(size,.75))*width_grid)+
+    ggforce::geom_circle(data = coor$maingrid[coor$maingrid$alpha==.5,],ggplot2::aes(x0=x,y0=y,r=r),col = paste("gray",fade,sep = ""),linetype = "dotted",size=min(c(size,.75))*width_grid)+
     ggforce::geom_circle(data = coor$maingrid[coor$maingrid$alpha==1,],ggplot2::aes(x0=x,y0=y,r=r),col = "gray20",linetype = "dotted",size=min(c(size,.75))*width_grid)+
     ggplot2::geom_segment(data = coor$cart_axes,ggplot2::aes(x=0,y=0,xend=x,yend=y),arrow = ggplot2::arrow(ends = "last",length = ggplot2::unit(.02*sqrt(size)*size_arrow_heads,"native"),type = "closed"),size=.5*sqrt(size)*width_axes)+
     ggplot2::geom_segment(data = coor$items[coor$items$width==max(coor$items$width),],ggplot2::aes(x=x1,y=y1,xend=x2,yend=y2),size=1,col = colour2)+

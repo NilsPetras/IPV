@@ -9,9 +9,13 @@
 #'   [filename].pdf
 #' @param filename character string; name of the .pdf file the chart is written
 #'   to; filename extension added automatically: [filename].pdf.
-#' @param filewidth integer; width of the .pdf file; defaults to 10, dpi is 3000.
-#' @param fileheight integer; height of the .pdf file; defaults to 10, dpi is 3000.
+#' @param filewidth integer; width of the .pdf file; defaults to 10, dpi is
+#'   3000.
+#' @param fileheight integer; height of the .pdf file; defaults to 10, dpi is
+#'   3000.
 #' @param colour character; name of the accent colour.
+#' @param fade integer; brightness of the gray tones between 0 (black) and 100
+#'   (white) in steps of 1; defaults to 90.
 #' @param cor_labels logical; if \code{TRUE}, draws latent correlations between
 #'   facets as text.
 #' @param tick numeric; axis tick position; defaults to .1.
@@ -19,8 +23,8 @@
 #'   install additional fonts).
 #' @param size_test_label integer; font size of the test label (relative to
 #'   default).
-#' @param size_facet_labels integer; font size of the facet labels
-#'   (relative to default).
+#' @param size_facet_labels integer; font size of the facet labels (relative to
+#'   default).
 #' @param width_axes integer; width of the radial axis lines (relative to
 #'   default).
 #' @param width_circles integer; width of the circle outlines (relative to
@@ -52,7 +56,7 @@
 #'
 #' @export
 plot_facets <- function(coor,size=1,filesave=TRUE,filename=NULL,
-                      filewidth=10,fileheight=10,colour="black",cor_labels=TRUE,tick=.1,font="sans",
+                      filewidth=10,fileheight=10,colour="black",fade=90,cor_labels=TRUE,tick=.1,font="sans",
                       size_test_label=1,size_facet_labels=1,width_axes=1,width_circles=1,size_tick=1,size_tick_label=1,size_cor_labels=1,size_center_dot=1){
 
   # empty filename warning
@@ -68,13 +72,13 @@ plot_facets <- function(coor,size=1,filesave=TRUE,filename=NULL,
   myfbrv <- ggplot2::ggplot(coor$cart_circles)+
     ggplot2::geom_point(ggplot2::aes(x=0,y=0),size=5*sqrt(size)*size_center_dot)+
     ggforce::geom_circle(ggplot2::aes(x0=0,y0=0,r=tick),linetype = "dotted",size=.5*min(c(size,.5))*size_tick)+
-    ggplot2::geom_segment(data = coor$cart_axes,ggplot2::aes(x=x2,y=y2,xend=x3,yend=y3),size=size*width_axes,color="gray90")+
+    ggplot2::geom_segment(data = coor$cart_axes,ggplot2::aes(x=x2,y=y2,xend=x3,yend=y3),size=size*width_axes,color=paste("gray",fade,sep = ""))+
     ggplot2::geom_text(ggplot2::aes(x,y,label = row.names(coor$cart_circles)),family = font,size = 8*sqrt(size)*size_facet_labels)+
     ggplot2::coord_fixed()+
     ggplot2::theme_minimal()+
     ggplot2::aes()+
     ggplot2::geom_text(data=coor$axis_tick,ggplot2::aes(x=x*tick+sign(x)*.02,y=y*tick+sign(y)*.02,label=as.character(tick)),angle = (coor$axis_tick$phi-pi/48-pi/2)*180/pi,family = font,size = 2*sqrt(size)*size_tick_label)+
-    ggforce::geom_circle(data=coor$cart_circles[1,],ggplot2::aes(x0=x,y0=y,r=radius),size=size*width_axes,color="gray90")+
+    ggforce::geom_circle(data=coor$cart_circles[1,],ggplot2::aes(x0=x,y0=y,r=radius),size=size*width_axes,color=paste("gray",fade,sep = ""))+
     ggforce::geom_circle(data=coor$cart_circles[-1,],ggplot2::aes(x0=x,y0=y,r=radius),size=size*width_circles,color=colour)+
     ggplot2::geom_segment(data = coor$cart_axes,ggplot2::aes(x=x0,y=y0,xend=x1,yend=y1),size=(sqrt(size)+size)*width_axes,col=colour)+
     ggplot2::geom_text(data = coor$factor_label,ggplot2::aes(x=x,y=y,label=label),family = font,size = 8*sqrt(size)*size_test_label,fontface="bold")+

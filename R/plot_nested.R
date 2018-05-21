@@ -16,7 +16,9 @@
 #' @param cor_labels_facets logical; if \code{TRUE}, draws latent
 #'   correlations between facets as text.
 #' @param colour_tests character; name of the global accent colour.
-#' @param colour_facets character; name of the nested accent colour
+#' @param colour_facets character; name of the nested accent colour.
+#' @param fade integer; brightness of the gray tones between 0 (black) and 100
+#'   (white) in steps of 1; defaults to 90.
 #' @param extra_arrows logical; if \code{TRUE}, draws correlation arrows between
 #'   facets of different tests.
 #' @param tick numeric; axis tick position; defaults to .1.
@@ -93,7 +95,7 @@
 #' @export
 plot_nested <- function(coor, size = 1, filesave=TRUE, filename=NULL, filewidth = 10, fileheight = 10,
                       cor_labels_tests = TRUE, cor_labels_facets = TRUE,
-                      colour_tests = "black", colour_facets = "black", font = "sans",
+                      colour_tests = "black", colour_facets = "black", fade = 90, font = "sans",
                       extra_arrows = FALSE, tick = .1,
                       size_title = 1, size_test_labels = 1, size_facet_labels = 1,
                       width_axes = 1, width_axes_inner = 1, width_circles = 1, width_circles_inner = 1,
@@ -126,10 +128,10 @@ plot_nested <- function(coor, size = 1, filesave=TRUE, filename=NULL, filewidth 
     ggplot2::aes()+
     ggplot2::geom_text(data=coor$global$axis_tick,ggplot2::aes(x=coor$global$relative_scaling*(x*tick+sign(x)*.02),y=coor$global$relative_scaling*(y*tick+sign(y)*.02),label=as.character(tick)),angle = (coor$global$axis_tick$phi-pi/48-pi/2)*180/pi,family = font,size = 1.95*sqrt(size)*size_tick_label)+
     ggforce::geom_circle(ggplot2::aes(x0=0,y0=0,r=coor$global$relative_scaling*tick),linetype = "dotted",size=coor$global$relative_scaling*.5*min(c(size,.25))*size_tick)+
-    ggplot2::geom_segment(data = coor$global$cart_axes,ggplot2::aes(x=x2,y=y2,xend=x3,yend=y3),size=.5*size*width_axes,color="gray90")+
-    ggforce::geom_circle(data=coor$global$cart_circles[1,],ggplot2::aes(x0=x,y0=y,r=radius),size=.5*size*width_axes,color="gray90")+
+    ggplot2::geom_segment(data = coor$global$cart_axes,ggplot2::aes(x=x2,y=y2,xend=x3,yend=y3),size=.5*size*width_axes,color=paste("gray",fade,sep = ""))+
+    ggforce::geom_circle(data=coor$global$cart_circles[1,],ggplot2::aes(x0=x,y0=y,r=radius),size=.5*size*width_axes,color=paste("gray",fade,sep = ""))+
     ggplot2::geom_point(ggplot2::aes(x=0,y=0),size=size*size_center_dot)+
-    ggplot2::geom_segment(data = coor$global$nested$axes,ggplot2::aes(x=x2,y=y2,xend=x3,yend=y3),size=.3*size*width_axes_inner,color="gray90")+
+    ggplot2::geom_segment(data = coor$global$nested$axes,ggplot2::aes(x=x2,y=y2,xend=x3,yend=y3),size=.3*size*width_axes_inner,color=paste("gray",fade,sep = ""))+
     ggplot2::geom_point(data=coor$global$cart_circles,ggplot2::aes(x=x,y=y),size=.5*size*size_center_dot_inner)+
     ggforce::geom_circle(data=coor$global$cart_circles[-1,],ggplot2::aes(x0=x,y0=y,r=radius),size=.5*size*width_circles,color=colour_tests)+
     ggforce::geom_circle(data=coor$global$cart_circles[-1,],ggplot2::aes(x0=x,y0=y,r=tick),size=0.5*min(c(size,.25))*size_tick_inner,linetype = "dotted")+
@@ -149,7 +151,7 @@ plot_nested <- function(coor, size = 1, filesave=TRUE, filename=NULL, filewidth 
     ggplot2::geom_text(data = subfactor_inner_cors,ggplot2::aes(x=x,y=y,label=label),family = font,size = 2.25*sqrt(size)*size_cor_labels_inner)}
 
   # adding cor labels (optional)
-  if(!is.null(inner_cors)){globalplot$layers <- c(ggforce::geom_circle(data=coor$global$cart_inner_ring,ggplot2::aes(x0=x,y0=y,r=radius),size=.3*size*width_axes_inner,color="gray90"),globalplot$layers)
+  if(!is.null(inner_cors)){globalplot$layers <- c(ggforce::geom_circle(data=coor$global$cart_inner_ring,ggplot2::aes(x0=x,y0=y,r=radius),size=.3*size*width_axes_inner,color=paste("gray",fade,sep = "")),globalplot$layers)
     globalplot <-  globalplot + ggplot2::geom_text(data = inner_cors,ggplot2::aes(x=x,y=y,label=label),family = font,size = coor$global$cor_spacing*6.75*sqrt(size)*size_cor_labels,fontface="bold")}
 
   # adding extra arrows (optional)

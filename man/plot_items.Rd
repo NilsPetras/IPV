@@ -6,7 +6,7 @@
 \usage{
 plot_items(coor, size = 1, filesave = TRUE, filename = NULL,
   filewidth = 10, fileheight = 10, font = "sans", colour = "black",
-  colour2 = "black", tick_label = TRUE, size_title = 1,
+  colour2 = "black", fade = 90, tick_label = TRUE, size_title = 1,
   size_axis_labels = 1, width_axes = 1, size_arrow_heads = 1,
   width_items = 1, width_grid = 1, size_tick_label = 1,
   size_center_dot = 1)
@@ -26,8 +26,8 @@ to; filename extension added automatically: [filename].pdf.}
 \item{filewidth}{integer; width of the .pdf document; defaults to 10; dpi is
 3000.}
 
-\item{fileheight}{integer; height of the .pdf document; defaults to 10, dpi is
-3000.}
+\item{fileheight}{integer; height of the .pdf document; defaults to 10, dpi
+is 3000.}
 
 \item{font}{character; text font; defaults to 'sans' (use extrafonts to
 install additional fonts).}
@@ -35,6 +35,9 @@ install additional fonts).}
 \item{colour}{character; name of the first accent colour.}
 
 \item{colour2}{character; name of the second accent colour.}
+
+\item{fade}{integer; brightness of minor grid lines, gray tones between 0
+(black) and 100 (white) in steps of 1; defaults to 90.}
 
 \item{tick_label}{logical; if \code{TRUE}, draws a text label for the axis
 tick}
