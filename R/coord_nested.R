@@ -97,30 +97,30 @@ coord_nested <- function(data, subradius,
 
   # with one value for all subrotations
     if(length(subrotate)==1){
-      factorcoors <- lapply(X = data$factors, FUN = coord_facets, subradius = subradius,
+      factorcoords <- lapply(X = data$factors, FUN = coord_facets, subradius = subradius,
                             rotate_radians = subrotate)
-      names(factorcoors) <- names(data$factors)
+      names(factorcoords) <- names(data$factors)
     }
     if(length(subrotate)==1 & items==TRUE){
-      itemcoors <- lapply(data$factors, coord_items, rotate_radians = subrotate)
-      names(itemcoors) <- names(data$factors)
+      itemcoords <- lapply(data$factors, coord_items, rotate_radians = subrotate)
+      names(itemcoords) <- names(data$factors)
     }
 
   # with a vector of values for subrotations
   if(length(subrotate)==length(data$factors)){
-    factorcoors <- list()
+    factorcoords <- list()
     for(i in 1:length(data$factors)){
-      factorcoors[[i]] <- coord_facets(data$factors[[i]], subradius = subradius,
+      factorcoords[[i]] <- coord_facets(data$factors[[i]], subradius = subradius,
                                        rotate_radians = subrotate[i])
     }
-    names(factorcoors) <- names(data$factors)
+    names(factorcoords) <- names(data$factors)
   }
   if(length(subrotate)==length(data$factors) & items==TRUE){
-    itemcoors <- list()
+    itemcoords <- list()
     for(i in 1:length(data$factors)){
-      itemcoors[[i]] <- coord_items(data$factors[[i]], rotate_radians = subrotate[i])
+      itemcoords[[i]] <- coord_items(data$factors[[i]], rotate_radians = subrotate[i])
     }
-    names(itemcoors) <- names(data$factors)
+    names(itemcoords) <- names(data$factors)
   }
 
 
@@ -143,7 +143,7 @@ coord_nested <- function(data, subradius,
     polcircs <- get(x = "pol_circles",envir = as.environment(x))
     polcircs <- polcircs[1,"radius"]
   }
-  circsize <- unlist(lapply(factorcoors,getcircsize))
+  circsize <- unlist(lapply(factorcoords,getcircsize))
   circsize <- circsize+cors*cor_spacing
 
   # global mean center distances
@@ -288,7 +288,7 @@ coord_nested <- function(data, subradius,
   # shifting the coordinates from coord_facets to the correct place
   # subcircles is a list of lists, one for each factor, with the shifted coordinates for that factor's nested chart objects
   subcircles <- list()
-  for(i in 1:cplx) subcircles[[nam[i]]] <- shift_factor(factorcoors[[nam[i]]],cart_circles[nam[i],"x"],cart_circles[nam[i],"y"])
+  for(i in 1:cplx) subcircles[[nam[i]]] <- shift_factor(factorcoords[[nam[i]]],cart_circles[nam[i],"x"],cart_circles[nam[i],"y"])
 
   # coordinates of facet circles
   # note that the coordinates of the following nested chart objects get bunched together across factors
@@ -400,8 +400,8 @@ coord_nested <- function(data, subradius,
                       arrows = arrows
                  )
 
-  coor <- list(factor=factorcoors,global=global)
-  if(items==T)coor$items <- itemcoors
+  coord <- list(factor=factorcoords,global=global)
+  if(items==T)coord$items <- itemcoords
 
-  return(coor)
+  return(coord)
 }

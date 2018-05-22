@@ -148,7 +148,7 @@ coord_facets <- function(data, subradius, rotate_radians = 0, rotate_degrees = 0
     ## return
 
   # returns a list of all dataframes above containing the coordinates of the plot objects
-  coor <- list(pol_circles = pol_circles,
+  coord <- list(pol_circles = pol_circles,
                cart_circles = cart_circles,
                pol_axes = pol_axes,
                cart_axes = cart_axes,
@@ -156,5 +156,5 @@ coord_facets <- function(data, subradius, rotate_radians = 0, rotate_degrees = 0
                factor_label = factor_label,
                inner_cors = inner_cors)
 
-  return(coor)
+  return(coord)
 }

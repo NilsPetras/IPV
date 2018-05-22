@@ -116,12 +116,12 @@ coord_items <- function(data, rotate_radians = 0, rotate_degrees = 0){
     ## return
 
   # returns a list of all dataframes above containing the coordinates of the chart objects
-  coor <- list(pol_axes = pol_axes,
+  coord <- list(pol_axes = pol_axes,
                cart_axes = cart_axes,
                items = items,
                maingrid = maingrid,
                axis_tick = axis_tick,
                factor_label = factor_label)
 
-  return(coor)
+  return(coord)
 }

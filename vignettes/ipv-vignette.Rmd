@@ -41,7 +41,7 @@ coord <- coord_nested(self_confidence,
                       rotate_radians = 4/3*pi,
                       subrotate_radians = c(pi/2,pi/2,0))
 sc_nested <- plot_nested(coord,
-                       filesave = FALSE,
+                       file = "none",
                        size = 1.5,
                        colour_tests = "red",
                        colour_facets = "darkorange",
@@ -99,7 +99,7 @@ But you can also display center distances for single items in an item chart:
 ```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
 coord <- coord_items(SMTQ)
 SMTQ_items <- plot_items(coord,
-                         filesave = FALSE,
+                         file = "none",
                          colour = "darkblue",
                          colour2 = "darkblue")
 SMTQ_items
@@ -112,13 +112,13 @@ SMTQ_items
 
 Before starting, calculate the structure equation models (SEMs) using your preferred statistical software. This package starts with the factor loadings and latent correlations of these models. To enable feeding in your SEM data, you can use the input_ functions. From there, **creating an IPV is a two step process using coord_ and plot_ functions**. Refine the appearance of your chart by reiteratively changing parameters of both of these functions and inspecting the result.
 
-All charts are optimized for .pdf output, rather than output within R. This has three advantages:
+All charts are optimized for .pdf file saves using function calls. This has three advantages:
 
 1. You do not need to worry about any graphic settings.
-2. You do not need to worry about saving your chart by hand. The chart is saved to your working directory (e.g. your R project within RStudio) on function call.
-3. The chart is saved vector-based: the sweet magic that smoothes curves and fonts, and prevents your chart to be compromised by resolution or zoom.
+2. You do not need to save your chart by hand. The chart is saved to your working directory (e.g. your R project within RStudio) on function call.
+3. The chart is saved vector-based: the sweet magic that smoothes curves and fonts, and prevents your chart to be compromised by resolution or zoom. the resulting .pdf files are also smaller than .png or .jpeg files.
 
-When using the graphics output within RStudio, always use the zoom popout from the Plots widget, otherwise charts are heavily distorted.
+When using the graphics display within RStudio, always use the zoom popout from the Plots widget, otherwise charts are heavily distorted.
 
 ## Data Preparation
 
@@ -164,23 +164,23 @@ Consider issuing desired input options on [github](https://github.com/NilsPetras
 
 Call ?IPV for an overview of the functions.
 
-Functions are named according to the chart concept, e.g. coord_items is needed to create an item chart. You will have to use two functions in conjunction. The first function is the *coord function* and prepares coordinates and labels for chart objects. The second function is the *plot function* and creates both a ggplot object and a .pdf file, the actual chart. So for each chart concept there are two functions.
+Functions are named according to the chart concept, e.g. coord_items is needed to create an item chart. You will have to use two functions in conjunction. The first function is the *coord function* and prepares coordinates and labels for chart objects. The second function is the *plot function* and creates both a ggplot object and a file, the actual chart. So for each chart concept there are two functions.
 
 For example, creating a facet chart works like this:
 
 ```{r,fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
 coord <- coord_facets(SMTQ, subradius = .6)
-SMTQ_facets <- plot_facets(coord, filesave = FALSE)
+SMTQ_facets <- plot_facets(coord, file = "none")
 SMTQ_facets
 ```
 
-As you can see, almost all function parameters have a default value, so you can start fast and frugal. The chart is saved to a nameless .pdf file in your working directory by default. Provide a filename using the filename parameter. You can suppress file creation using the filesave parameter.
+As you can see, almost all function parameters have a default value, so you can start fast and frugal. The chart is saved to a nameless .pdf file in your working directory by default. Provide a filename using the filename parameter. You can change the file format or suppress file creation using the file parameter. Supported file formats are "pdf", "png", and "jpeg". Any other value will suppress the file output.
 
 There is a useful shortcut for nested models. The function coord_nested always also generates coordinates for facet charts. If you set items = TRUE, you also get coordinates for the item charts in one go:
 
 ```{r,eval=FALSE}
 coord <- coord_nested(self_confidence, subradius = .6, items = TRUE)
-DSSEI_items <- plot_items(coord$items$DSSEI, filesave = FALSE)
+DSSEI_items <- plot_items(coord$items$DSSEI, file = "none")
 
 ```
 Note that item chart coordinates are living in coord\$items and facet chart coordinates in coord\$factors
