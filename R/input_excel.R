@@ -32,26 +32,35 @@
 #' tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
 #'              system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
 #'              system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
-#' x <- input_excel(global = global,tests = tests)
+#' x <- input_excel(global = global, tests = tests)
 #'
 #' @export
-input_excel <- function(global=NULL,tests){
+input_excel <- function(global = NULL, tests){
+
 
   # the helper function 'input_excel_factor' does most of the dirty work and
   # applies to both the global and the nested scale
-  if(is.null(global)){
+
+  if (is.null(global)) { # simple case
     mydata <- input_excel_factor(tests)
-  }else{
+  } else { # nested case
+
+    # global level
     global_input <- input_excel_factor(global)
-    # including the factor name in the item name to distinguish between items
-    # from different tests but with the same name
+      # including the factor name in the item name to distinguish between items
+      # from different tests but with the same name
     global_input$center_distances$item <- paste(global_input$center_distances$subfactor,
                                                 global_input$center_distances$item,
                                                 sep = ".")
-    tests_input <- lapply(tests,input_excel_factor)
-    # naming the lists of the tests, which are list elements of the overall list
-    for(i in 1:global_input$parameters$complexity)names(tests_input)[i] <- levels(tests_input[[c(i,1)]]$factor)
-    mydata <- list(global=global_input,tests=tests_input)
+
+    # test level
+    tests_input <- lapply(tests, input_excel_factor)
+      # including test names
+    for (i in 1:global_input$parameters$complexity) {
+      names(tests_input)[i] <- levels(tests_input[[c(i, 1)]]$factor)
+    }
+
+    mydata <- list(global = global_input, tests = tests_input)
   }
 
   return(mydata)

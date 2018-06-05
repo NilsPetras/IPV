@@ -6,9 +6,9 @@
 \usage{
 plot_facets(coord, size = 1, file = "pdf", filename = NULL,
   filewidth = 10, fileheight = 10, colour = "black", fade = 90,
-  cor_labels = TRUE, tick = 0.1, font = "sans", size_test_label = 1,
-  size_facet_labels = 1, width_axes = 1, width_circles = 1,
-  size_tick = 1, size_tick_label = 1, size_cor_labels = 1,
+  font = "sans", tick = 0.1, cor_labels = TRUE, size_cor_labels = 1,
+  size_test_label = 1, size_facet_labels = 1, width_axes = 1,
+  width_circles = 1, size_tick = 1, size_tick_label = 1,
   size_center_dot = 1)
 }
 \arguments{
@@ -35,13 +35,16 @@ filename extension added from file parameter like this: [filename].[file].}
 \item{fade}{integer; brightness of the gray tones between 0 (black) and 100
 (white) in steps of 1; defaults to 90.}
 
-\item{cor_labels}{logical; if \code{TRUE}, draws latent correlations between
-facets as text.}
+\item{font}{character; text font; defaults to 'sans' (use extrafonts to
+install additional fonts).}
 
 \item{tick}{numeric; axis tick position; defaults to .1.}
 
-\item{font}{character; text font; defaults to 'sans' (use extrafonts to
-install additional fonts).}
+\item{cor_labels}{logical; if \code{TRUE}, draws latent correlations between
+facets as text.}
+
+\item{size_cor_labels}{integer; font size of the latent correlations between
+facets (relative to default).}
 
 \item{size_test_label}{integer; font size of the test label (relative to
 default).}
@@ -60,9 +63,6 @@ default).}
 
 \item{size_tick_label}{integer; font size of the axis tick label (relative to
 default).}
-
-\item{size_cor_labels}{integer; font size of the latent correlations between
-facets (relative to default).}
 
 \item{size_center_dot}{integer; size of the center dot marking the origin
 (relative to default).}

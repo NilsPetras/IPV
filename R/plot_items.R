@@ -51,54 +51,161 @@
 #' @examples
 #' # creating item charts is a two step process, using coord_items and this function:
 #' coord <- coord_items(DSSEI)
-#' DSSEI_items <- plot_items(coord,filename = "DSSEI_items")
+#' DSSEI_items <- plot_items(coord, filename = "DSSEI_items")
 #' DSSEI_items
 #'
 #' @export
-plot_items <- function(coord,size=1,file="pdf",filename=NULL,
-                            filewidth=10,fileheight=10,font="sans",
-                            colour="black",colour2="black",fade=90,tick_label=TRUE,
-                            size_title=1,size_axis_labels=1,width_axes=1,size_arrow_heads=1,width_items=1,width_grid=1,size_tick_label=1,size_center_dot=1){
+plot_items <- function (coord, size = 1, file = "pdf", filename = NULL,
+                        filewidth = 10, fileheight = 10,
+                        colour = "black", colour2 = "black", fade = 90, font = "sans",
+                        tick_label = TRUE, size_tick_label = 1,
+                        size_title = 1, size_axis_labels = 1,
+                        width_axes = 1, size_arrow_heads = 1, width_items = 1,
+                        width_grid = 1, size_center_dot = 1) {
 
-  # chart layers
-  myipv <- ggplot2::ggplot(coord$cart_axes)+
-    ggplot2::geom_text(ggplot2::aes(x=xlabel,y=ylabel,label = row.names(coord$cart_axes)),family = font,size = 6*sqrt(size)*size_axis_labels,hjust = "inward")+
-    ggplot2::coord_fixed()+
-    ggplot2::theme_minimal()+
-    ggplot2::aes()+
-    ggplot2::geom_point(ggplot2::aes(x=0,y=0),size=.5*size*size_center_dot)+
-    ggforce::geom_circle(data = coord$maingrid[coord$maingrid$alpha==.5,],ggplot2::aes(x0=x,y0=y,r=r),col = paste("gray",fade,sep = ""),linetype = "dotted",size=min(c(size,.75))*width_grid)+
-    ggforce::geom_circle(data = coord$maingrid[coord$maingrid$alpha==1,],ggplot2::aes(x0=x,y0=y,r=r),col = "gray20",linetype = "dotted",size=min(c(size,.75))*width_grid)+
-    ggplot2::geom_segment(data = coord$cart_axes,ggplot2::aes(x=0,y=0,xend=x,yend=y),arrow = ggplot2::arrow(ends = "last",length = ggplot2::unit(.02*sqrt(size)*size_arrow_heads,"native"),type = "closed"),size=.5*sqrt(size)*width_axes)+
-    ggplot2::geom_segment(data = coord$items[coord$items$width==max(coord$items$width),],ggplot2::aes(x=x1,y=y1,xend=x2,yend=y2),size=1,col = colour2)+
-    ggplot2::geom_segment(data = coord$items[coord$items$width==min(coord$items$width),],ggplot2::aes(x=x1,y=y1,xend=x2,yend=y2),size=1,col = colour)+
-    # width_items currently not supported since it shifts the edge of the bars away from the correct position determined by the center distance
-    # ggplot2::geom_segment(data = coord$items,ggplot2::aes(x=x1,y=y1,xend=x2,yend=y2),size=size*width_items,col = colour)+
-    ggplot2::geom_text(data = coord$factor_label,ggplot2::aes(x=x,y=y,label = label),family = font,size = 6*sqrt(size)*size_title,col=colour,fontface="bold")+
-    ggplot2::theme(axis.line=ggplot2::element_blank(),axis.text.x=ggplot2::element_blank(),axis.text.y=ggplot2::element_blank(),axis.ticks=ggplot2::element_blank(),
-          axis.title.x=ggplot2::element_blank(),axis.title.y=ggplot2::element_blank(),legend.position = "none",
-          panel.background=ggplot2::element_blank(),panel.border=ggplot2::element_blank(),panel.grid.major=ggplot2::element_blank(),
-          panel.grid.minor=ggplot2::element_blank(),plot.background=ggplot2::element_blank(),text = ggplot2::element_text(size = 16,family = font),plot.margin = ggplot2::margin(1,1,1,1,"in"))
+  # width_items currently not supported,
+  # since it shifts the edge of the bars away from the correct position
 
-  # adding tick label (optional)
-  if(tick_label == TRUE && max(coord$maingrid$r)>=.5) myipv <- myipv +  ggplot2::geom_text(data = coord$axis_tick,ggplot2::aes(x,y,label = label),angle = (coord$axis_tick$phi-pi/48-pi/2)*180/pi,family = font,size = 3*sqrt(size)*size_tick_label,col = "gray20")
 
-  # saving as:
-    # .pdf
-  if(file == "pdf"){
-    ggplot2::ggsave(paste(filename,".pdf",sep = ""), myipv, width = filewidth, height = fileheight, units = "in", dpi = 3000)
-    if(is.null(filename))warning("empty filename")
+# chart -----------------------------------------------------------------------
+
+  myipv <- ggplot2::ggplot(coord$cart_axes) + # x has placeholder value
+
+
+      ## initializing -----------------
+
+    ggplot2::coord_fixed() +
+    ggplot2::theme(axis.line        = ggplot2::element_blank(),
+                   axis.text.x      = ggplot2::element_blank(),
+                   axis.text.y      = ggplot2::element_blank(),
+                   axis.ticks       = ggplot2::element_blank(),
+                   axis.title.x     = ggplot2::element_blank(),
+                   axis.title.y     = ggplot2::element_blank(),
+                   legend.position  = "none",
+                   panel.background = ggplot2::element_blank(),
+                   panel.border     = ggplot2::element_blank(),
+                   panel.grid.major = ggplot2::element_blank(),
+                   panel.grid.minor = ggplot2::element_blank(),
+                   plot.background  = ggplot2::element_blank(),
+                   text             = ggplot2::element_text(size = 16, family = font),
+                   plot.margin      = ggplot2::margin(1, 1, 1, 1, "in")) +
+    ggplot2::aes() +
+
+
+      ## layers -----------------------
+
+    # layers ordered from bottom to top
+
+    # axis labels
+    ggplot2::geom_text(ggplot2::aes(x = xlabel, y = ylabel, label = row.names(coord$cart_axes)),
+                       family = font,
+                       size = 6 * sqrt(size) * size_axis_labels,
+                       hjust = "inward") +
+
+    # center dot
+    ggplot2::geom_point(ggplot2::aes(x = 0, y = 0),
+                        size = .5 * size * size_center_dot) +
+
+    # minor grid
+    ggforce::geom_circle(data = coord$maingrid[coord$maingrid$alpha == .5, ],
+                         ggplot2::aes(x0 = x, y0 = y, r = r),
+                         color = paste("gray", fade, sep = ""),
+                         linetype = "dotted",
+                         size = min(c(size, .75)) * width_grid) +
+
+    # major grid
+    ggforce::geom_circle(data = coord$maingrid[coord$maingrid$alpha == 1, ],
+                         ggplot2::aes(x0 = x, y0 = y, r = r),
+                         color = "gray20",
+                         linetype = "dotted",
+                         size = min(c(size, .75)) * width_grid) +
+
+    # axes
+    ggplot2::geom_segment(data = coord$cart_axes,
+                          ggplot2::aes(x = 0, y = 0, xend = x, yend = y),
+                          arrow = ggplot2::arrow(ends = "last",
+                                                 length = ggplot2::unit(.02*sqrt(size) * size_arrow_heads,
+                                                                        "native"),
+                                                 type = "closed"),
+                          size = .5 * sqrt(size) * width_axes) +
+
+    # items 2
+    ggplot2::geom_segment(data = coord$items[coord$items$length == max(coord$items$length), ],
+                          ggplot2::aes(x = x1, y = y1, xend = x2, yend = y2),
+                          size = 1,
+                          color = colour2) +
+
+    # items 1
+    ggplot2::geom_segment(data = coord$items[coord$items$length == min(coord$items$length), ],
+                          ggplot2::aes(x = x1, y = y1, xend = x2, yend = y2),
+                          size = 1,
+                          color = colour) +
+
+    # title
+    ggplot2::geom_text(data = coord$factor_label,
+                       ggplot2::aes(x = x, y = y, label = label),
+                       family = font,
+                       size = 6 * sqrt(size) * size_title,
+                       color = colour,
+                       fontface = "bold")
+
+
+    ## optional layers ----------------
+
+  # tick label
+  if(tick_label == TRUE && max(coord$maingrid$r) >= .5) {
+    myipv <- myipv +
+      ggplot2::geom_text(data = coord$axis_tick,
+                         ggplot2::aes(x, y, label = label),
+                         angle = (coord$axis_tick$phi - pi / 48 - pi / 2) * 180 / pi,
+                         family = font,
+                         size = 3 * sqrt(size) * size_tick_label,
+                         color = "gray20")
   }
-    # .png
-  if(file == "png"){
-    ggplot2::ggsave(paste(filename,".png",sep = ""), myipv, width = filewidth, height = fileheight, units = "in", dpi = 500)
-    if(is.null(filename))warning("empty filename")
+
+
+# optional file save ----------------------------------------------------------
+
+    ## .pdf ---------------------------
+
+  if (file == "pdf") {
+    ggplot2::ggsave(paste(filename, ".pdf", sep = ""),
+                    myipv,
+                    width = filewidth,
+                    height = fileheight,
+                    units = "in",
+                    dpi = 3000)
+    if (is.null(filename)) warning ("empty filename")
   }
-    # .jpeg
-  if(file == "jpeg"){
-    ggplot2::ggsave(paste(filename,".jpeg",sep = ""), myipv, width = filewidth, height = fileheight, units = "in", dpi = 500)
-    if(is.null(filename))warning("empty filename")
+
+
+    ## .png ---------------------------
+
+  if (file == "png") {
+    ggplot2::ggsave(paste(filename, ".png", sep = ""),
+                    myipv,
+                    width = filewidth,
+                    height = fileheight,
+                    units = "in",
+                    dpi = 500)
+    if (is.null(filename)) warning ("empty filename")
   }
+
+
+    ## .jpeg --------------------------
+
+  if (file == "jpeg") {
+    ggplot2::ggsave(paste(filename, ".jpeg", sep = ""),
+                    myipv,
+                    width = filewidth,
+                    height = fileheight,
+                    units = "in",
+                    dpi = 500)
+    if (is.null(filename)) warning ("empty filename")
+  }
+
+
+# return ----------------------------------------------------------------------
 
   return(myipv)
 }

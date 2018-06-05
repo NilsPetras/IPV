@@ -9,7 +9,9 @@
 #' @details Helper function of \code{\link{coord_nested}}.
 #'
 #' @return List containing a limited selection of coordinates.
-shift_factor <- function(data,x,y){
+shift_factor <- function (data, x, y) {
+
+
   # stripping off superfluous information
   data_shifted <- data[c("cart_circles",
                          "cart_axes",
@@ -18,23 +20,23 @@ shift_factor <- function(data,x,y){
   data_shifted$axis_tick[1:2] <- list(NULL) # polar coordinates not needed anymore
 
   # moving on the x axis by adding x shift to all x coordinates
-  data_shifted$cart_circles$x <- data_shifted$cart_circles$x+x
-  data_shifted$cart_axes$x0 <- data_shifted$cart_axes$x0+x
-  data_shifted$cart_axes$x1 <- data_shifted$cart_axes$x1+x
-  data_shifted$cart_axes$x2 <- data_shifted$cart_axes$x2+x
-  data_shifted$cart_axes$x3 <- data_shifted$cart_axes$x3+x
-  data_shifted$axis_tick$x <- data_shifted$axis_tick$x+x
-  data_shifted$factor_label$x <- data_shifted$factor_label$x+x
-  data_shifted$inner_cors$x <- data_shifted$inner_cors$x+x
+  data_shifted$cart_circles$x <- data_shifted$cart_circles$x + x
+  data_shifted$cart_axes$x0 <- data_shifted$cart_axes$x0 + x
+  data_shifted$cart_axes$x1 <- data_shifted$cart_axes$x1 + x
+  data_shifted$cart_axes$x2 <- data_shifted$cart_axes$x2 + x
+  data_shifted$cart_axes$x3 <- data_shifted$cart_axes$x3 + x
+  data_shifted$axis_tick$x <- data_shifted$axis_tick$x + x
+  data_shifted$factor_label$x <- data_shifted$factor_label$x + x
+  data_shifted$inner_cors$x <- data_shifted$inner_cors$x + x
 
   # moving on the y axis by adding y shift to all y coordinates
-  data_shifted$cart_circles$y <- data_shifted$cart_circles$y+y
-  data_shifted$cart_axes$y0 <- data_shifted$cart_axes$y0+y
-  data_shifted$cart_axes$y1 <- data_shifted$cart_axes$y1+y
-  data_shifted$cart_axes$y2 <- data_shifted$cart_axes$y2+y
-  data_shifted$cart_axes$y3 <- data_shifted$cart_axes$y3+y
-  data_shifted$factor_label$y <- data_shifted$factor_label$y+y
-  data_shifted$inner_cors$y <- data_shifted$inner_cors$y+y
+  data_shifted$cart_circles$y <- data_shifted$cart_circles$y + y
+  data_shifted$cart_axes$y0 <- data_shifted$cart_axes$y0 + y
+  data_shifted$cart_axes$y1 <- data_shifted$cart_axes$y1 + y
+  data_shifted$cart_axes$y2 <- data_shifted$cart_axes$y2 + y
+  data_shifted$cart_axes$y3 <- data_shifted$cart_axes$y3 + y
+  data_shifted$factor_label$y <- data_shifted$factor_label$y + y
+  data_shifted$inner_cors$y <- data_shifted$inner_cors$y + y
 
   return(data_shifted)
 }

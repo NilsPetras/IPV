@@ -51,60 +51,165 @@
 #'
 #' @examples
 #' # creating facet charts is a two step process, using coord_facets and this function:
-#' coord <- coord_facets(DSSEI,subradius = .5)
-#' DSSEI_facets <- plot_facets(coord,filename = "DSSEI_facets")
+#' coord <- coord_facets(DSSEI, subradius = .5)
+#' DSSEI_facets <- plot_facets(coord, filename = "DSSEI_facets")
 #' DSSEI_facets
 #'
 #' @export
-plot_facets <- function(coord,size=1,file="pdf",filename=NULL,
-                      filewidth=10,fileheight=10,colour="black",fade=90,cor_labels=TRUE,tick=.1,font="sans",
-                      size_test_label=1,size_facet_labels=1,width_axes=1,width_circles=1,size_tick=1,size_tick_label=1,size_cor_labels=1,size_center_dot=1){
+plot_facets <- function(coord, size = 1, file = "pdf", filename = NULL,
+                      filewidth = 10, fileheight = 10,
+                      colour = "black", fade = 90, font = "sans", tick = .1,
+                      cor_labels = TRUE, size_cor_labels = 1,
+                      size_test_label = 1, size_facet_labels = 1,
+                      width_axes = 1, width_circles = 1,
+                      size_tick = 1, size_tick_label = 1, size_center_dot = 1){
 
-  # preparing cor labels
-  if(cor_labels==TRUE){
+
+# preparation -----------------------------------------------------------------
+
+  # correlations
+  if (cor_labels == TRUE) {
     inner_cors <- coord$inner_cors
-  }
-  else inner_cors <- NULL
+  } else inner_cors <- NULL
 
-  # plot layers
-  myipv <- ggplot2::ggplot(coord$cart_circles)+
-    ggplot2::geom_point(ggplot2::aes(x=0,y=0),size=5*sqrt(size)*size_center_dot)+
-    ggforce::geom_circle(ggplot2::aes(x0=0,y0=0,r=tick),linetype = "dotted",size=.5*min(c(size,.5))*size_tick)+
-    ggplot2::geom_segment(data = coord$cart_axes,ggplot2::aes(x=x2,y=y2,xend=x3,yend=y3),size=size*width_axes,color=paste("gray",fade,sep = ""))+
-    ggplot2::geom_text(ggplot2::aes(x,y,label = row.names(coord$cart_circles)),family = font,size = 8*sqrt(size)*size_facet_labels)+
-    ggplot2::coord_fixed()+
-    ggplot2::theme_minimal()+
-    ggplot2::aes()+
-    ggplot2::geom_text(data=coord$axis_tick,ggplot2::aes(x=x*tick+sign(x)*.02,y=y*tick+sign(y)*.02,label=as.character(tick)),angle = (coord$axis_tick$phi-pi/48-pi/2)*180/pi,family = font,size = 2*sqrt(size)*size_tick_label)+
-    ggforce::geom_circle(data=coord$cart_circles[1,],ggplot2::aes(x0=x,y0=y,r=radius),size=size*width_axes,color=paste("gray",fade,sep = ""))+
-    ggforce::geom_circle(data=coord$cart_circles[-1,],ggplot2::aes(x0=x,y0=y,r=radius),size=size*width_circles,color=colour)+
-    ggplot2::geom_segment(data = coord$cart_axes,ggplot2::aes(x=x0,y=y0,xend=x1,yend=y1),size=(sqrt(size)+size)*width_axes,col=colour)+
-    ggplot2::geom_text(data = coord$factor_label,ggplot2::aes(x=x,y=y,label=label),family = font,size = 8*sqrt(size)*size_test_label,fontface="bold")+
-    ggplot2::theme(axis.line=ggplot2::element_blank(),axis.text.x=ggplot2::element_blank(),axis.text.y=ggplot2::element_blank(),axis.ticks=ggplot2::element_blank(),
-          axis.title.x=ggplot2::element_blank(),axis.title.y=ggplot2::element_blank(),legend.position = "none",
-          panel.background=ggplot2::element_blank(),panel.border=ggplot2::element_blank(),panel.grid.major=ggplot2::element_blank(),
-          panel.grid.minor=ggplot2::element_blank(),plot.background=ggplot2::element_blank(),text = ggplot2::element_text(size = 16,family = font),plot.margin = ggplot2::margin(1,1,1,1,"in"))
 
-  # adding cor labels (optional)
-  if(!is.null(inner_cors))myipv <- myipv +
-    ggplot2::geom_text(data = inner_cors,ggplot2::aes(x=x,y=y,label=label),family = font,size = 4*sqrt(size)*size_cor_labels)
+# chart -----------------------------------------------------------------------
 
-  # saving as:
-  # .pdf
-  if(file == "pdf"){
-    ggplot2::ggsave(paste(filename,".pdf",sep = ""), myipv, width = filewidth, height = fileheight, units = "in", dpi = 3000)
-    if(is.null(filename))warning("empty filename")
+  myipv <- ggplot2::ggplot(coord$cart_circles) + # x has placeholder value
+
+
+      ## initializing -----------------
+
+    ggplot2::coord_fixed() +
+    ggplot2::theme(axis.line        = ggplot2::element_blank(),
+                   axis.text.x      = ggplot2::element_blank(),
+                   axis.text.y      = ggplot2::element_blank(),
+                   axis.ticks       = ggplot2::element_blank(),
+                   axis.title.x     = ggplot2::element_blank(),
+                   axis.title.y     = ggplot2::element_blank(),
+                   legend.position  = "none",
+                   panel.background = ggplot2::element_blank(),
+                   panel.border     = ggplot2::element_blank(),
+                   panel.grid.major = ggplot2::element_blank(),
+                   panel.grid.minor = ggplot2::element_blank(),
+                   plot.background  = ggplot2::element_blank(),
+                   text             = ggplot2::element_text(size = 16, family = font),
+                   plot.margin      = ggplot2::margin(1, 1, 1, 1, "in")) +
+    ggplot2::aes() +
+
+
+      ## layers -----------------------
+
+    # layers ordered from bottom to top
+
+    # center dot
+    ggplot2::geom_point(ggplot2::aes(x = 0, y = 0),
+                        size = 5 * sqrt(size) * size_center_dot) +
+
+    # axis tick
+    ggforce::geom_circle(ggplot2::aes(x0 = 0, y0 = 0, r = tick),
+                         linetype = "dotted",
+                         size = .5 * min(c(size, .5)) * size_tick) +
+
+    # outer axis segments
+    ggplot2::geom_segment(data = coord$cart_axes,
+                          ggplot2::aes(x = x2, y = y2, xend = x3, yend = y3),
+                          size = size * width_axes,
+                          color = paste("gray", fade, sep = "")) +
+
+    # facet labels
+    ggplot2::geom_text(ggplot2::aes(x, y, label = row.names(coord$cart_circles)),
+                       family = font,
+                       size = 8 * sqrt(size) * size_facet_labels) +
+
+    # tick label
+    ggplot2::geom_text(data = coord$axis_tick,
+                       ggplot2::aes(x = x * tick + sign(x) * .02,
+                                    y = y * tick + sign(y) * .02,
+                                    label = as.character(tick)),
+                       angle = (coord$axis_tick$phi - pi / 48 - pi / 2) * 180 / pi,
+                       family = font,
+                       size = 2 * sqrt(size) * size_tick_label) +
+
+    # test circle
+    ggforce::geom_circle(data = coord$cart_circles[1, ],
+                         ggplot2::aes(x0 = x, y0 = y, r = radius),
+                         size = size * width_axes,
+                         color = paste("gray", fade, sep = "")) +
+
+    # facet circles
+    ggforce::geom_circle(data = coord$cart_circles[-1, ],
+                         ggplot2::aes(x0 = x, y0 = y, r = radius),
+                         size = size * width_circles, color = colour) +
+
+    # inner axis segments
+    ggplot2::geom_segment(data = coord$cart_axes,
+                          ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1),
+                          size = (sqrt(size) + size) * width_axes,
+                          color = colour) +
+
+    # title
+    ggplot2::geom_text(data = coord$factor_label,
+                       ggplot2::aes(x = x, y = y, label = label),
+                       family = font,
+                       size = 8 * sqrt(size) * size_test_label,
+                       fontface = "bold")
+
+
+    ## optional layers ----------------
+
+  # correlations
+  if (!is.null(inner_cors)) {
+    myipv <- myipv +
+      ggplot2::geom_text(data = inner_cors,
+                         ggplot2::aes(x = x, y = y, label = label),
+                         family = font,
+                         size = 4 * sqrt(size) * size_cor_labels)
   }
-  # .png
-  if(file == "png"){
-    ggplot2::ggsave(paste(filename,".png",sep = ""), myipv, width = filewidth, height = fileheight, units = "in", dpi = 500)
-    if(is.null(filename))warning("empty filename")
+
+
+# optional file save ----------------------------------------------------------
+
+    ## .pdf ---------------------------
+
+  if (file == "pdf") {
+    ggplot2::ggsave(paste(filename,".pdf",sep = ""),
+                    myipv,
+                    width = filewidth,
+                    height = fileheight,
+                    units = "in",
+                    dpi = 3000)
+    if (is.null(filename)) warning ("empty filename")
   }
-  # .jpeg
-  if(file == "jpeg"){
-    ggplot2::ggsave(paste(filename,".jpeg",sep = ""), myipv, width = filewidth, height = fileheight, units = "in", dpi = 500)
-    if(is.null(filename))warning("empty filename")
+
+
+    ## .png ---------------------------
+
+  if (file == "png") {
+    ggplot2::ggsave(paste(filename, ".png", sep = ""),
+                    myipv,
+                    width = filewidth,
+                    height = fileheight,
+                    units = "in",
+                    dpi = 500)
+    if (is.null(filename)) warning ("empty filename")
   }
+
+
+    ## .jpeg --------------------------
+
+  if (file == "jpeg") {
+    ggplot2::ggsave(paste(filename,".jpeg",sep = ""),
+                    myipv,
+                    width = filewidth,
+                    height = fileheight,
+                    units = "in",
+                    dpi = 500)
+    if (is.null(filename)) warning ("empty filename")
+  }
+
+
+# return ----------------------------------------------------------------------
 
   return(myipv)
 }

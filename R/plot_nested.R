@@ -82,98 +82,264 @@
 #' sc_nested
 #'
 #' # adding extra arrows
-#' sc_arrows <- data.frame(V1_factor=rep(NA,3),
-#'                         V1_subfactor=rep(NA,3),
-#'                         V2_factor=rep(NA,3),
-#'                         V2_subfactor=rep(NA,3),
-#'                         value=rep(NA,3))
-#' sc_arrows[1,] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
-#' sc_arrows[2,] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
-#' sc_arrows[3,] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
+#' sc_arrows <- data.frame(V1_factor = rep(NA, 3),
+#'                         V1_subfactor = rep(NA, 3),
+#'                         V2_factor = rep(NA, 3),
+#'                         V2_subfactor = rep(NA, 3),
+#'                         value = rep(NA, 3))
+#' sc_arrows[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
+#' sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
+#' sc_arrows[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
 #' coord <- coord_nested(self_confidence, subradius = .6, extra_arrows = sc_arrows)
 #' sc_nested <- plot_nested(coord, filename = "sc_nested", extra_arrows = TRUE)
 #' sc_nested
 #'
 #' @export
-plot_nested <- function(coord, size = 1, file = "pdf", filename=NULL, filewidth = 10, fileheight = 10,
-                      cor_labels_tests = TRUE, cor_labels_facets = TRUE,
-                      colour_tests = "black", colour_facets = "black", fade = 90, font = "sans",
-                      extra_arrows = FALSE, tick = .1,
-                      size_title = 1, size_test_labels = 1, size_facet_labels = 1,
-                      width_axes = 1, width_axes_inner = 1, width_circles = 1, width_circles_inner = 1,
-                      size_tick = 1, size_tick_inner = 1, size_tick_label = 1,
-                      size_cor_labels = 1, size_cor_labels_inner = 1,
-                      size_center_dot = 1, size_center_dot_inner = 1,
-                      size_extra_arrows = 1, size_extra_arrow_heads = 1, size_extra_labels = 1){
+plot_nested <- function (coord, size = 1, file = "pdf", filename = NULL,
+                        filewidth = 10, fileheight = 10,
+                        cor_labels_tests = TRUE, cor_labels_facets = TRUE,
+                        colour_tests = "black", colour_facets = "black", fade = 90, font = "sans",
+                        extra_arrows = FALSE, tick = .1,
+                        size_title = 1, size_test_labels = 1, size_facet_labels = 1,
+                        width_axes = 1, width_axes_inner = 1,
+                        width_circles = 1, width_circles_inner = 1,
+                        size_tick = 1, size_tick_inner = 1, size_tick_label = 1,
+                        size_cor_labels = 1, size_cor_labels_inner = 1,
+                        size_center_dot = 1, size_center_dot_inner = 1,
+                        size_extra_arrows = 1, size_extra_arrow_heads = 1, size_extra_labels = 1) {
 
-    ## nested plot
 
-  # preparing cor labels
-  if(cor_labels_tests==TRUE){
+# preparation -----------------------------------------------------------------
+
+  # correlations
+  if (cor_labels_tests == TRUE) {
     inner_cors <- coord$global$inner_cors
-  }
-  else inner_cors <- NULL
+  } else inner_cors <- NULL
 
-  # preparing subfactor cor labels
-  if(cor_labels_facets==TRUE){
+  # subfactor correlations
+  if (cor_labels_facets == TRUE) {
     subfactor_inner_cors <- coord$global$nested$inner_cors
+  } else subfactor_inner_cors <- NULL
+
+
+# chart -----------------------------------------------------------------------
+
+  globalplot <- ggplot2::ggplot(coord$global$cart_circles) +
+
+
+      ## initializing -----------------
+
+    ggplot2::coord_fixed() +
+    ggplot2::theme(axis.line        = ggplot2::element_blank(),
+                   axis.text.x      = ggplot2::element_blank(),
+                   axis.text.y      = ggplot2::element_blank(),
+                   axis.ticks       = ggplot2::element_blank(),
+                   axis.title.x     = ggplot2::element_blank(),
+                   axis.title.y     = ggplot2::element_blank(),
+                   legend.position  = "none",
+                   panel.background = ggplot2::element_blank(),
+                   panel.border     = ggplot2::element_blank(),
+                   panel.grid.major = ggplot2::element_blank(),
+                   panel.grid.minor = ggplot2::element_blank(),
+                   plot.background  = ggplot2::element_blank(),
+                   text             = ggplot2::element_text(size = 16, family = font),
+                   plot.margin      = ggplot2::margin(1, 1, 1, 1, "in")) +
+    ggplot2::aes() +
+
+
+      ## layers -----------------------
+
+    # layers ordered from bottom to top
+
+    # tick label
+    ggplot2::geom_text(data = coord$global$axis_tick,
+                       ggplot2::aes(x = coord$global$relative_scaling * (x * tick + sign(x) * .02),
+                                    y = coord$global$relative_scaling * (y * tick + sign(y) * .02),
+                                    label = as.character(tick)),
+                       angle = (coord$global$axis_tick$phi - pi / 48 - pi / 2) * 180 / pi,
+                       family = font,
+                       size = 1.95 * sqrt(size) * size_tick_label) +
+
+    # global tick
+    ggforce::geom_circle(ggplot2::aes(x0 = 0, y0 = 0, r = coord$global$relative_scaling * tick),
+                         linetype = "dotted",
+                         size = coord$global$relative_scaling * .5 * min(c(size, .25)) * size_tick) +
+
+    # global outer axis segments
+    ggplot2::geom_segment(data = coord$global$cart_axes,
+                          ggplot2::aes(x = x2, y = y2, xend = x3, yend = y3),
+                          size = .5 * size * width_axes,
+                          color = paste("gray", fade, sep = "")) +
+
+    # global circle
+    ggforce::geom_circle(data = coord$global$cart_circles[1, ],
+                         ggplot2::aes(x0 = x, y0 = y, r = radius),
+                         size = .5 * size * width_axes,
+                         color = paste("gray", fade, sep = "")) +
+
+    # global center dot
+    ggplot2::geom_point(ggplot2::aes(x = 0, y = 0),
+                        size = 5 * sqrt(size) * size_center_dot) +
+
+    # nested outer axis segments
+    ggplot2::geom_segment(data = coord$global$nested$axes,
+                          ggplot2::aes(x = x2, y = y2, xend = x3, yend = y3),
+                          size = .3 * size * width_axes_inner,
+                          color = paste("gray", fade, sep = "")) +
+
+    # nested center dots
+    ggplot2::geom_point(data = coord$global$cart_circles,
+                        ggplot2::aes(x = x, y = y),
+                        size = 2.5 * sqrt(size) * size_center_dot_inner) +
+
+    # test circles
+    ggforce::geom_circle(data = coord$global$cart_circles[-1, ],
+                         ggplot2::aes(x0 = x, y0 = y, r = radius),
+                         size = .5 * size * width_circles,
+                         color = colour_tests) +
+
+    # nested tick
+    ggforce::geom_circle(data = coord$global$cart_circles[-1, ],
+                         ggplot2::aes(x0 = x, y0 = y, r = tick),
+                         size = 0.5 * min(c(size, .25)) * size_tick_inner,
+                         linetype = "dotted") +
+
+    # global inner axis segments
+    ggplot2::geom_segment(data = coord$global$cart_axes,
+                          ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1),
+                          size = .5 * (sqrt(size) + size) * width_axes,
+                          color = colour_tests) +
+
+    # facet circles
+    ggforce::geom_circle(data = coord$global$nested$circles,
+                         ggplot2::aes(x0 = x, y0 = y, r = radius),
+                         size = .25 * size * width_circles_inner,
+                         color = colour_facets) +
+
+    # facet labels
+    ggplot2::geom_text(data = coord$global$nested$circles,
+                       ggplot2::aes(x, y, label = label),
+                       family = font,
+                       size = 3.125 * sqrt(size) * size_facet_labels) +
+
+    # nested inner axis segments
+    ggplot2::geom_segment(data = coord$global$nested$axes,
+                          ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1),
+                          size = .25 * (sqrt(size) + size) * width_axes_inner,
+                          color = colour_facets) +
+
+    # title
+    ggplot2::geom_text(data = coord$global$factor_label,
+                       ggplot2::aes(x = x, y = y, label = label),
+                       family = font,
+                       size = 16 / 3 * sqrt(size) * size_title,
+                       fontface = "bold") +
+
+    # test labels
+    ggplot2::geom_text(data = coord$global$nested$factor_label,
+                       ggplot2::aes(x = x, y = y, label = label),
+                       family = font,
+                       size = 4 * sqrt(size) * size_test_labels,
+                       fontface = "bold")
+
+
+    ## optional layers ----------------
+
+  # facet correlations
+  if (!is.null(subfactor_inner_cors)) {
+    globalplot <- globalplot +
+      ggplot2::geom_text(data = subfactor_inner_cors,
+                         ggplot2::aes(x = x, y = y, label = label),
+                         family = font,
+                         size = 2.25 * sqrt(size) * size_cor_labels_inner)
   }
-  else subfactor_inner_cors <- NULL
 
-  # plot layers
-  globalplot <- ggplot2::ggplot(coord$global$cart_circles)+
-    ggplot2::coord_fixed()+
-    ggplot2::theme_minimal()+
-    ggplot2::aes()+
-    ggplot2::geom_text(data=coord$global$axis_tick,ggplot2::aes(x=coord$global$relative_scaling*(x*tick+sign(x)*.02),y=coord$global$relative_scaling*(y*tick+sign(y)*.02),label=as.character(tick)),angle = (coord$global$axis_tick$phi-pi/48-pi/2)*180/pi,family = font,size = 1.95*sqrt(size)*size_tick_label)+
-    ggforce::geom_circle(ggplot2::aes(x0=0,y0=0,r=coord$global$relative_scaling*tick),linetype = "dotted",size=coord$global$relative_scaling*.5*min(c(size,.25))*size_tick)+
-    ggplot2::geom_segment(data = coord$global$cart_axes,ggplot2::aes(x=x2,y=y2,xend=x3,yend=y3),size=.5*size*width_axes,color=paste("gray",fade,sep = ""))+
-    ggforce::geom_circle(data=coord$global$cart_circles[1,],ggplot2::aes(x0=x,y0=y,r=radius),size=.5*size*width_axes,color=paste("gray",fade,sep = ""))+
-    ggplot2::geom_point(ggplot2::aes(x=0,y=0),size=size*size_center_dot)+
-    ggplot2::geom_segment(data = coord$global$nested$axes,ggplot2::aes(x=x2,y=y2,xend=x3,yend=y3),size=.3*size*width_axes_inner,color=paste("gray",fade,sep = ""))+
-    ggplot2::geom_point(data=coord$global$cart_circles,ggplot2::aes(x=x,y=y),size=.5*size*size_center_dot_inner)+
-    ggforce::geom_circle(data=coord$global$cart_circles[-1,],ggplot2::aes(x0=x,y0=y,r=radius),size=.5*size*width_circles,color=colour_tests)+
-    ggforce::geom_circle(data=coord$global$cart_circles[-1,],ggplot2::aes(x0=x,y0=y,r=tick),size=0.5*min(c(size,.25))*size_tick_inner,linetype = "dotted")+
-    ggplot2::geom_segment(data = coord$global$cart_axes,ggplot2::aes(x=x0,y=y0,xend=x1,yend=y1),size=.5*(sqrt(size)+size)*width_axes,color=colour_tests)+
-    ggforce::geom_circle(data=coord$global$nested$circles,ggplot2::aes(x0=x,y0=y,r=radius),size=.25*size*width_circles_inner,color=colour_facets)+
-    ggplot2::geom_text(data=coord$global$nested$circles,ggplot2::aes(x,y,label = label),family = font,size = 3.125*sqrt(size)*size_facet_labels)+
-    ggplot2::geom_segment(data = coord$global$nested$axes,ggplot2::aes(x=x0,y=y0,xend=x1,yend=y1),size=.25*(sqrt(size)+size)*width_axes_inner,color=colour_facets)+
-    ggplot2::geom_text(data = coord$global$factor_label,ggplot2::aes(x=x,y=y,label=label),family = font,size = 16/3*sqrt(size)*size_title,fontface="bold")+
-    ggplot2::geom_text(data = coord$global$nested$factor_label,ggplot2::aes(x=x,y=y,label=label),family = font,size = 4*sqrt(size)*size_test_labels,fontface="bold")+
-    ggplot2::theme(axis.line=ggplot2::element_blank(),axis.text.x=ggplot2::element_blank(),axis.text.y=ggplot2::element_blank(),axis.ticks=ggplot2::element_blank(),
-          axis.title.x=ggplot2::element_blank(),axis.title.y=ggplot2::element_blank(),legend.position = "none",
-          panel.background=ggplot2::element_blank(),panel.border=ggplot2::element_blank(),panel.grid.major=ggplot2::element_blank(),
-          panel.grid.minor=ggplot2::element_blank(),plot.background=ggplot2::element_blank(),text = ggplot2::element_text(size = 16,family = font),plot.margin = ggplot2::margin(1,1,1,1,"in"))
+  # test correlations
+  if (!is.null(inner_cors)) {
 
-  # adding subfactor cor labels (optional)
-  if(!is.null(subfactor_inner_cors)){globalplot <- globalplot +
-    ggplot2::geom_text(data = subfactor_inner_cors,ggplot2::aes(x=x,y=y,label=label),family = font,size = 2.25*sqrt(size)*size_cor_labels_inner)}
+    # rings
+      # c() enables putting layer on the bottom
+    globalplot$layers <- c(ggforce::geom_circle(data = coord$global$cart_inner_ring,
+                                                ggplot2::aes(x0 = x, y0 = y, r = radius),
+                                                size = .3 * size * width_axes_inner,
+                                                color = paste("gray", fade, sep = "")),
+                           globalplot$layers)
 
-  # adding cor labels (optional)
-  if(!is.null(inner_cors)){globalplot$layers <- c(ggforce::geom_circle(data=coord$global$cart_inner_ring,ggplot2::aes(x0=x,y0=y,r=radius),size=.3*size*width_axes_inner,color=paste("gray",fade,sep = "")),globalplot$layers)
-    globalplot <-  globalplot + ggplot2::geom_text(data = inner_cors,ggplot2::aes(x=x,y=y,label=label),family = font,size = coord$global$cor_spacing*6.75*sqrt(size)*size_cor_labels,fontface="bold")}
+    # labels
+    globalplot <-  globalplot +
+      ggplot2::geom_text(data = inner_cors,
+                         ggplot2::aes(x = x, y = y, label = label),
+                         family = font,
+                         size = coord$global$cor_spacing * 6.75 * sqrt(size) * size_cor_labels,
+                         fontface = "bold")
+  }
 
-  # adding extra arrows (optional)
-  if(extra_arrows==TRUE){globalplot <- globalplot +
-    ggplot2::geom_segment(data = coord$global$arrows,ggplot2::aes(x=x1,y=y1,xend=x2,yend=y2),arrow = ggplot2::arrow(ends = "both",length = ggplot2::unit(.003*sqrt(size)*size_extra_arrow_heads,"native"),type = "closed"),size=.25*size*size_extra_arrows,linetype = "dotted",color="gray20")+
-    ggplot2::geom_text(data = coord$global$arrows,ggplot2::aes(x=xlabel,y=ylabel,label=label),size=2.25*sqrt(size)*size_extra_labels,family=font,color="gray20")}
+  # extra arrows
+  if (extra_arrows == TRUE) {
+    globalplot <- globalplot +
 
-  # saving as:
-  # .pdf
+      # arrows
+      ggplot2::geom_segment(data = coord$global$arrows,
+                            ggplot2::aes(x = x1, y = y1, xend = x2, yend = y2),
+                            arrow = ggplot2::arrow(ends = "both",
+                                                   length = ggplot2::unit(.003 * sqrt(size) * size_extra_arrow_heads,
+                                                                          "native"),
+                                                   type = "closed"),
+                            size= .25 * size * size_extra_arrows,
+                            linetype = "dotted",
+                            color = "gray20")+
+
+      # labels
+      ggplot2::geom_text(data = coord$global$arrows,
+                         ggplot2::aes(x = xlabel, y = ylabel, label = label),
+                         size = 2.25 * sqrt(size) * size_extra_labels,
+                         family = font,
+                         color = "gray20")
+  }
+
+
+# optional file save ----------------------------------------------------------
+
+    ## .pdf ---------------------------
+
   if(file == "pdf"){
-    ggplot2::ggsave(paste(filename,".pdf",sep = ""), globalplot, width = filewidth, height = fileheight, units = "in", dpi = 3000)
-    if(is.null(filename))warning("empty filename")
+    ggplot2::ggsave(paste(filename, ".pdf", sep = ""),
+                    globalplot,
+                    width = filewidth,
+                    height = fileheight,
+                    units = "in",
+                    dpi = 3000)
+    if (is.null(filename)) warning ("empty filename")
   }
-  # .png
-  if(file == "png"){
-    ggplot2::ggsave(paste(filename,".png",sep = ""), globalplot, width = filewidth, height = fileheight, units = "in", dpi = 500)
-    if(is.null(filename))warning("empty filename")
+
+
+    ## .png ---------------------------
+
+  if (file == "png") {
+    ggplot2::ggsave(paste(filename, ".png", sep = ""),
+                    globalplot,
+                    width = filewidth,
+                    height = fileheight,
+                    units = "in",
+                    dpi = 500)
+    if (is.null(filename)) warning ("empty filename")
   }
-  # .jpeg
-  if(file == "jpeg"){
-    ggplot2::ggsave(paste(filename,".jpeg",sep = ""), globalplot, width = filewidth, height = fileheight, units = "in", dpi = 500)
-    if(is.null(filename))warning("empty filename")
+
+
+    ## .jpeg --------------------------
+
+  if (file == "jpeg") {
+    ggplot2::ggsave(paste(filename, ".jpeg", sep = ""),
+                    globalplot,
+                    width = filewidth,
+                    height = fileheight,
+                    units = "in",
+                    dpi = 500)
+    if (is.null(filename)) warning ("empty filename")
   }
+
+
+# return ----------------------------------------------------------------------
 
   return(globalplot)
 }

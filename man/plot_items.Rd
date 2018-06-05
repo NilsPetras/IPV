@@ -5,10 +5,10 @@
 \title{Plot Items}
 \usage{
 plot_items(coord, size = 1, file = "pdf", filename = NULL,
-  filewidth = 10, fileheight = 10, font = "sans", colour = "black",
-  colour2 = "black", fade = 90, tick_label = TRUE, size_title = 1,
-  size_axis_labels = 1, width_axes = 1, size_arrow_heads = 1,
-  width_items = 1, width_grid = 1, size_tick_label = 1,
+  filewidth = 10, fileheight = 10, colour = "black", colour2 = "black",
+  fade = 90, font = "sans", tick_label = TRUE, size_tick_label = 1,
+  size_title = 1, size_axis_labels = 1, width_axes = 1,
+  size_arrow_heads = 1, width_items = 1, width_grid = 1,
   size_center_dot = 1)
 }
 \arguments{
@@ -30,9 +30,6 @@ filename extension added from file parameter like this: [filename].[file].}
 \item{fileheight}{integer; height of the .pdf document; defaults to 10, dpi
 is 3000.}
 
-\item{font}{character; text font; defaults to 'sans' (use extrafonts to
-install additional fonts).}
-
 \item{colour}{character; name of the first accent colour.}
 
 \item{colour2}{character; name of the second accent colour.}
@@ -40,8 +37,14 @@ install additional fonts).}
 \item{fade}{integer; brightness of minor grid lines, gray tones between 0
 (black) and 100 (white) in steps of 1; defaults to 90.}
 
+\item{font}{character; text font; defaults to 'sans' (use extrafonts to
+install additional fonts).}
+
 \item{tick_label}{logical; if \code{TRUE}, draws a text label for the axis
 tick}
+
+\item{size_tick_label}{integer; font size of the axis tick label (relative to
+default).}
 
 \item{size_title}{integer; font size of the test label (relative to default).}
 
@@ -58,9 +61,6 @@ default).}
 Currently not supported!}
 
 \item{width_grid}{integer; width of the dotted grid lines (relative to
-default).}
-
-\item{size_tick_label}{integer; font size of the axis tick label (relative to
 default).}
 
 \item{size_center_dot}{integer; size of the center dot marking the origin

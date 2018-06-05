@@ -27,12 +27,12 @@
 #' DSSEI_items
 #'
 #' @export
-coord_items <- function(data, rotate_radians = 0, rotate_degrees = 0){
+coord_items <- function (data, rotate_radians = 0, rotate_degrees = 0) {
 
 
-    ## helper variables
+# helper variables ------------------------------------------------------------
 
-  # number of facets
+  # number of facets (=subfactors)
   cplx <- data$parameters$complexity
 
   # total rotation value in radians
@@ -42,65 +42,92 @@ coord_items <- function(data, rotate_radians = 0, rotate_degrees = 0){
   maxcd <- max(data$center_distances$center_distance)
 
 
-    ## coordinates of chart objects
+# chart objects ---------------------------------------------------------------
+
+    ## axes ---------------------------
 
   # polar coordinates of axis line ends and axis labels
-    # axis ends are at 120% of the maximum center distance
-    # axis labels are at 110% of the axis ends
-  pol_axes <- data.frame(phi = rep(NA, cplx), rho = rep(NA, cplx), rholabel = rep(NA, cplx))
+    # axis ends at 120 % of the maximum center distance
+    # axis labels at 110 % of the axis ends
+  pol_axes <- data.frame(phi = rep(NA, cplx),
+                         rho = rep(NA, cplx),
+                         rholabel = rep(NA, cplx))
   row.names(pol_axes) <- levels(data$center_distances$subfactor)
   pol_axes$rho <- maxcd * 1.2
   pol_axes$phi <- c(2 * pi / cplx * c(1:cplx)) + rotate
   pol_axes$rholabel <- pol_axes$rho * 1.1
 
-  # cartesian coordinates of axis lines and axis labels
+  # cartesian coordinates
     # x = cos(phi) * rho
     # y = sin(phi) * rho
   cart_axes <- pol_axes
-  cart_axes[, 1] <- round(cos(pol_axes$phi) * pol_axes$rho, digits = 7)
-  cart_axes[, 2] <- round(sin(pol_axes$phi) * pol_axes$rho, digits = 7)
-  cart_axes[, 3] <- round(cos(pol_axes$phi) * pol_axes$rholabel, digits = 7)
-  cart_axes[, 4] <- round(sin(pol_axes$phi) * pol_axes$rholabel, digits = 7)
+    # rounded values to decrease display length in console
+  cart_axes[ ,1] <- round(cos(pol_axes$phi) * pol_axes$rho, digits = 7)
+  cart_axes[ ,2] <- round(sin(pol_axes$phi) * pol_axes$rho, digits = 7)
+  cart_axes[ ,3] <- round(cos(pol_axes$phi) * pol_axes$rholabel, digits = 7)
+  cart_axes[ ,4] <- round(sin(pol_axes$phi) * pol_axes$rholabel, digits = 7)
   names(cart_axes) <- c("x", "y", "xlabel", "ylabel")
 
+  # axis tick label
+  # reflecting the default settings of other charts, the axis tick of 0.1 is labeled
+  # the axis tick label automatically shows within the first quadrant
+  axis_tick <- data.frame(rho = 0.14, label = "0.1", phi = NA, x = NA, y = NA)
+  axis_tick$phi <- min(pol_axes$phi[pol_axes$rho>.1] %% (2 * pi)) +
+                   pi / 32 / axis_tick$rho
+  axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
+  axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
+
+
+    ## items --------------------------
+
   # coordinates of item bars
-    # the width of item bars alternates between long and short to better distinguish similar items
-    # the width of item bars is relative to the overall size of the chart determined by the maximum center distance
-    # the center distances of items are equal to the distance from the origin to the inner edge of the item bar
+    # the length of item bars alternates between long and short to better distinguish similar items
+    # the length of item bars is relative to the overall size of the chart
+    # center distances = from the origin to the inner edge of the item bar
     # n = number of items
   n <- length(data$center_distances$item)
-  items <- data.frame(rho = rep(NA, n), phi = rep(NA, n), x = rep(NA, n), y = rep(NA, n), x1 = rep(NA, n), y1 = rep(NA, n), x2 = rep(NA, n), y2 = rep(NA, n), width = rep(NA, n))
+  items <- data.frame(rho = rep(NA, n),
+                      phi = rep(NA, n),
+                      x = rep(NA, n),
+                      y = rep(NA, n),
+                      x1 = rep(NA, n),
+                      y1 = rep(NA, n),
+                      x2 = rep(NA, n),
+                      y2 = rep(NA, n),
+                      length = rep(NA, n))
   row.names(items) <- data$center_distances$item
   items$phi <- pol_axes$phi[data$center_distances$subfactor]
   items$rho <- data$center_distances$center_distance + .01
   items <- items[order(items$phi, items$rho), ]
   items$x <- round(cos(items$phi) * items$rho, digits = 7)
   items$y <- round(sin(items$phi) * items$rho, digits = 7)
-  items$width <- 0.85 * maxcd
-  items$width[seq(from = 1, by = 2, to = length(items$width))] <- 1.15 * maxcd
-  items$x1 <- items$x-items$y / items$rho * .03 * items$width
-  items$y1 <- items$y + items$x / items$rho * .03 * items$width
-  items$x2 <- items$x + items$y / items$rho * .03 * items$width
-  items$y2 <- items$y-items$x / items$rho * .03 * items$width
+  items$length <- 0.85 * maxcd
+  items$length[seq(from = 1, by = 2, to = length(items$length))] <- 1.15 * maxcd
+  items$x1 <- items$x-items$y / items$rho * .03 * items$length
+  items$y1 <- items$y + items$x / items$rho * .03 * items$length
+  items$x2 <- items$x + items$y / items$rho * .03 * items$length
+  items$y2 <- items$y-items$x / items$rho * .03 * items$length
 
-  # coordinates of main grid
+
+    ## grid ---------------------------
+
+  # coordinates of grid
     # grid density is one line every 0.1 center distance
     # the grid ends right before the maximum center distance
     # grid lines are accentuated at 0.1 and multiples of 0.5
+    # n = number of grid lines
   n <- trunc(maxcd * 10)
-  maingrid <- data.frame(x = rep(0, n), y = rep(0, n), r = rep(NA, n), alpha = rep(NA, n))
+  maingrid <- data.frame(x = rep(0, n),
+                         y = rep(0, n),
+                         r = rep(NA, n),
+                         alpha = rep(NA, n))
   maingrid$r <- seq(from = .1, by = .1, to = round(maxcd, digits = 2))
   maingrid$alpha <- .5
-  if(n>4)maingrid$alpha[seq(from = 5, by = 5, to = n)] <- 1
+  if (n > 4) maingrid$alpha[seq(from = 5, by = 5, to = n)] <- 1
   maingrid$alpha[1] <- 1
 
-  # coordinates of axis tick label
-    # reflecting the default settings of other charts, the axis tick of 0.1 is labeled
-    # the axis tick label automatically shows within the first quadrant
-  axis_tick <- data.frame(rho = 0.14,label = "0.1", phi = NA, x = NA, y = NA)
-  axis_tick$phi <- min(pol_axes$phi[pol_axes$rho>.1] %% (2 * pi)) + pi / 32 / axis_tick$rho
-  axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
-  axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
+
+    ## title --------------------------
 
   # coordinates of factor name
     # the factor label automatically shows between the first two facets
@@ -113,9 +140,9 @@ coord_items <- function(data, rotate_radians = 0, rotate_degrees = 0){
   factor_label$y <- round(sin(factor_label$phi) * factor_label$rho, digits = 7)
 
 
-    ## return
+# return ----------------------------------------------------------------------
 
-  # returns a list of all dataframes above containing the coordinates of the chart objects
+  # list of all dataframes containing the coordinates of the chart objects
   coord <- list(pol_axes = pol_axes,
                cart_axes = cart_axes,
                items = items,

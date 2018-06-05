@@ -56,75 +56,84 @@
 #'
 #' @examples
 #' # creating nested charts is a two step process, using this function and plot_nested:
-#' coord <- coord_nested(self_confidence,subradius = .6)
-#' sc_nested <- plot_nested(coord,filename = "sc_nested")
+#' coord <- coord_nested(self_confidence, subradius = .6)
+#' sc_nested <- plot_nested(coord, filename = "sc_nested")
 #' sc_nested
 #'
 #' # adding extra arrows
-#' sc_arrows <- data.frame(V1_factor=rep(NA,3),
-#'                         V1_subfactor=rep(NA,3),
-#'                         V2_factor=rep(NA,3),
-#'                         V2_subfactor=rep(NA,3),
-#'                         value=rep(NA,3))
-#' sc_arrows[1,] <- c("DSSEI","Ab","RSES","Ps",".67")
-#' sc_arrows[2,] <- c("DSSEI","Ab","SMTQ","Cs",".81")
-#' sc_arrows[3,] <- c("SMTQ","Ct","RSES","Ns",".76")
-#' coord <- coord_nested(self_confidence,subradius = .6,extra_arrows = sc_arrows)
-#' sc_nested <- plot_nested(coord,filename = "sc_nested",extra_arrows = TRUE)
+#' sc_arrows <- data.frame(V1_factor = rep(NA, 3),
+#'                         V1_subfactor = rep(NA, 3),
+#'                         V2_factor = rep(NA, 3),
+#'                         V2_subfactor = rep(NA, 3),
+#'                         value = rep(NA, 3))
+#' sc_arrows[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
+#' sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
+#' sc_arrows[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
+#' coord <- coord_nested(self_confidence,
+#'                       subradius = .6,
+#'                       extra_arrows = sc_arrows)
+#' sc_nested <- plot_nested(coord, filename = "sc_nested", extra_arrows = TRUE)
 #' sc_nested
 #'
 #' # rotating the nested facet charts one by one
-#' coord <- coord_nested(self_confidence,subradius = .6,subrotate_radians = c(0,pi/2,0))
-#' sc_nested <- plot_nested(coord,filename = "sc_nested")
+#' coord <- coord_nested(self_confidence,
+#'                       subradius = .6,
+#'                       subrotate_radians = c(0, pi / 2, 0))
+#' sc_nested <- plot_nested(coord, filename = "sc_nested")
 #' sc_nested
 #'
 #' @export
-coord_nested <- function(data, subradius,
-                      rotate_radians = 0, rotate_degrees = 0,
-                      subrotate_radians = 0, subrotate_degrees = 0,
-                      rotate_title_radians = 0, rotate_title_degrees = 0,
-                      items = FALSE, cors = TRUE, cor_spacing = .4, relative_scaling = 3,
-                      extra_arrows = NULL){
+coord_nested <- function (data, subradius,
+                          rotate_radians = 0, rotate_degrees = 0,
+                          subrotate_radians = 0, subrotate_degrees = 0,
+                          rotate_title_radians = 0, rotate_title_degrees = 0,
+                          items = FALSE, cors = TRUE, cor_spacing = .4, relative_scaling = 3,
+                          extra_arrows = NULL) {
 
 
-    ## helper variabe for facet and item plots
+# helper variables ------------------------------------------------------------
 
   # total subrotation value in radians
   subrotate <- subrotate_radians + subrotate_degrees * pi / 180
 
 
-    ## listwise calculation for single factors using mode_facets and coord_items
+# listwise calculation for single factors -------------------------------------
 
   # with one value for all subrotations
-    if(length(subrotate)==1){
-      factorcoords <- lapply(X = data$factors, FUN = coord_facets, subradius = subradius,
-                            rotate_radians = subrotate)
-      names(factorcoords) <- names(data$factors)
-    }
-    if(length(subrotate)==1 & items==TRUE){
-      itemcoords <- lapply(data$factors, coord_items, rotate_radians = subrotate)
-      names(itemcoords) <- names(data$factors)
-    }
+  if (length(subrotate) == 1) {
+    factorcoords <- lapply(data$tests, coord_facets,
+                           subradius = subradius,
+                           rotate_radians = subrotate)
+    names(factorcoords) <- names(data$tests)
+  }
+  if (length(subrotate) == 1 & items == TRUE) {
+    itemcoords <- lapply(data$tests,
+                         coord_items,
+                         rotate_radians = subrotate)
+    names(itemcoords) <- names(data$tests)
+  }
 
   # with a vector of values for subrotations
-  if(length(subrotate)==length(data$factors)){
+  if (length(subrotate) == length(data$tests)) {
     factorcoords <- list()
-    for(i in 1:length(data$factors)){
-      factorcoords[[i]] <- coord_facets(data$factors[[i]], subradius = subradius,
-                                       rotate_radians = subrotate[i])
+    for (i in 1:length(data$tests)) {
+      factorcoords[[i]] <- coord_facets(data$tests[[i]],
+                                        subradius = subradius,
+                                        rotate_radians = subrotate[i])
     }
-    names(factorcoords) <- names(data$factors)
+    names(factorcoords) <- names(data$tests)
   }
-  if(length(subrotate)==length(data$factors) & items==TRUE){
+  if (length(subrotate) == length(data$tests) & items == TRUE) {
     itemcoords <- list()
-    for(i in 1:length(data$factors)){
-      itemcoords[[i]] <- coord_items(data$factors[[i]], rotate_radians = subrotate[i])
+    for (i in 1:length(data$tests)) {
+      itemcoords[[i]] <- coord_items(data$tests[[i]],
+                                     rotate_radians = subrotate[i])
     }
-    names(itemcoords) <- names(data$factors)
+    names(itemcoords) <- names(data$tests)
   }
 
 
-    ## helper variables for nested plot
+# helper variables ------------------------------------------------------------
 
   # names of factors
   nam <- levels(data$global$center_distances$subfactor)
@@ -139,79 +148,91 @@ coord_nested <- function(data, subradius,
   rotate_title <- rotate_title_radians + rotate_title_degrees * pi / 180
 
   # retrieving the size of the factor circles from the coord_facets output
-  getcircsize <- function(x){
-    polcircs <- get(x = "pol_circles",envir = as.environment(x))
-    polcircs <- polcircs[1,"radius"]
+  getcircsize <- function (x) {
+    polcircs <- get(x = "pol_circles", envir = as.environment(x))
+    polcircs <- polcircs[1, "radius"]
   }
-  circsize <- unlist(lapply(factorcoords,getcircsize))
-  circsize <- circsize+cors*cor_spacing
+  circsize <- unlist(lapply(factorcoords, getcircsize))
+  circsize <- circsize + cors * cor_spacing
 
   # global mean center distances
-  global_center_distances <- data.frame(lapply(split(data$global$center_distances,data$global$center_distances$subfactor),function(x)y <- x$mean_center_distance[1]))
+  global_center_distances <- data.frame(lapply(split(data$global$center_distances,
+                                                     data$global$center_distances$subfactor),
+                                               function (x) y <- x$mean_center_distance[1]))
   global_center_distances <- t(global_center_distances)
   global_center_distances <- data.frame(global_center_distances)
 
 
-    ## coordinates of global chart objects
+# global chart objects --------------------------------------------------------
+
+    ## circles ------------------------
 
   # polar coordinates of factor circles
-    # the main circle is centered on the origin
-    # the main circle's radius is set so it touches the furthest circle on the outside
-    # the coordinates position the centers of the circles
-    # note that the factor circles differ in center distance AND size
-    # factor circle size depends on the size of the factor correlation ring
-  pol_circles <- data.frame(phi=rep(NA,cplx+1),rho=rep(0,cplx+1),radius=rep(NA,cplx+1))
-  row.names(pol_circles) <- c(levels(data$global$center_distances$factor),nam)
-  pol_circles[names(circsize),"radius"] <- circsize
-  pol_circles$radius[1] <- max(global_center_distances[nam,]*relative_scaling+circsize[nam]*2)
-  pol_circles[nam,"rho"] <- c(global_center_distances[nam,]*relative_scaling+circsize[nam])
-  pol_circles$phi <- c(0,2*pi/cplx*c(1:cplx))+rotate
+  pol_circles <- data.frame(phi = rep(NA, cplx + 1),
+                            rho = rep(0, cplx + 1),
+                            radius = rep(NA, cplx + 1))
+  row.names(pol_circles) <- c(levels(data$global$center_distances$factor), nam)
+  pol_circles[names(circsize), "radius"] <- circsize
+  pol_circles$radius[1] <- max(global_center_distances[nam, ] * relative_scaling + circsize[nam] * 2)
+  pol_circles[nam, "rho"] <- c(global_center_distances[nam, ] * relative_scaling + circsize[nam])
+  pol_circles$phi <- c(0, 2 * pi / cplx * c(1:cplx)) + rotate
   pol_circles$rho[-1] <- pol_circles$rho[-1]
 
-  # cartesian coordinates of factor circles
+  # cartesian coordinates
     # x=cos(phi)*rho
     # y=sin(phi)*rho
   cart_circles <- pol_circles
-  cart_circles[,1] <- round(cos(pol_circles$phi) * pol_circles$rho, digits = 7)
-  cart_circles[,2] <- round(sin(pol_circles$phi) * pol_circles$rho, digits = 7)
-  names(cart_circles) <- c("x","y","radius")
+    # rounded values to decrease display length in console
+  cart_circles[ ,1] <- round(cos(pol_circles$phi) * pol_circles$rho, digits = 7)
+  cart_circles[ ,2] <- round(sin(pol_circles$phi) * pol_circles$rho, digits = 7)
+  names(cart_circles) <- c("x", "y", "radius")
   row.names(cart_circles)[1] <- ""
 
-  # polar coordinates of inner circle marking the factor correlation ring
-  if(cors==T){
-    pol_inner_ring <- data.frame(phi=rep(NA,cplx+1),rho=rep(NA,cplx+1),radius=rep(NA,cplx+1))
-    row.names(pol_inner_ring) <- c(levels(data$global$center_distances$factor),nam)
-    pol_inner_ring[names(circsize),"radius"] <- circsize-cors*cor_spacing
-    pol_inner_ring[nam,"rho"] <- c(global_center_distances[nam,]*relative_scaling+circsize[nam])
-    pol_inner_ring$phi <- c(0,2*pi/cplx*c(1:cplx))+rotate
+  # polar coordinates of factor correlation rings
+  if(cors == T) {
+    pol_inner_ring <- data.frame(phi = rep(NA, cplx + 1),
+                                 rho = rep(NA, cplx + 1),
+                                 radius = rep(NA, cplx + 1))
+    row.names(pol_inner_ring) <- c(levels(data$global$center_distances$factor), nam)
+    pol_inner_ring[names(circsize), "radius"] <- circsize - cors * cor_spacing
+    pol_inner_ring[nam, "rho"] <- c(global_center_distances[nam, ] * relative_scaling + circsize[nam])
+    pol_inner_ring$phi <- c(0, 2 * pi / cplx * c(1:cplx)) + rotate
     pol_inner_ring$rho[-1] <- pol_inner_ring$rho[-1]
-    pol_inner_ring <- pol_inner_ring[-1,]
+    pol_inner_ring <- pol_inner_ring[-1, ]
     pol_inner_ring <- pol_inner_ring
-  }
-  else pol_inner_ring <- NULL
+  } else pol_inner_ring <- NULL
 
-  # cartesian coordinates of inner circle marking the factor correlation ring
-  if(cors==T){
+  # cartesian coordinates
+  if(cors == T) {
     cart_inner_ring <- pol_inner_ring
     cart_inner_ring[,1] <- round(cos(pol_inner_ring$phi) * pol_inner_ring$rho, digits = 7)
     cart_inner_ring[,2] <- round(sin(pol_inner_ring$phi) * pol_inner_ring$rho, digits = 7)
-    names(cart_inner_ring) <- c("x","y","radius")
-  }
-  else cart_inner_ring <- NULL
+    names(cart_inner_ring) <- c("x", "y", "radius")
+  } else cart_inner_ring <- NULL
 
-  # polar coordinates of global axes
-    # inner (rho1) and outer (rho2) intersection of axes and circles
-    # intersection of axes and main circle (rho3)
-  pol_axes <- data.frame(rho0=rep(0,cplx),rho1=rep(NA,cplx),rho2=rep(NA,cplx),rho3=rep(NA,cplx),phi=rep(NA,cplx))
+
+    ## axes ---------------------------
+
+  # polar coordinates of global radial axes
+    # axes are split into two segments by the test circles:
+    # one from the origin (rho0) to the inner edge of the test circles (rho1), the center distance
+    # one from the outer edge of the test circles (rho2) to the edge of the main circle (rho3)
+  pol_axes <- data.frame(rho0 = rep(0, cplx),
+                         rho1 = rep(NA, cplx),
+                         rho2 = rep(NA, cplx),
+                         rho3 = rep(NA, cplx),
+                         phi = rep(NA, cplx))
   row.names(pol_axes) <- nam
-  pol_axes$phi <- utils::tail(pol_circles$phi,cplx)
-  pol_axes$rho1 <- utils::tail(pol_circles$rho,cplx)-utils::tail(pol_circles$radius,cplx)
-  pol_axes$rho2 <- pol_axes$rho1 + 2 * utils::tail(pol_circles$radius,cplx)
+  pol_axes$phi <- utils::tail(pol_circles$phi, cplx)
+  pol_axes$rho1 <- utils::tail(pol_circles$rho, cplx) - utils::tail(pol_circles$radius, cplx)
+  pol_axes$rho2 <- pol_axes$rho1 + 2 * utils::tail(pol_circles$radius, cplx)
   pol_axes$rho3 <- rep(pol_circles$radius[1])
 
-  # cartesian coordinates of global axes
-  cart_axes <- data.frame(x0=rep(NA,cplx),y0=rep(NA,cplx),x1=rep(NA,cplx),y1=rep(NA,cplx),
-                          x2=rep(NA,cplx),y2=rep(NA,cplx),x3=rep(NA,cplx),y3=rep(NA,cplx))
+  # cartesian coordinates
+  cart_axes <- data.frame(x0 = rep(NA, cplx), y0 = rep(NA, cplx),
+                          x1 = rep(NA, cplx), y1 = rep(NA, cplx),
+                          x2 = rep(NA, cplx), y2 = rep(NA, cplx),
+                          x3 = rep(NA, cplx), y3 = rep(NA, cplx))
   row.names(cart_axes) <- nam
   cart_axes$x0 <- round(cos(pol_axes$phi) * pol_axes$rho0, digits = 7)
   cart_axes$x1 <- round(cos(pol_axes$phi) * pol_axes$rho1, digits = 7)
@@ -224,148 +245,218 @@ coord_nested <- function(data, subradius,
 
   # coordinates of global axis tick label
     # this is only a template and sets the axis tick to 1
-    # the actual tick is defined in the plot function by multiplying x and y with the tick value (defaults to 0.1)
+    # the actual tick is defined in the plot function by
+    # multiplying x and y with the tick value (defaults to 0.1)
+    # the axis tick label is displayed between the rightmost axis and the next one counter-clockwise
   axis_tick <- data.frame(rho = 1, phi = NA, x = NA, y = NA)
-  axis_tick$phi <- min(pol_axes$phi %% (2*pi)) + pi / cplx
+  axis_tick$phi <- min(pol_axes$phi %% (2 * pi)) + pi / cplx
   axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
   axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
+
+
+    ## title --------------------------
 
   # coordinates of overall general factor name
     # the factor label automatically shows next to the lowest mean center distance (counter-clockwise)
     # the factor label shows at 2/3 of the distance from the origin to the edge of the main circle
-  factor_label <- data.frame(x = NA,y = NA,label = row.names(pol_circles)[1],phi=NA,rho=NA)
-  factor_label$phi <- pol_circles[which.min(pol_circles$radius),"phi"]+pi/cplx+rotate_title
-  factor_label$rho <- 2/3*max(pol_circles$radius)
-  factor_label$x <- round(cos(factor_label$phi)*factor_label$rho, digits = 7)
-  factor_label$y <- round(sin(factor_label$phi)*factor_label$rho, digits = 7)
+  factor_label <- data.frame(x = NA, y = NA, label = row.names(pol_circles)[1], phi=NA, rho=NA)
+  factor_label$phi <- pol_circles[which.min(pol_circles$radius), "phi"] + pi / cplx + rotate_title
+  factor_label$rho <- 2/3 * max(pol_circles$radius)
+  factor_label$x <- round(cos(factor_label$phi) * factor_label$rho, digits = 7)
+  factor_label$y <- round(sin(factor_label$phi) * factor_label$rho, digits = 7)
 
-  # coordinates of latent factor correlation labels
-    # n = 2 * number of correlations (each correlation label appears twice: once in each factor circle)
-  n <- cplx*(cplx-1)
-  inner_cors <- data.frame(x=rep(NA,n),y=rep(NA,n),V1=rep(NA,n),V2=rep(NA,n),
-                           label=rep(NA,n),xnew=rep(NA,n),ynew=rep(NA,n))
-    # subfactor list 1 represents a ring (a,b,c,...) moving one element each time matched with
-    # subfactor list 2 representing a list with repeated elements (a,a,b,b,...)
-    # so all pairs of facets are covered twice, once in every order, excluding self-pairing
-  # subfactor list 1
+
+    ## correlations -------------------
+
+  # coordinates of latent test correlation labels
+    # each correlation label appears twice: once in each facet's circle
+    # n = 2 * number of correlations
+  n <- cplx * (cplx - 1)
+  inner_cors <- data.frame(x = rep(NA, n),
+                           y = rep(NA, n),
+                           V1 = rep(NA, n),
+                           V2 = rep(NA, n),
+                           label = rep(NA, n),
+                           xnew = rep(NA, n),
+                           ynew = rep(NA, n))
+
+  # all pairs of subfactors are covered twice, once in every order, excluding self-pairing
   a <- row.names(data$global$subfactor_cors)
-  a <- c(a,a[1])
+  a <- c(a, a[1])
   b <- NULL
-    # matching subfactors from list 1 to all other subfactors in the correct order
-      # this uses a workaround instead of a ring
-      # where b is the incrementally generated object and a the ring elements [1-n,1] shifted by 1 each iteration
-  for(k in 1:cplx) {
-    b <- c(b,a[-c(1,cplx+1)])
+  for (k in 1:cplx) {
+    b <- c(b, a[-c(1, cplx + 1)])
     a <- a[-1]
-    a <- c(a,a[1])
+    a <- c(a, a[1])
   }
   inner_cors$V1 <- b
-    # subfactor list 2
-  inner_cors$V2 <- unlist(lapply(row.names(data$global$subfactor_cors),FUN=rep,times=cplx-1))
-    # correlation values
-  for(k in 1:n) inner_cors$label[k] <- data$global$subfactor_cors[inner_cors$V1[k],inner_cors$V2[k]]
+  inner_cors$V2 <- unlist(lapply(row.names(data$global$subfactor_cors), rep, times = cplx - 1))
+
+  # correlation values
+  for (k in 1:n) {
+    inner_cors$label[k] <- data$global$subfactor_cors[inner_cors$V1[k], inner_cors$V2[k]]
+  }
   inner_cors$label <- as.character(inner_cors$label)
-  inner_cors$label[inner_cors$label<1] <- substr(inner_cors$label,2,4)
-    # label coordinates
-  inner_cors$x <- cart_circles[inner_cors$V2,"x"]
-  inner_cors$y <- cart_circles[inner_cors$V2,"y"]
-    # scatter as list
-      # middle of list is anchored towards the origin
-      # scatter width resembles the angles of an even n-sided polygon for n subfactors
-      # (e.g. 90? = pi/2 for 4 subfactors)
-      # labels are distributed in directions that were a perfect fit in an even polygon
-  scatter <- rep(seq(from = (-pi+2*pi/cplx)/2,to = (pi-2*pi/cplx)/2,by = (pi-2*pi/cplx)/(cplx-2)),cplx)
-  inner_cors$xnew <- inner_cors$x + round(cos(pol_circles[inner_cors$V2,"phi"]+pi+scatter), digits = 7)*(pol_circles[inner_cors$V2,"radius"]-cors*.5*cor_spacing)
-  inner_cors$ynew <- inner_cors$y + round(sin(pol_circles[inner_cors$V2,"phi"]+pi+scatter), digits = 7)*(pol_circles[inner_cors$V2,"radius"]-cors*.5*cor_spacing)
+  inner_cors$label[inner_cors$label < 1] <- substr(inner_cors$label, 2, 4)
+
+  # label coordinates
+  inner_cors$x <- cart_circles[inner_cors$V2, "x"]
+  inner_cors$y <- cart_circles[inner_cors$V2, "y"]
+
+  # scattered as list in the general direction of the partner variable
+  scatter <- rep(seq(from = (-pi + 2 * pi / cplx) / 2,
+                     to = (pi - 2 * pi / cplx) / 2,
+                     by = (pi - 2 * pi / cplx) / (cplx - 2)),
+                 cplx)
+  rho <- pol_circles[inner_cors$V2, "radius"]
+  phi <- pol_circles[inner_cors$V2, "phi"]
+  inner_cors$xnew <- inner_cors$x + round(cos(phi + pi + scatter), digits = 7) * (rho - cors * .5 * cor_spacing)
+  inner_cors$ynew <- inner_cors$y + round(sin(phi + pi + scatter), digits = 7) * (rho - cors * .5 * cor_spacing)
   inner_cors$x <- inner_cors$xnew
   inner_cors$y <- inner_cors$ynew
   inner_cors[6:7] <- list(NULL)
 
 
-    ## coordinates of nested chart objects
+# nested chart objects --------------------------------------------------------
 
-  # these objects are put into a list ('nested') next to the data frames containing the global chart objects
-  # shifting the coordinates from coord_facets to the correct place
-  # subcircles is a list of lists, one for each factor, with the shifted coordinates for that factor's nested chart objects
+  # these objects are put into a list ('nested') next to the
+  # data frames containing the global chart objects
+
+    ## shifted facet charts -----------
+
   subcircles <- list()
-  for(i in 1:cplx) subcircles[[nam[i]]] <- shift_factor(factorcoords[[nam[i]]],cart_circles[nam[i],"x"],cart_circles[nam[i],"y"])
-
-  # coordinates of facet circles
-  # note that the coordinates of the following nested chart objects get bunched together across factors
-  nested <- list(circles=NULL,axes=NULL,factor_label=NULL,inner_cors=NULL)
-  for(i in 1:cplx) nested$circles[[nam[i]]] <- subcircles[[c(i,1)]]
-  nested$circles <- lapply(nested$circles,utils::tail,n=-1)
-  nested$circles <- do.call("rbind",nested$circles)
-  nested$circles$label <- substr(row.names(nested$circles),unlist(gregexpr(pattern = "\\.",row.names(nested$circles)))+1,nchar(row.names(nested$circles)))
-
-  # coordinates of nested axes
-  for(i in 1:cplx) nested$axes[[nam[i]]] <- subcircles[[c(i,2)]]
-  nested$axes <- do.call("rbind",nested$axes)
-
-  # coordinates of factor names
-  for(i in 1:cplx) nested$factor_label[[nam[i]]] <- subcircles[[c(i,3)]]
-  nested$factor_label <- do.call("rbind",nested$factor_label)
-
-  # coordinates of latent facet correlations
-  for(i in 1:cplx) nested$inner_cors[[nam[i]]] <- subcircles[[c(i,4)]]
-  nested$inner_cors <- do.call("rbind",nested$inner_cors)
+  for(i in 1:cplx) {
+    subcircles[[nam[i]]] <- shift_factor(factorcoords[[nam[i]]],
+                                         cart_circles[nam[i], "x"],
+                                         cart_circles[nam[i], "y"])
+  }
 
 
-    ## (optional) correlation arrows between facets of different factors
+  # the coordinates of the following nested chart objects
+  # get bunched together across factors
+  nested <- list(circles = NULL,
+                 axes = NULL,
+                 factor_label = NULL,
+                 inner_cors = NULL)
 
-  if(!is.null(extra_arrows)){
+
+    ## chart objects ------------------
+
+  # circles
+  for (i in 1:cplx) nested$circles[[nam[i]]] <- subcircles[[c(i, 1)]]
+  nested$circles <- lapply(nested$circles, utils::tail, n = -1)
+  nested$circles <- do.call("rbind", nested$circles)
+    # cutting test names from labels
+  nested$circles$label <- substr(row.names(nested$circles),
+                                 unlist(gregexpr(pattern = "\\.", row.names(nested$circles))) + 1,
+                                 nchar(row.names(nested$circles)))
+
+  # axes
+  for (i in 1:cplx) nested$axes[[nam[i]]] <- subcircles[[c(i, 2)]]
+  nested$axes <- do.call("rbind", nested$axes)
+
+  # titles
+  for (i in 1:cplx) nested$factor_label[[nam[i]]] <- subcircles[[c(i, 3)]]
+  nested$factor_label <- do.call("rbind", nested$factor_label)
+
+  # correlations
+  for (i in 1:cplx) nested$inner_cors[[nam[i]]] <- subcircles[[c(i,4)]]
+  nested$inner_cors <- do.call("rbind", nested$inner_cors)
+
+
+# extra arrows ----------------------------------------------------------------
+
+    ## arrows -------------------------
+
+  if (!is.null(extra_arrows)) {
     # n = number of arrows
     n <- dim(extra_arrows)[1]
-    arrows <- data.frame(x1=rep(NA,n),x2=rep(NA,n),y1=rep(NA,n),y2=rep(NA,n),label=rep(NA,n),xlabel=rep(NA,n),ylabel=rep(NA,n))
+    arrows <- data.frame(x1 = rep(NA, n),
+                         x2 = rep(NA, n),
+                         y1 = rep(NA, n),
+                         y2 = rep(NA, n),
+                         label = rep(NA, n),
+                         xlabel = rep(NA, n),
+                         ylabel = rep(NA, n))
     arrows$label <- extra_arrows$value
-    # coordinates of the correlation arrows
     # note: facet circles are named as 'factor.facet' within nested$circles
-    arrows$x1 <- nested$circles[paste(extra_arrows$V1_factor,extra_arrows$V1_subfactor,sep = "."),"x"]
-    arrows$y1 <- nested$circles[paste(extra_arrows$V1_factor,extra_arrows$V1_subfactor,sep = "."),"y"]
-    arrows$x2 <- nested$circles[paste(extra_arrows$V2_factor,extra_arrows$V2_subfactor,sep = "."),"x"]
-    arrows$y2 <- nested$circles[paste(extra_arrows$V2_factor,extra_arrows$V2_subfactor,sep = "."),"y"]
+    arrows$x1 <- nested$circles[paste(extra_arrows$V1_factor,
+                                      extra_arrows$V1_subfactor,
+                                      sep = "."),
+                                "x"]
+    arrows$y1 <- nested$circles[paste(extra_arrows$V1_factor,
+                                      extra_arrows$V1_subfactor,
+                                      sep = "."),
+                                "y"]
+    arrows$x2 <- nested$circles[paste(extra_arrows$V2_factor,
+                                      extra_arrows$V2_subfactor,
+                                      sep = "."),
+                                "x"]
+    arrows$y2 <- nested$circles[paste(extra_arrows$V2_factor,
+                                      extra_arrows$V2_subfactor,
+                                      sep = "."),
+                                "y"]
 
-    # coordinates of the correlation labels
-    # labels are on the intersection between the arrow and an imaginary line halfway between big circles
 
-    # helper variables
+      ## labels -----------------------
+
+    # labels are placed on the intersection between the arrow
+    # and an imaginary line halfway between the test circles
+    # to avoid overlap with any other chart objects
+    # the calculations used to achieve this are documented elsewhere,
+    # due to being quite complicated
+
       # x- and y-distances between the centers of the big and the small circles involved
     xdist_big <- NULL
     ydist_big <- NULL
-    for(i in 1:n){
-      xdist_big[i] <- cart_circles[extra_arrows$V2_factor[i],"x"]-cart_circles[extra_arrows$V1_factor[i],"x"]
-      ydist_big[i] <- cart_circles[extra_arrows$V2_factor[i],"y"]-cart_circles[extra_arrows$V1_factor[i],"y"]
+    for (i in 1:n) {
+      xdist_big[i] <- cart_circles[extra_arrows$V2_factor[i], "x"] -
+                      cart_circles[extra_arrows$V1_factor[i], "x"]
+      ydist_big[i] <- cart_circles[extra_arrows$V2_factor[i], "y"] -
+                      cart_circles[extra_arrows$V1_factor[i], "y"]
     }
-    xdist_small <- arrows$x2-arrows$x1
-    ydist_small <- arrows$y2-arrows$y1
+    xdist_small <- arrows$x2 - arrows$x1
+    ydist_small <- arrows$y2 - arrows$y1
       # total distances between the centers of the big and the small circles involved
-    dist_big <- sqrt(xdist_big^2+ydist_big^2)
-    dist_small <- sqrt(xdist_small^2+ydist_small^2)
+    dist_big <- sqrt(xdist_big ^ 2 + ydist_big ^ 2)
+    dist_small <- sqrt(xdist_small ^ 2 + ydist_small ^ 2)
       # points halfway between the big circles
-    halfwaypoint <- data.frame(x=rep(NA,n),y=rep(NA,n))
-    for(i in 1:n){
-        halfwaypoint$x[i] <- (cart_circles[extra_arrows$V1_factor[i],"x"]+cart_circles[extra_arrows$V2_factor[i],"x"])/2+xdist_big[i]/dist_big[i]/2*(cart_circles[extra_arrows$V1_factor[i],"radius"]-cart_circles[extra_arrows$V2_factor[i],"radius"])
-        halfwaypoint$y[i] <- (cart_circles[extra_arrows$V1_factor[i],"y"]+cart_circles[extra_arrows$V2_factor[i],"y"])/2+ydist_big[i]/dist_big[i]/2*(cart_circles[extra_arrows$V1_factor[i],"radius"]-cart_circles[extra_arrows$V2_factor[i],"radius"])
+    halfwaypoint <- data.frame(x = rep(NA, n),y = rep(NA, n))
+    for (i in 1:n) {
+      halfwaypoint$x[i] <- (cart_circles[extra_arrows$V1_factor[i], "x"] +
+                            cart_circles[extra_arrows$V2_factor[i], "x"]) / 2 +
+                            xdist_big[i] / dist_big[i] /
+                            2 * (cart_circles[extra_arrows$V1_factor[i], "radius"] -
+                                 cart_circles[extra_arrows$V2_factor[i], "radius"])
+      halfwaypoint$y[i] <- (cart_circles[extra_arrows$V1_factor[i], "y"] +
+                            cart_circles[extra_arrows$V2_factor[i], "y"]) / 2 +
+                            ydist_big[i] / dist_big[i] /
+                            2 * (cart_circles[extra_arrows$V1_factor[i], "radius"] -
+                                 cart_circles[extra_arrows$V2_factor[i], "radius"])
     }
-
-    # label "moves" a distance of "d" from the center of the first small circle towards the other small circle
+    # placing the labels alongside the arrow on their final positions
     d <- NULL
     for(i in 1:n){
-      d[i] <- dist_small[i]*(((arrows$x1[i]-halfwaypoint$x[i])*-xdist_big[i])-((arrows$y1[i]-halfwaypoint$y[i])*ydist_big[i]))/(ydist_small[i]*ydist_big[i]-xdist_small[i]*-xdist_big[i])
+      d[i] <- dist_small[i] *
+              (((arrows$x1[i] - halfwaypoint$x[i]) * -xdist_big[i]) -
+              ((arrows$y1[i] - halfwaypoint$y[i]) * ydist_big[i])) /
+              (ydist_small[i] * ydist_big[i] - xdist_small[i] * -xdist_big[i])
     }
-    # placing the labels a distance of "d" away from the center of the first circle alongside the arrow
-    arrows$xlabel <- arrows$x1+d/dist_small*xdist_small
-    arrows$ylabel <- arrows$y1+d/dist_small*ydist_small
+    arrows$xlabel <- arrows$x1 + d / dist_small * xdist_small
+    arrows$ylabel <- arrows$y1 + d / dist_small * ydist_small
 
-    # letting the correlation labels dodge their arrow by 0.1 sideways
-    arrows$xlabel <- arrows$xlabel+.1/dist_small*ydist_small
-    arrows$ylabel <- arrows$ylabel+.1/dist_small*-xdist_small
+    # letting the correlation labels dodge their arrow by .1 sideways to avoid overlap
+    arrows$xlabel <- arrows$xlabel + .1 / dist_small * ydist_small
+    arrows$ylabel <- arrows$ylabel + .1 / dist_small * -xdist_small
 
-    # shift arrow ends from center to edge of facet circles
-    arrows$x1new <- arrows$x1+subradius/dist_small*xdist_small
-    arrows$x2new <- arrows$x2+subradius/dist_small*(-xdist_small)
-    arrows$y1new <- arrows$y1+subradius/dist_small*ydist_small
-    arrows$y2new <- arrows$y2+subradius/dist_small*(-ydist_small)
+
+      ## arrows -----------------------
+
+    # shifting arrow ends from center to edge of facet circles
+    arrows$x1new <- arrows$x1 + subradius / dist_small * xdist_small
+    arrows$x2new <- arrows$x2 + subradius / dist_small * -xdist_small
+    arrows$y1new <- arrows$y1 + subradius / dist_small * ydist_small
+    arrows$y2new <- arrows$y2 + subradius / dist_small * -ydist_small
     arrows$x1 <- arrows$x1new
     arrows$x2 <- arrows$x2new
     arrows$y1 <- arrows$y1new
@@ -373,18 +464,17 @@ coord_nested <- function(data, subradius,
 
     arrows[8:11] <- list(NULL)
     rm(n)
-  }
-  else arrows <- NULL
+  } else arrows <- NULL
 
   rm(nam,cplx)
 
 
-    ## return
+# return ----------------------------------------------------------------------
 
-  # returns a list of lists of all dataframes above containing the coordinates of the chart objects
+  # list of lists of dataframes containing the coordinates of the chart objects
     # the first element ('factor') is a list of the lists created by coord_facets for facet charts
     # the second element ('global') is a list containing the dataframes with coordinates for the nested chart
-    # the third (optional) element ('items') is a list of the lists created by coord_items for item charts
+    # the third optional element ('items') is a list of the lists created by coord_items for item charts
   global <- list(pol_circles = pol_circles,
                       cart_circles = cart_circles,
                       pol_inner_ring = pol_inner_ring,
@@ -399,9 +489,8 @@ coord_nested <- function(data, subradius,
                       cor_spacing = cor_spacing,
                       arrows = arrows
                  )
-
-  coord <- list(factor=factorcoords,global=global)
-  if(items==T)coord$items <- itemcoords
+  coord <- list(factor = factorcoords, global = global)
+  if (items == T) coord$items <- itemcoords
 
   return(coord)
 }
