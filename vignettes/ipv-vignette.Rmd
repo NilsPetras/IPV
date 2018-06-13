@@ -27,25 +27,24 @@ Item Pool Visualization (IPV) is an original way to to display factor structures
 *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
 
 ```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", echo=FALSE}
-sc_arrows <- data.frame(V1_factor=rep(NA,3),
-                        V1_subfactor=rep(NA,3),
-                        V2_factor=rep(NA,3),
-                        V2_subfactor=rep(NA,3),
-                        value=rep(NA,3))
-sc_arrows[1,] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
-sc_arrows[2,] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
-sc_arrows[3,] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
-coord <- coord_nested(self_confidence,
-                      subradius = .6,
-                      extra_arrows = sc_arrows,
-                      rotate_radians = 4/3*pi,
-                      subrotate_radians = c(pi/2,pi/2,0))
-sc_nested <- plot_nested(coord,
-                       file = "none",
-                       size = 1.5,
-                       colour_tests = "red",
-                       colour_facets = "darkorange",
-                       extra_arrows = TRUE)
+sc_arrows <- data.frame(V1_factor = rep(NA, 3),
+                        V1_subfactor = rep(NA, 3),
+                        V2_factor = rep(NA, 3),
+                        V2_subfactor = rep(NA, 3),
+                        value = rep(NA, 3))
+sc_arrows[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
+sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
+sc_arrows[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
+sc_nested <- nested_chart(self_confidence,
+                          subradius = .6,
+                          xarrows = sc_arrows,
+                          rotate_radians = 4 / 3 * pi,
+                          subrotate_radians = c(pi / 2, pi / 2, 0),
+                          file = "none",
+                          size = 1.5,
+                          colour_tests = "red",
+                          colour_facets = "darkorange",
+                          show_xarrows = TRUE)
 sc_nested
 
 ```
@@ -92,13 +91,13 @@ An item pool can be represented by a general factor or multiple correlated facto
   cd = \frac{\lambda^2_c}{\lambda^2_g} -1
 \end{equation}
 
-For example, a center distance of 0.5 indicates that the correlated factor, estimated from a subpool, explains 50% more of the item variance compared to the general factor, estimated from the whole item pool. It could be, that the overall test score of a self-esteem test explains 20% of the variance of that item (squared factor loading = 0.2), while its facet explains 30% of the variance of that item (squared factor loading = 0.3), resulting in a relative increase of 50%. In IPVs, center distances are displayed as the distance to the center of the chart. In the [*example at the top*](#ipv), the center distances are displayed as the distance from the edge of the circles to the center. The center distances are marked by a thick radial line ending at the edge of the circle (red or orange). Axis scales are indicated by gray dotted circles, so values of center distances can be read from the chart. 
+For example, a center distance of 0.5 indicates that the correlated factor, estimated from a subpool, explains 50% more of the item variance compared to the general factor, estimated from the whole item pool. It could be, that the overall test score of a self-esteem test explains 20% of the variance of that item (squared factor loading = 0.2), while its facet explains 30% of the variance of that item (squared factor loading = 0.3), resulting in a relative increase of 50%. In IPVs, center distances are displayed on radial axes as the distance to the center of the chart. In the [*example at the top*](#ipv), the center distances are displayed as the distance from the edge of the circles to the center. The center distances are marked by a thick radial line ending at the edge of the circle (red or orange). Axis scales are indicated by gray dotted circles, so values of center distances can be read from the chart. 
 
 But you can also display center distances for single items in an item chart:
 
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-coord <- coord_items(SMTQ)
-SMTQ_items <- plot_items(coord,
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", echo=FALSE}
+
+SMTQ_items <- item_chart(SMTQ,
                          file = "none",
                          colour = "darkblue",
                          colour2 = "darkblue")
@@ -106,21 +105,19 @@ SMTQ_items
 
 ```
 
-<span style="color:darkblue">Blue bars</span> represent items. Center distances are displayed as the distance from the origin to the inner edge of the bars. The items are arranged by facets on the radial arrows. Read center distance values from the grid of concentric circles, where steps of 0.5 are highlighted.
+<span style="color:darkblue">Blue bars</span> represent items. Center distances are displayed on radial axes (arrows). They are the distance from the origin to the inner edge of the bars. The items are arranged by facets on the radial axes. Read center distance values from the grid of concentric circles, where steps of 0.5 are highlighted.
 
 # Workflow
 
-Before starting, calculate the structure equation models (SEMs) using your preferred statistical software. This package starts with the factor loadings and latent correlations of these models. To enable feeding in your SEM data, you can use the input_ functions. From there, **creating an IPV is a two step process using coord_ and plot_ functions**. Refine the appearance of your chart by reiteratively changing parameters of both of these functions and inspecting the result.
-
-All charts are optimized for .pdf file saves using function calls. This has three advantages:
-
-1. You do not need to worry about any graphic settings.
-2. You do not need to save your chart by hand. The chart is saved to your working directory (e.g. your R project within RStudio) on function call.
-3. The chart is saved vector-based: the sweet magic that smoothes curves and fonts, and prevents your chart to be compromised by resolution or zoom. the resulting .pdf files are also smaller than .png or .jpeg files.
+Before starting, calculate the structure equation models (SEMs) using your preferred statistical software. This package starts with the factor loadings and latent correlations of these models. To enable feeding in your SEM data, you can use the input functions. Then choose the chart type and use the proper chart function. Refine the appearance of your chart by reiteratively changing parameter values and inspecting the result.
 
 When using the graphics display within RStudio, always use the zoom popout from the Plots widget, otherwise charts are heavily distorted.
 
+Call ?IPV for an overview of the functions of the package.
+
 ## Data Preparation
+
+UNDER CONSTRUCTION
 
 Currently there are two ways to prepare your data: excel sheets or manual input in R. At the current beta state of this package I recommend using excel sheets.
 
@@ -162,46 +159,36 @@ Consider issuing desired input options on [github](https://github.com/NilsPetras
 
 ## Chart Creation {#fac}
 
-Call ?IPV for an overview of the functions.
-
-Functions are named according to the chart concept, e.g. coord_items is needed to create an item chart. You will have to use two functions in conjunction. The first function is the *coord function* and prepares coordinates and labels for chart objects. The second function is the *plot function* and creates both a ggplot object and a file, the actual chart. So for each chart concept there are two functions.
-
-For example, creating a facet chart works like this:
+Functions are named according to the chart concept. For example, creating a facet chart works like this:
 
 ```{r,fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-coord <- coord_facets(SMTQ, subradius = .6)
-SMTQ_facets <- plot_facets(coord, file = "none")
+SMTQ_facets <- facet_chart(SMTQ, subradius = .6, file = "none")
 SMTQ_facets
 ```
 
 As you can see, almost all function parameters have a default value, so you can start fast and frugal. The chart is saved to a nameless .pdf file in your working directory by default. Provide a filename using the filename parameter. You can change the file format or suppress file creation using the file parameter. Supported file formats are "pdf", "png", and "jpeg". Any other value will suppress the file output.
 
-There is a useful shortcut for nested models. The function coord_nested always also generates coordinates for facet charts. If you set items = TRUE, you also get coordinates for the item charts in one go:
-
-```{r,eval=FALSE}
-coord <- coord_nested(self_confidence, subradius = .6, items = TRUE)
-DSSEI_items <- plot_items(coord$items$DSSEI, file = "none")
-
-```
-Note that item chart coordinates are living in coord\$items and facet chart coordinates in coord\$factors
-
 ## Design Choices
 
 The vast majority of parameters are size parameters for single elements of the chart, all named size_xyz or width_xyz. Those are pretty straightforward: linear scaling sizes defaulting to 1. Some other parameters are self-explanatory. These important parameters are more complex:
 
-- **size** scales all elements of the chart. Not all elements are scaled linearly to produce harmonious results across a variety of sizes ("smart scaling"). **If you were limited to one cosmetic parameter, this would be the one**
-- **colour**, **colour2**, **colour_tests**,**colour_facets** [full set of colours including gray](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). Colours are used to add visual contrast to important parts of the chart, I recommend using colours whenever possible. In the item chart, use different tones for *colour2* and *colour* to make overlapping items more visible.
-- **relative_scaling** of the global and the test level in nested charts. For a clear chart, you need to hit the sweet spot between a) sizing up for readability and b) emphasize relative positions by creating gaps.
-- **extra_arrows** adds custom correlation arrows to nested charts. Provide information about latent correlations between facets of different factors to the coord_nested (as below). Set *extra_arrows* = TRUE in plot_nested. Straighten out your chart with the subrotate parameters.
+- **size** scales all elements of the chart. This is the most important cosmetic parameter. Not all elements are scaled linearly to produce harmonious results across a variety of sizes (let's call it "smart" scaling).
+- **file**, **filename** the chart is saved to [filename].[file]. If file is neither of "pdf", "png", or "jpeg", no file is saved.
+- **colour**, **colour2**, **colour_tests**,**colour_facets** [full set of colours including gray](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). Colours are used to add visual contrast to important parts of the chart, I recommend using colours whenever possible. In the item chart, use different tones for *colour* and *colour2* to make overlapping items more visible.
+- **subradius** sets the radius of facet circles. Use this parameter to avoid overlapping or too small circles.
+- **relative_scaling** of the global and the test level in nested charts. For a clear chart, you need to hit the sweet spot between allowing big fonts and emphasizing relative positions.
+- **rotate_degrees**, **rotate_radians** rotate the whole chart by the given value. A full circle is equivalent to 360 degrees or 2*pi radians.
+- **fade** is the degree to which gray background features of the chart are faded. Choose a value so that they are still visible, but do not distract the eye from the foreground.
+- **xarrows** adds custom correlation arrows to nested charts. Provide information about latent correlations between facets of different factors to the xarrow parameter (see below). Set *show_xarrows* = TRUE in plot_nested. Straighten out your chart with the subrotate parameters.
 
-```{r}
-sc_arrows <- data.frame(V1_factor=rep(NA,3),
-                        V1_subfactor=rep(NA,3),
-                        V2_factor=rep(NA,3),
-                        V2_subfactor=rep(NA,3),
-                        value=rep(NA,3))
-sc_arrows[1,] <- c("DSSEI","Ab","RSES","Ps",".67")
-sc_arrows[2,] <- c("DSSEI","Ab","SMTQ","Cs",".81")
-sc_arrows[3,] <- c("SMTQ","Ct","RSES","Ns",".76")
+```{r, echo=FALSE}
+sc_arrows <- data.frame(V1_factor = rep(NA, 3),
+                        V1_subfactor = rep(NA, 3),
+                        V2_factor = rep(NA, 3),
+                        V2_subfactor = rep(NA, 3),
+                        value = rep(NA, 3))
+sc_arrows[1,] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
+sc_arrows[2,] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
+sc_arrows[3,] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
 sc_arrows
 ```

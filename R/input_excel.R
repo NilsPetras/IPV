@@ -18,8 +18,8 @@
 #'   facets.
 #'
 #' @return List containing formatted data including center distances for
-#'   \code{\link{coord_items}}, \code{\link{coord_facets}}, and
-#'   \code{\link{coord_nested}}.
+#'   \code{\link{item_chart}}, \code{\link{facet_chart}}, and
+#'   \code{\link{nested_chart}}.
 #'
 #' @examples
 #' # read data for a simple model by ignoring the "global" parameter of input_excel
@@ -47,16 +47,16 @@ input_excel <- function(global = NULL, tests){
 
     # global level
     global_input <- input_excel_factor(global)
-      # including the factor name in the item name to distinguish between items
-      # from different tests but with the same name
-    global_input$center_distances$item <- paste(global_input$center_distances$subfactor,
-                                                global_input$center_distances$item,
-                                                sep = ".")
+    # including the factor name in the item name to distinguish between items
+    # from different tests but with the same name
+    global_input$cds$item <- paste(global_input$cds$subfactor,
+                                   global_input$cds$item,
+                                   sep = ".")
 
     # test level
     tests_input <- lapply(tests, input_excel_factor)
-      # including test names
-    for (i in 1:global_input$parameters$complexity) {
+    # including test names
+    for (i in 1:global_input$pars$cplx) {
       names(tests_input)[i] <- levels(tests_input[[c(i, 1)]]$factor)
     }
 

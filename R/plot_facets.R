@@ -6,8 +6,8 @@
 #'   \code{\link{coord_nested}}.
 #' @param size integer; smartly scaled size of chart objects.
 #' @param file character; file format to save. Supported formats are: "pdf"
-#'   (best quality with lowest file size),"png","jpeg". Suppress file output using any
-#'   other value; defaults to "pdf".
+#'   (best quality with lowest file size),"png","jpeg". Suppress file output
+#'   using any other value; defaults to "pdf".
 #' @param filename character string; name of the file the chart is written to;
 #'   filename extension added from file parameter like this: [filename].[file].
 #' @param filewidth integer; width of the .pdf file; defaults to 10, dpi is
@@ -26,11 +26,11 @@
 #'   default).
 #' @param size_facet_labels integer; font size of the facet labels (relative to
 #'   default).
-#' @param width_axes integer; width of the radial axis lines (relative to
-#'   default).
+#' @param width_axes integer; width of the radial axis lines indicating center
+#'   distances (relative to default).
 #' @param width_circles integer; width of the circle outlines (relative to
 #'   default).
-#' @param size_tick integer; width of the dotted axis tick line (relative to
+#' @param width_tick integer; width of the dotted axis tick line (relative to
 #'   default).
 #' @param size_tick_label integer; font size of the axis tick label (relative to
 #'   default).
@@ -42,135 +42,169 @@
 #' @details Use this function in conjunction with \code{\link{coord_facets}} or
 #'   \code{\link{coord_nested}} for simple models.
 #'
+#'   Use \code{\link{facet_chart}} to create the chart in a single step.
+#'
+#'   Rotate  or change the size of the circles using \code{\link{coord_facets}},
+#'   not this function.
+#'
+#'   When changing the size of objects, consider the \code{size} parameter first
+#'   and make specific adjustments with the other \code{size_} and \code{width_}
+#'   parameters after.
+#'
 #'   Facets are displayed using the average center distance of their items as
 #'   distance from the origin to the circle's edge.
 #'
-#' @return Object of the class "ggplot" and the same object as a .pdf file.
+#' @return Object of the class "ggplot" and optionally the same object saved as
+#'   a file.
 #'
-#' @seealso \code{\link{coord_facets}}
+#' @seealso \code{\link{coord_facets}} \code{\link{facet_chart}}
 #'
 #' @examples
-#' # creating facet charts is a two step process, using coord_facets and this function:
-#' coord <- coord_facets(DSSEI, subradius = .5)
-#' DSSEI_facets <- plot_facets(coord, filename = "DSSEI_facets")
-#' DSSEI_facets
-#'
-#' @export
-plot_facets <- function(coord, size = 1, file = "pdf", filename = NULL,
-                      filewidth = 10, fileheight = 10,
-                      colour = "black", fade = 90, font = "sans", tick = .1,
-                      cor_labels = TRUE, size_cor_labels = 1,
-                      size_test_label = 1, size_facet_labels = 1,
-                      width_axes = 1, width_circles = 1,
-                      size_tick = 1, size_tick_label = 1, size_center_dot = 1){
+#' # # creating facet charts is a two step process, using coord_facets and this
+#' # # function:
+#' # coord <- coord_facets(DSSEI, subradius = .5)
+#' # DSSEI_facets <- plot_facets(coord, filename = "DSSEI_facets")
+#' # DSSEI_facets
+plot_facets <- function(
+  coord,
+  size = 1,
+  file = "pdf",
+  filename = NULL,
+  filewidth = 10,
+  fileheight = 10,
+  colour = "black",
+  fade = 90,
+  font = "sans",
+  tick = .1,
+  cor_labels = TRUE,
+  size_cor_labels = 1,
+  size_test_label = 1,
+  size_facet_labels = 1,
+  width_axes = 1,
+  width_circles = 1,
+  width_tick = 1,
+  size_tick_label = 1,
+  size_center_dot = 1){
 
 
-# preparation -----------------------------------------------------------------
+  # preparation ----------------------------------------------------------------
 
   # correlations
   if (cor_labels == TRUE) {
-    inner_cors <- coord$inner_cors
-  } else inner_cors <- NULL
+    cors <- coord$cors
+  } else cors <- NULL
 
 
-# chart -----------------------------------------------------------------------
+  # chart ----------------------------------------------------------------------
 
-  myipv <- ggplot2::ggplot(coord$cart_circles) + # x has placeholder value
+  myipv <- ggplot2::ggplot(coord$c_circs) + # x has placeholder value
 
 
-      ## initializing -----------------
+    ## initializing -----------------
 
     ggplot2::coord_fixed() +
-    ggplot2::theme(axis.line        = ggplot2::element_blank(),
-                   axis.text.x      = ggplot2::element_blank(),
-                   axis.text.y      = ggplot2::element_blank(),
-                   axis.ticks       = ggplot2::element_blank(),
-                   axis.title.x     = ggplot2::element_blank(),
-                   axis.title.y     = ggplot2::element_blank(),
-                   legend.position  = "none",
-                   panel.background = ggplot2::element_blank(),
-                   panel.border     = ggplot2::element_blank(),
-                   panel.grid.major = ggplot2::element_blank(),
-                   panel.grid.minor = ggplot2::element_blank(),
-                   plot.background  = ggplot2::element_blank(),
-                   text             = ggplot2::element_text(size = 16, family = font),
-                   plot.margin      = ggplot2::margin(1, 1, 1, 1, "in")) +
+    ggplot2::theme(
+      axis.line        = ggplot2::element_blank(),
+      axis.text.x      = ggplot2::element_blank(),
+      axis.text.y      = ggplot2::element_blank(),
+      axis.ticks       = ggplot2::element_blank(),
+      axis.title.x     = ggplot2::element_blank(),
+      axis.title.y     = ggplot2::element_blank(),
+      legend.position  = "none",
+      panel.background = ggplot2::element_blank(),
+      panel.border     = ggplot2::element_blank(),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      plot.background  = ggplot2::element_blank(),
+      text             = ggplot2::element_text(size = 16, family = font),
+      plot.margin      = ggplot2::margin(1, 1, 1, 1, "in")) +
     ggplot2::aes() +
 
 
-      ## layers -----------------------
+    ## layers -----------------------
 
     # layers ordered from bottom to top
 
     # center dot
-    ggplot2::geom_point(ggplot2::aes(x = 0, y = 0),
-                        size = 5 * sqrt(size) * size_center_dot) +
+    ggplot2::geom_point(
+      ggplot2::aes(x = 0, y = 0),
+      size = 5 * sqrt(size) * size_center_dot) +
 
     # axis tick
-    ggforce::geom_circle(ggplot2::aes(x0 = 0, y0 = 0, r = tick),
-                         linetype = "dotted",
-                         size = .5 * min(c(size, .5)) * size_tick) +
+    ggforce::geom_circle(
+      ggplot2::aes(x0 = 0, y0 = 0, r = tick),
+      linetype = "dotted",
+      size = .5 * min(c(size, .5)) * width_tick) +
 
     # outer axis segments
-    ggplot2::geom_segment(data = coord$cart_axes,
-                          ggplot2::aes(x = x2, y = y2, xend = x3, yend = y3),
-                          size = size * width_axes,
-                          color = paste("gray", fade, sep = "")) +
+    ggplot2::geom_segment(
+      data = coord$c_axes,
+      ggplot2::aes(x = x2, y = y2, xend = x3, yend = y3),
+      size = size * width_axes,
+      color = paste("gray", fade, sep = "")) +
 
     # facet labels
-    ggplot2::geom_text(ggplot2::aes(x, y, label = row.names(coord$cart_circles)),
-                       family = font,
-                       size = 8 * sqrt(size) * size_facet_labels) +
+    ggplot2::geom_text(
+      ggplot2::aes(x, y, label = row.names(coord$c_circs)),
+      family = font,
+      size = 8 * sqrt(size) * size_facet_labels) +
 
     # tick label
-    ggplot2::geom_text(data = coord$axis_tick,
-                       ggplot2::aes(x = x * tick + sign(x) * .02,
-                                    y = y * tick + sign(y) * .02,
-                                    label = as.character(tick)),
-                       angle = (coord$axis_tick$phi - pi / 48 - pi / 2) * 180 / pi,
-                       family = font,
-                       size = 2 * sqrt(size) * size_tick_label) +
+    ggplot2::geom_text(
+      data = coord$axis_tick,
+      ggplot2::aes(x = x * tick + sign(x) * .02,
+                   y = y * tick + sign(y) * .02,
+                   label = as.character(tick)),
+      angle = (coord$axis_tick$phi - pi / 48 - pi / 2) * 180 / pi,
+      family = font,
+      size = 2 * sqrt(size) * size_tick_label) +
 
     # test circle
-    ggforce::geom_circle(data = coord$cart_circles[1, ],
-                         ggplot2::aes(x0 = x, y0 = y, r = radius),
-                         size = size * width_axes,
-                         color = paste("gray", fade, sep = "")) +
+    ggforce::geom_circle(
+      data = coord$c_circs[1, ],
+      ggplot2::aes(x0 = x, y0 = y, r = radius),
+      size = size * width_axes,
+      color = paste("gray", fade, sep = "")) +
 
     # facet circles
-    ggforce::geom_circle(data = coord$cart_circles[-1, ],
-                         ggplot2::aes(x0 = x, y0 = y, r = radius),
-                         size = size * width_circles, color = colour) +
+    ggforce::geom_circle(
+      data = coord$c_circs[-1, ],
+      ggplot2::aes(x0 = x, y0 = y, r = radius),
+      size = size * width_circles,
+      color = colour) +
 
     # inner axis segments
-    ggplot2::geom_segment(data = coord$cart_axes,
-                          ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1),
-                          size = (sqrt(size) + size) * width_axes,
-                          color = colour) +
+    ggplot2::geom_segment(
+      data = coord$c_axes,
+      ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1),
+      size = (sqrt(size) + size) * width_axes,
+      color = colour) +
 
     # title
-    ggplot2::geom_text(data = coord$factor_label,
-                       ggplot2::aes(x = x, y = y, label = label),
-                       family = font,
-                       size = 8 * sqrt(size) * size_test_label,
-                       fontface = "bold")
+    ggplot2::geom_text(
+      data = coord$title,
+      ggplot2::aes(x = x, y = y, label = label),
+      family = font,
+      size = 8 * sqrt(size) * size_test_label,
+      fontface = "bold")
 
 
-    ## optional layers ----------------
+  ## optional layers ----------------
 
   # correlations
-  if (!is.null(inner_cors)) {
+  if (!is.null(cors)) {
     myipv <- myipv +
-      ggplot2::geom_text(data = inner_cors,
-                         ggplot2::aes(x = x, y = y, label = label),
-                         family = font,
-                         size = 4 * sqrt(size) * size_cor_labels)
+      ggplot2::geom_text(
+        data = cors,
+        ggplot2::aes(x = x, y = y, label = label),
+        family = font,
+        size = 4 * sqrt(size) * size_cor_labels)
   }
 
 
-# optional file save ----------------------------------------------------------
+  # optional file save ---------------------------------------------------------
 
-    ## .pdf ---------------------------
+  ## .pdf ---------------------------
 
   if (file == "pdf") {
     ggplot2::ggsave(paste(filename,".pdf",sep = ""),
@@ -183,7 +217,7 @@ plot_facets <- function(coord, size = 1, file = "pdf", filename = NULL,
   }
 
 
-    ## .png ---------------------------
+  ## .png ---------------------------
 
   if (file == "png") {
     ggplot2::ggsave(paste(filename, ".png", sep = ""),
@@ -196,7 +230,7 @@ plot_facets <- function(coord, size = 1, file = "pdf", filename = NULL,
   }
 
 
-    ## .jpeg --------------------------
+  ## .jpeg --------------------------
 
   if (file == "jpeg") {
     ggplot2::ggsave(paste(filename,".jpeg",sep = ""),
@@ -209,7 +243,7 @@ plot_facets <- function(coord, size = 1, file = "pdf", filename = NULL,
   }
 
 
-# return ----------------------------------------------------------------------
+  # return ---------------------------------------------------------------------
 
   return(myipv)
 }

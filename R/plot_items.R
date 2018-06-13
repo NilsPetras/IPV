@@ -6,8 +6,8 @@
 #'   \code{\link{coord_nested}}.
 #' @param size integer; smartly scaled size of chart objects.
 #' @param file character; file format to save. Supported formats are: "pdf"
-#'   (best quality with lowest file size),"png","jpeg". Suppress file output using any
-#'   other value; defaults to "pdf".
+#'   (best quality with lowest file size),"png","jpeg". Suppress file output
+#'   using any other value; defaults to "pdf".
 #' @param filename character string; name of the file the chart is written to;
 #'   filename extension added from file parameter like this: [filename].[file].
 #' @param filewidth integer; width of the .pdf document; defaults to 10; dpi is
@@ -23,12 +23,12 @@
 #' @param tick_label logical; if \code{TRUE}, draws a text label for the axis
 #'   tick
 #' @param size_title integer; font size of the test label (relative to default).
-#' @param size_axis_labels integer; font size of the axis labels (relative to
+#' @param size_facet_labels integer; font size of the axis labels (relative to
 #'   default).
-#' @param width_axes integer; width of the radial axis lines (relative to
-#'   default).
-#' @param size_arrow_heads integer; length of the arrow heads (relative to
-#'   default).
+#' @param width_axes integer; width of the radial axis lines indicating center
+#'   distances (relative to default).
+#' @param size_arrow_heads integer; length of the arrow heads at the end of the
+#'   axes (relative to default).
 #' @param width_items integer; width of the item bars (relative to default).
 #'   Currently not supported!
 #' @param width_grid integer; width of the dotted grid lines (relative to
@@ -41,132 +41,163 @@
 #' @details Use this function in conjunction with \code{\link{coord_items}} or
 #'   \code{\link{coord_nested}} for simple models.
 #'
+#'   Use \code{\link{item_chart}} to create the chart in a single step.
+#'
+#'   Rotate using \code{\link{coord_items}}, not this function.
+#'
+#'   When changing the size of objects, consider the \code{size} parameter first
+#'   and make specific adjustments with the other \code{size_} and \code{width_}
+#'   parameters after.
+#'
 #'   To better display overlapping item values, set the accent colours to
 #'   different values.
 #'
-#' @return Object of the class "ggplot" and the same object as a .pdf file.
+#' @return Object of the class "ggplot" and optionally the same object saved as
+#'   a file.
 #'
-#' @seealso \code{\link{coord_items}}
+#' @seealso \code{\link{coord_items}} \code{\link{item_chart}}
 #'
 #' @examples
-#' # creating item charts is a two step process, using coord_items and this function:
-#' coord <- coord_items(DSSEI)
-#' DSSEI_items <- plot_items(coord, filename = "DSSEI_items")
-#' DSSEI_items
-#'
-#' @export
-plot_items <- function (coord, size = 1, file = "pdf", filename = NULL,
-                        filewidth = 10, fileheight = 10,
-                        colour = "black", colour2 = "black", fade = 90, font = "sans",
-                        tick_label = TRUE, size_tick_label = 1,
-                        size_title = 1, size_axis_labels = 1,
-                        width_axes = 1, size_arrow_heads = 1, width_items = 1,
-                        width_grid = 1, size_center_dot = 1) {
+#' # # creating item charts is a two step process, using coord_items and this
+#' # # function:
+#' # coord <- coord_items(DSSEI)
+#' # DSSEI_items <- plot_items(coord, filename = "DSSEI_items")
+#' # DSSEI_items
+plot_items <- function (
+  coord,
+  size = 1,
+  file = "pdf",
+  filename = NULL,
+  filewidth = 10,
+  fileheight = 10,
+  colour = "black",
+  colour2 = "black",
+  fade = 90,
+  font = "sans",
+  tick_label = TRUE,
+  size_tick_label = 1,
+  size_title = 1,
+  size_facet_labels = 1,
+  width_axes = 1,
+  size_arrow_heads = 1,
+  width_items = 1,
+  width_grid = 1,
+  size_center_dot = 1) {
 
   # width_items currently not supported,
   # since it shifts the edge of the bars away from the correct position
 
 
-# chart -----------------------------------------------------------------------
+  # chart ----------------------------------------------------------------------
 
-  myipv <- ggplot2::ggplot(coord$cart_axes) + # x has placeholder value
+  myipv <- ggplot2::ggplot(coord$c_axes) + # x has placeholder value
 
 
-      ## initializing -----------------
+    ## initializing -----------------
 
     ggplot2::coord_fixed() +
-    ggplot2::theme(axis.line        = ggplot2::element_blank(),
-                   axis.text.x      = ggplot2::element_blank(),
-                   axis.text.y      = ggplot2::element_blank(),
-                   axis.ticks       = ggplot2::element_blank(),
-                   axis.title.x     = ggplot2::element_blank(),
-                   axis.title.y     = ggplot2::element_blank(),
-                   legend.position  = "none",
-                   panel.background = ggplot2::element_blank(),
-                   panel.border     = ggplot2::element_blank(),
-                   panel.grid.major = ggplot2::element_blank(),
-                   panel.grid.minor = ggplot2::element_blank(),
-                   plot.background  = ggplot2::element_blank(),
-                   text             = ggplot2::element_text(size = 16, family = font),
-                   plot.margin      = ggplot2::margin(1, 1, 1, 1, "in")) +
+    ggplot2::theme(
+      axis.line        = ggplot2::element_blank(),
+      axis.text.x      = ggplot2::element_blank(),
+      axis.text.y      = ggplot2::element_blank(),
+      axis.ticks       = ggplot2::element_blank(),
+      axis.title.x     = ggplot2::element_blank(),
+      axis.title.y     = ggplot2::element_blank(),
+      legend.position  = "none",
+      panel.background = ggplot2::element_blank(),
+      panel.border     = ggplot2::element_blank(),
+      panel.grid.major = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
+      plot.background  = ggplot2::element_blank(),
+      text             = ggplot2::element_text(size = 16, family = font),
+      plot.margin      = ggplot2::margin(1, 1, 1, 1, "in")) +
     ggplot2::aes() +
 
 
-      ## layers -----------------------
+    ## layers -----------------------
 
-    # layers ordered from bottom to top
+  # layers ordered from bottom to top
 
     # axis labels
-    ggplot2::geom_text(ggplot2::aes(x = xlabel, y = ylabel, label = row.names(coord$cart_axes)),
-                       family = font,
-                       size = 6 * sqrt(size) * size_axis_labels,
-                       hjust = "inward") +
+    ggplot2::geom_text(
+      ggplot2::aes(x = xlabel, y = ylabel, label = row.names(coord$c_axes)),
+      family = font,
+      size = 6 * sqrt(size) * size_facet_labels,
+      hjust = "inward") +
 
     # center dot
-    ggplot2::geom_point(ggplot2::aes(x = 0, y = 0),
-                        size = .5 * size * size_center_dot) +
+    ggplot2::geom_point(
+      ggplot2::aes(x = 0, y = 0),
+      size = .5 * size * size_center_dot) +
 
     # minor grid
-    ggforce::geom_circle(data = coord$maingrid[coord$maingrid$alpha == .5, ],
-                         ggplot2::aes(x0 = x, y0 = y, r = r),
-                         color = paste("gray", fade, sep = ""),
-                         linetype = "dotted",
-                         size = min(c(size, .75)) * width_grid) +
+    ggforce::geom_circle(
+      data = coord$maingrid[coord$maingrid$alpha == .5, ],
+      ggplot2::aes(x0 = x, y0 = y, r = r),
+      color = paste("gray", fade, sep = ""),
+      linetype = "dotted",
+      size = min(c(size, .75)) * width_grid) +
 
     # major grid
-    ggforce::geom_circle(data = coord$maingrid[coord$maingrid$alpha == 1, ],
-                         ggplot2::aes(x0 = x, y0 = y, r = r),
-                         color = "gray20",
-                         linetype = "dotted",
-                         size = min(c(size, .75)) * width_grid) +
+    ggforce::geom_circle(
+      data = coord$maingrid[coord$maingrid$alpha == 1, ],
+      ggplot2::aes(x0 = x, y0 = y, r = r),
+      color = "gray20",
+      linetype = "dotted",
+      size = min(c(size, .75)) * width_grid) +
 
     # axes
-    ggplot2::geom_segment(data = coord$cart_axes,
-                          ggplot2::aes(x = 0, y = 0, xend = x, yend = y),
-                          arrow = ggplot2::arrow(ends = "last",
-                                                 length = ggplot2::unit(.02*sqrt(size) * size_arrow_heads,
-                                                                        "native"),
-                                                 type = "closed"),
-                          size = .5 * sqrt(size) * width_axes) +
+    ggplot2::geom_segment(
+      data = coord$c_axes,
+      ggplot2::aes(x = 0, y = 0, xend = x, yend = y),
+      arrow = ggplot2::arrow(
+        ends = "last",
+        length = ggplot2::unit(.02*sqrt(size) * size_arrow_heads, "native"),
+        type = "closed"),
+      size = .5 * sqrt(size) * width_axes) +
 
     # items 2
-    ggplot2::geom_segment(data = coord$items[coord$items$length == max(coord$items$length), ],
-                          ggplot2::aes(x = x1, y = y1, xend = x2, yend = y2),
-                          size = 1,
-                          color = colour2) +
+    ggplot2::geom_segment(
+      data = coord$items[coord$items$length == max(coord$items$length), ],
+      ggplot2::aes(x = x1, y = y1, xend = x2, yend = y2),
+      size = 1,
+      color = colour2) +
 
     # items 1
-    ggplot2::geom_segment(data = coord$items[coord$items$length == min(coord$items$length), ],
-                          ggplot2::aes(x = x1, y = y1, xend = x2, yend = y2),
-                          size = 1,
-                          color = colour) +
+    ggplot2::geom_segment(
+      data = coord$items[coord$items$length == min(coord$items$length), ],
+      ggplot2::aes(x = x1, y = y1, xend = x2, yend = y2),
+      size = 1,
+      color = colour) +
 
     # title
-    ggplot2::geom_text(data = coord$factor_label,
-                       ggplot2::aes(x = x, y = y, label = label),
-                       family = font,
-                       size = 6 * sqrt(size) * size_title,
-                       color = colour,
-                       fontface = "bold")
+    ggplot2::geom_text(
+      data = coord$title,
+      ggplot2::aes(x = x, y = y, label = label),
+      family = font,
+      size = 6 * sqrt(size) * size_title,
+      color = colour,
+      fontface = "bold")
 
 
-    ## optional layers ----------------
+  ## optional layers ----------------
 
   # tick label
   if(tick_label == TRUE && max(coord$maingrid$r) >= .5) {
     myipv <- myipv +
-      ggplot2::geom_text(data = coord$axis_tick,
-                         ggplot2::aes(x, y, label = label),
-                         angle = (coord$axis_tick$phi - pi / 48 - pi / 2) * 180 / pi,
-                         family = font,
-                         size = 3 * sqrt(size) * size_tick_label,
-                         color = "gray20")
+      ggplot2::geom_text(
+        data = coord$axis_tick,
+        ggplot2::aes(x, y, label = label),
+        angle = (coord$axis_tick$phi - pi / 48 - pi / 2) * 180 / pi,
+        family = font,
+        size = 3 * sqrt(size) * size_tick_label,
+        color = "gray20")
   }
 
 
-# optional file save ----------------------------------------------------------
+  # optional file save ---------------------------------------------------------
 
-    ## .pdf ---------------------------
+  ## .pdf ---------------------------
 
   if (file == "pdf") {
     ggplot2::ggsave(paste(filename, ".pdf", sep = ""),
@@ -179,7 +210,7 @@ plot_items <- function (coord, size = 1, file = "pdf", filename = NULL,
   }
 
 
-    ## .png ---------------------------
+  ## .png ---------------------------
 
   if (file == "png") {
     ggplot2::ggsave(paste(filename, ".png", sep = ""),
@@ -192,7 +223,7 @@ plot_items <- function (coord, size = 1, file = "pdf", filename = NULL,
   }
 
 
-    ## .jpeg --------------------------
+  ## .jpeg --------------------------
 
   if (file == "jpeg") {
     ggplot2::ggsave(paste(filename, ".jpeg", sep = ""),
@@ -205,7 +236,7 @@ plot_items <- function (coord, size = 1, file = "pdf", filename = NULL,
   }
 
 
-# return ----------------------------------------------------------------------
+  # return ---------------------------------------------------------------------
 
   return(myipv)
 }

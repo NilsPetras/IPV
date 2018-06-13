@@ -1,30 +1,25 @@
 #' IPV: A package to create Item Pool Visualizations
 #'
-#' The IPV package provides three categories of important functions: input,
-#' coord, and plot.
+#' The IPV package provides four categories of important functions: input,
+#' chart, coord, and plot.
 #'
 #' @section Input Functions:
 #'
-#'   The input functions format your data, so the coord functions can use them.
-#'   \code{\link{input_excel}}
+#'   The input functions help preprocessing your data, so the other functions
+#'   can use them. \code{\link{input_excel}}
 #'
-#' @section Coord Functions:
+#' @section Chart Functions:
 #'
-#'   The coord functions calculate specific coordinates the plot functions draw
-#'   from. \code{\link{coord_items}} \code{\link{coord_facets}}
-#'   \code{\link{coord_nested}}
-#'
-#' @section Plot Functions:
-#'
-#'   The plot functions create the actual charts. \code{\link{plot_items}}
-#'   \code{\link{plot_facets}} \code{\link{plot_nested}}
+#'   Chart functions create a ggplot2 object (the chart) and optionally save
+#'   this object to a file. There are three types of charts.
+#'   \code{\link{item_chart}} \code{\link{facet_chart}}
+#'   \code{\link{nested_chart}}
 #'
 #' @section Workflow:
 #'
-#'   Creating an IPV from prepared data is a two step process, using a coord_
-#'   and a plot_ function. Some customizations are made in the coord_ and some
-#'   in the plot_ function. For example use \code{\link{coord_items}} in
-#'   conjunction with \code{\link{plot_items}} to produce an item chart.
+#'   Prepare your data using input functions. Choose a chart type and use the
+#'   proper chart function. Then \enumerate{\item choose parameter values of the
+#'   chart function \item check chart appearance \item repeat until satisfied}
 #'
 #' @docType package
 #' @name IPV

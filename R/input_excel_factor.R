@@ -7,21 +7,21 @@
 #' @details Helper function of \code{\link{input_excel}}.
 #'
 #' @return list containing formatted data including center distances for
-#'   \code{\link{coord_items}}, \code{\link{coord_facets}}
+#'   \code{\link{item_chart}}, \code{\link{facet_chart}}
 #' @seealso \code{\link{input_excel}}
 input_excel_factor <- function (file) {
 
 
-# file reading ----------------------------------------------------------------
+  # file reading ---------------------------------------------------------------
 
   # excel sheets 1 and 2 as tibbles
   sheet1 <- readxl::read_excel(file, sheet = 1, col_names = T)
   sheet2 <- readxl::read_excel(file, sheet = 2, col_names = T)
 
 
-# checking and recalculating --------------------------------------------------
+  # checking and recalculating -------------------------------------------------
 
-    ## factor loadings ----------------
+  ## factor loadings ----------------
 
   # checking for factor loadings below .1
   bad <- min(c(sheet1$factor_loading, sheet1$subfactor_loading))
@@ -31,45 +31,46 @@ input_excel_factor <- function (file) {
   sheet1$subfactor_loading[sheet1$subfactor_loading < .1] <- .1
 
 
-    ## center distances ---------------
+  ## center distances ---------------
 
   # calculating the center distances
-  center_distances <- data.frame(factor = sheet1$factor,
-                                 subfactor = sheet1$subfactor,
-                                 item = as.factor(sheet1$item),
-                                 center_distance = sheet1$subfactor_loading ^ 2 / sheet1$factor_loading ^ 2 - 1,
-                                 mean_center_distance = NA)
+  cds <- data.frame(
+    factor = sheet1$factor,
+    subfactor = sheet1$subfactor,
+    item = as.factor(sheet1$item),
+    cd = sheet1$subfactor_loading ^ 2 / sheet1$factor_loading ^ 2 - 1,
+    mean_cd = NA)
 
   # checking for negative center distances
-  bad <- min(center_distances$center_distance)
+  bad <- min(cds$cd)
   bad <- bad < 0
   if (bad) warning ("At least one negative center distance adjusted to 0")
-  center_distances$center_distance[center_distances$center_distance < 0] <- 0
+  cds$cd[cds$cd < 0] <- 0
 
   # calculating mean center distances of facets
-  mean_center_distances <- lapply(split(center_distances, center_distances$subfactor),
-                                  function (x) x$mean_center_distance <- mean(x$center_distance))
-  center_distances$mean_center_distance <- as.numeric(mean_center_distances[center_distances$subfactor])
+  mean_cds <- lapply(split(cds, cds$subfactor),
+                     function (x) x$mean_cd <- mean(x$cd))
+  cds$mean_cd <- as.numeric(mean_cds[cds$subfactor])
 
 
-    ## model parameters ---------------
+  ## model parameters ---------------
 
   # number of facets
-  parameters <- list(complexity = length(levels(center_distances$subfactor)))
+  pars <- list(cplx = length(levels(cds$subfactor)))
 
 
-    ## correlations -------------------
+  ## correlations -------------------
 
   # subfactor correlation matrix
-  subfactor_cors <- apply(as.matrix(sheet2)[ ,-1], c(1,2), as.numeric)
-  row.names(subfactor_cors) <- colnames(subfactor_cors)
+  cors <- apply(as.matrix(sheet2)[ ,-1], c(1,2), as.numeric)
+  row.names(cors) <- colnames(cors)
 
 
-# return ----------------------------------------------------------------------
+  # return ---------------------------------------------------------------------
 
-  mydata <- list(center_distances=center_distances,
-                 subfactor_cors=subfactor_cors,
-                 parameters=parameters)
+  mydata <- list(cds = cds,
+                 cors = cors,
+                 pars = pars)
 
   return(mydata)
 }
