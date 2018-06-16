@@ -5,7 +5,7 @@
 \title{Item Chart}
 \usage{
 item_chart(data, rotate_radians = 0, rotate_degrees = 0, size = 1,
-  file = "pdf", filename = NULL, filewidth = 10, fileheight = 10,
+  filename = "myipv.pdf", filewidth = 10, fileheight = 10,
   colour = "black", colour2 = "black", fade = 90, font = "sans",
   tick_label = TRUE, size_tick_label = 1, size_title = 1,
   size_facet_labels = 1, width_axes = 1, size_arrow_heads = 1,
@@ -23,12 +23,9 @@ counter-clockwise by.}
 
 \item{size}{integer; smartly scaled size of chart objects.}
 
-\item{file}{character; file format to save. Supported formats are: "pdf"
-(best quality with lowest file size),"png","jpeg". Suppress file output
-using any other value; defaults to "pdf".}
-
-\item{filename}{character string; name of the file the chart is written to;
-filename extension added from file parameter like this: [filename].[file].}
+\item{filename}{character; name of the file to save. Supported formats are:
+"pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
+suppress file output; defaults to "myipv.pdf".}
 
 \item{filewidth}{integer; width of the .pdf document; defaults to 10; dpi is
 3000.}
@@ -79,17 +76,11 @@ Object of the class "ggplot" and optionally the same object saved as
 \description{
 Creates an item chart, showing the items of a test arranged by facets.
 }
-\details{
-This function creates the chart in one step, but does not return the
-  coordinates from \code{\link{coord_items}}. Alternatively use
-  \code{\link{coord_items}} and \code{\link{plot_items}}. This allows you to
-  make changes to or reuse the coordinates.
-}
 \examples{
 # as simple as that
 item_chart(SMTQ)
 
 }
 \seealso{
-\code{\link{coord_items}} \code{\link{plot_items}}
+\code{\link{facet_chart}} \code{\link{nested_chart}}
 }

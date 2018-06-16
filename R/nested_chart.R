@@ -32,11 +32,9 @@
 #' @param xarrows data frame containing information about additional correlation
 #'   arrows between facets of different tests; see examples.
 #' @param size integer; smartly scaled size of chart objects.
-#' @param file character; file format to save. Supported formats are: "pdf"
-#'   (best quality with lowest file size),"png","jpeg". Suppress file output
-#'   using any other value; defaults to "pdf".
-#' @param filename character string; name of the file the chart is written to;
-#'   filename extension added from file parameter like this: [filename].[file].
+#' @param filename character; name of the file to save. Supported formats are:
+#'   "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
+#'   suppress file output; defaults to "myipv.pdf".
 #' @param filewidth integer; width of the .pdf file; defaults to 10, dpi is
 #'   3000.
 #' @param fileheight integer; height of the .pdf file; defaults to 10, dpi is
@@ -89,12 +87,7 @@
 #' @param size_xarrow_labels integer; font size of the latent correlations
 #'   indicated by extra arrows (relative to default).
 #'
-#' @details This function creates the chart in one step, but does not return the
-#'   coordinates from \code{\link{coord_nested}}. Alternatively use
-#'   \code{\link{coord_nested}} and \code{\link{plot_nested}}. This allows you
-#'   to make changes to or reuse the coordinates.
-#'
-#'   If you set \code{subrotate} to a single value, all nested facet charts will
+#' @details If you set \code{subrotate} to a single value, all nested facet charts will
 #'   be rotated by the same amount. If you use a vector of values, the nested
 #'   facet charts will be rotated one by one by the values from that vector.
 #'
@@ -114,7 +107,7 @@
 #' @return Object of the class "ggplot" and optionally the same object saved as
 #'   a file.
 #'
-#' @seealso \code{\link{coord_nested}} \code{\link{plot_nested}}
+#' @seealso \code{\link{item_chart}} \code{\link{facet_chart}}
 #'
 #' @examples
 #' # as simple as that
@@ -154,8 +147,7 @@ nested_chart <- function(
   relative_scaling = 3,
   xarrows = NULL,
   size = 1,
-  file = "pdf",
-  filename = NULL,
+  filename = "myipv.pdf",
   filewidth = 10,
   fileheight = 10,
   cor_labels_tests = TRUE,
@@ -202,7 +194,6 @@ nested_chart <- function(
   myipv <- plot_nested(
     coord = coord,
     size = size,
-    file = file,
     filename = filename,
     filewidth = filewidth,
     fileheight = fileheight,

@@ -4,11 +4,10 @@
 \alias{plot_nested}
 \title{Plot Nested}
 \usage{
-plot_nested(coord, size = 1, file = "pdf", filename = NULL,
-  filewidth = 10, fileheight = 10, cor_labels_tests = TRUE,
-  cor_labels_facets = TRUE, colour_tests = "black",
-  colour_facets = "black", fade = 90, font = "sans",
-  show_xarrows = FALSE, tick = 0.1, size_title = 1,
+plot_nested(coord, size = 1, filename = "myipv.pdf", filewidth = 10,
+  fileheight = 10, cor_labels_tests = TRUE, cor_labels_facets = TRUE,
+  colour_tests = "black", colour_facets = "black", fade = 90,
+  font = "sans", show_xarrows = FALSE, tick = 0.1, size_title = 1,
   size_test_labels = 1, size_facet_labels = 1, width_axes = 1,
   width_axes_inner = 1, width_circles = 1, width_circles_inner = 1,
   width_tick = 1, width_tick_inner = 1, size_tick_label = 1,
@@ -21,12 +20,9 @@ plot_nested(coord, size = 1, file = "pdf", filename = NULL,
 
 \item{size}{integer; smartly scaled size of chart objects.}
 
-\item{file}{character; file format to save. Supported formats are: "pdf"
-(best quality with lowest file size),"png","jpeg". Suppress file output
-using any other value; defaults to "pdf".}
-
-\item{filename}{character string; name of the file the chart is written to;
-filename extension added from file parameter like this: [filename].[file].}
+\item{filename}{character; name of the file to save. Supported formats are:
+"pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
+suppress file output; defaults to "myipv.pdf".}
 
 \item{filewidth}{integer; width of the .pdf file; defaults to 10, dpi is
 3000.}
@@ -139,7 +135,7 @@ Use this function in conjunction with \code{\link{coord_nested}} for
 # # creating nested charts is a two step process, using coord_nested and this
 # # function:
 # coord <- coord_nested(self_confidence, subradius = .6)
-# sc_nested <- plot_nested(coord, filename = "sc_nested")
+# sc_nested <- plot_nested(coord, filename = "sc_nested.pdf")
 # sc_nested
 #
 # # adding xarrows
@@ -152,7 +148,7 @@ Use this function in conjunction with \code{\link{coord_nested}} for
 # sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
 # sc_arrows[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
 # coord <- coord_nested(self_confidence, subradius = .6, xarrows = sc_arrows)
-# sc_nested <- plot_nested(coord, filename = "sc_nested", show_xarrows = TRUE)
+# sc_nested <- plot_nested(coord, filename = "sc_nested.pdf", show_xarrows = TRUE)
 # sc_nested
 }
 \seealso{

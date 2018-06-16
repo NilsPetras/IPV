@@ -7,8 +7,8 @@
 nested_chart(data, subradius, rotate_radians = 0, rotate_degrees = 0,
   subrotate_radians = 0, subrotate_degrees = 0, rotate_title_radians = 0,
   rotate_title_degrees = 0, correlations = TRUE, cor_spacing = 0.4,
-  relative_scaling = 3, xarrows = NULL, size = 1, file = "pdf",
-  filename = NULL, filewidth = 10, fileheight = 10,
+  relative_scaling = 3, xarrows = NULL, size = 1,
+  filename = "myipv.pdf", filewidth = 10, fileheight = 10,
   cor_labels_tests = TRUE, cor_labels_facets = TRUE,
   colour_tests = "black", colour_facets = "black", fade = 90,
   font = "sans", show_xarrows = FALSE, tick = 0.1, size_title = 1,
@@ -62,12 +62,9 @@ arrows between facets of different tests; see examples.}
 
 \item{size}{integer; smartly scaled size of chart objects.}
 
-\item{file}{character; file format to save. Supported formats are: "pdf"
-(best quality with lowest file size),"png","jpeg". Suppress file output
-using any other value; defaults to "pdf".}
-
-\item{filename}{character string; name of the file the chart is written to;
-filename extension added from file parameter like this: [filename].[file].}
+\item{filename}{character; name of the file to save. Supported formats are:
+"pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
+suppress file output; defaults to "myipv.pdf".}
 
 \item{filewidth}{integer; width of the .pdf file; defaults to 10, dpi is
 3000.}
@@ -156,12 +153,7 @@ Creates a nested chart, showing several tests and their facets in a global
 chart.
 }
 \details{
-This function creates the chart in one step, but does not return the
-  coordinates from \code{\link{coord_nested}}. Alternatively use
-  \code{\link{coord_nested}} and \code{\link{plot_nested}}. This allows you
-  to make changes to or reuse the coordinates.
-
-  If you set \code{subrotate} to a single value, all nested facet charts will
+If you set \code{subrotate} to a single value, all nested facet charts will
   be rotated by the same amount. If you use a vector of values, the nested
   facet charts will be rotated one by one by the values from that vector.
 
@@ -203,5 +195,5 @@ nested_chart(self_confidence,
 
 }
 \seealso{
-\code{\link{coord_nested}} \code{\link{plot_nested}}
+\code{\link{item_chart}} \code{\link{facet_chart}}
 }

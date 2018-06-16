@@ -12,11 +12,9 @@
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
 #' @param size integer; smartly scaled size of chart objects.
-#' @param file character; file format to save. Supported formats are: "pdf"
-#'   (best quality with lowest file size),"png","jpeg". Suppress file output
-#'   using any other value; defaults to "pdf".
-#' @param filename character string; name of the file the chart is written to;
-#'   filename extension added from file parameter like this: [filename].[file].
+#' @param filename character; name of the file to save. Supported formats are:
+#'   "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
+#'   suppress file output; defaults to "myipv.pdf".
 #' @param filewidth integer; width of the .pdf file; defaults to 10, dpi is
 #'   3000.
 #' @param fileheight integer; height of the .pdf file; defaults to 10, dpi is
@@ -46,15 +44,10 @@
 #' @param size_center_dot integer; size of the center dot marking the origin
 #'   (relative to default).
 #'
-#' @details This function creates the chart in one step, but does not return the
-#'   coordinates from \code{\link{coord_facets}}. Alternatively use
-#'   \code{\link{coord_facets}} and \code{\link{plot_facets}}. This allows you to
-#'   make changes to or reuse the coordinates.
-#'
 #' @return Object of the class "ggplot" and optionally the same object saved as
 #'   a file.
 #'
-#' @seealso \code{\link{coord_facets}} \code{\link{plot_facets}}
+#' @seealso \code{\link{item_chart}} \code{\link{nested_chart}}
 #'
 #' @examples
 #' # as simple as that
@@ -67,8 +60,7 @@ facet_chart <- function(
   rotate_radians = 0,
   rotate_degrees = 0,
   size = 1,
-  file = "pdf",
-  filename = NULL,
+  filename = "myipv.pdf",
   filewidth = 10,
   fileheight = 10,
   colour = "black",
@@ -94,7 +86,6 @@ facet_chart <- function(
   myipv <- plot_facets(
     coord = coord,
     size = size,
-    file = file,
     filename = filename,
     filewidth = filewidth,
     fileheight = fileheight,

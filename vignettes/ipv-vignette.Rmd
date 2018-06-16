@@ -40,7 +40,7 @@ sc_nested <- nested_chart(self_confidence,
                           xarrows = sc_arrows,
                           rotate_radians = 4 / 3 * pi,
                           subrotate_radians = c(pi / 2, pi / 2, 0),
-                          file = "none",
+                          filename = "none",
                           size = 1.5,
                           colour_tests = "red",
                           colour_facets = "darkorange",
@@ -98,7 +98,7 @@ But you can also display center distances for single items in an item chart:
 ```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", echo=FALSE}
 
 SMTQ_items <- item_chart(SMTQ,
-                         file = "none",
+                         filename = "none",
                          colour = "darkblue",
                          colour2 = "darkblue")
 SMTQ_items
@@ -162,18 +162,17 @@ Consider issuing desired input options on [github](https://github.com/NilsPetras
 Functions are named according to the chart concept. For example, creating a facet chart works like this:
 
 ```{r,fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-SMTQ_facets <- facet_chart(SMTQ, subradius = .6, file = "none")
+SMTQ_facets <- facet_chart(SMTQ, subradius = .6, filename = "none")
 SMTQ_facets
 ```
 
-As you can see, almost all function parameters have a default value, so you can start fast and frugal. The chart is saved to a nameless .pdf file in your working directory by default. Provide a filename using the filename parameter. You can change the file format or suppress file creation using the file parameter. Supported file formats are "pdf", "png", and "jpeg". Any other value will suppress the file output.
+As you can see, almost all function parameters have a default value, so you can start fast and frugal. The chart is saved to "myipv.pdf" in your working directory by default. Supported file formats are pdf, png, and jpeg. filename = "none" will suppress the file output.
 
 ## Design Choices
 
 The vast majority of parameters are size parameters for single elements of the chart, all named size_xyz or width_xyz. Those are pretty straightforward: linear scaling sizes defaulting to 1. Some other parameters are self-explanatory. These important parameters are more complex:
 
 - **size** scales all elements of the chart. This is the most important cosmetic parameter. Not all elements are scaled linearly to produce harmonious results across a variety of sizes (let's call it "smart" scaling).
-- **file**, **filename** the chart is saved to [filename].[file]. If file is neither of "pdf", "png", or "jpeg", no file is saved.
 - **colour**, **colour2**, **colour_tests**,**colour_facets** [full set of colours including gray](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). Colours are used to add visual contrast to important parts of the chart, I recommend using colours whenever possible. In the item chart, use different tones for *colour* and *colour2* to make overlapping items more visible.
 - **subradius** sets the radius of facet circles. Use this parameter to avoid overlapping or too small circles.
 - **relative_scaling** of the global and the test level in nested charts. For a clear chart, you need to hit the sweet spot between allowing big fonts and emphasizing relative positions.
