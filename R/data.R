@@ -6,19 +6,19 @@
 #'
 #' @section Items:
 #'
-#'   __ Social (So) __
+#'   __ Social Competence (So) __
 #'
 #'   1.  I usually feel as if I have handled myself well at social gatherings.
 #'
 #'   5.  I feel secure in social situations.
 #'
-#'   9.  I feel confident of my social behavior.
+#'   9.  I feel confident of my social behaviour.
 #'
 #'   13. I am often troubled with shyness. (R)
 #'
 #'   17. At social gatherings I am often withdrawn, not at all outgoing. (R)
 #'
-#'   __ Ability (Ab) __
+#'   __ Task-Related Abilities (Ab) __
 #'
 #'   2.  I feel as if I lack the necessary skills to really succeed at the work I
 #'   do. (R)
@@ -31,7 +31,7 @@
 #'
 #'   18. In general, I feel confident about my abilities.
 #'
-#'   __ Physical (Ph) __
+#'   __ Physical Appeal (Ph) __
 #'
 #'   3.  I feel that others would consider me to be attractive.
 #'
@@ -43,7 +43,7 @@
 #'
 #'   19. I feel unattractive compared to most people my age. (R)
 #'
-#'   __ Public (Pb) __
+#'   __ Public Presentation (Pb) __
 #'
 #'   4.  When I speak in a large group discussion, I usually feel sure of myself.
 #'
@@ -76,7 +76,7 @@
 #'
 #'  _____ RSES _____
 #'
-#'  __ Positive (Ps) __
+#'  __ Positive Self-Esteem (Ps) __
 #'
 #'  1. On the whole, I am satisfied with myself.
 #'
@@ -88,11 +88,11 @@
 #'
 #'  10. I take a positive attitude toward myself.
 #'
-#'  __ Negative (Ns) __
+#'  __ Lack of Negative Self-Esteem (Ns) __
 #'
 #'  2. At times I think I am no good at all.
 #'
-#'  5. I feel 1do not have much to be proud of.
+#'  5. I feel I do not have much to be proud of.
 #'
 #'  6. I certainly feel useless at times.
 #'

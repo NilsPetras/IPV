@@ -59,8 +59,8 @@ coord_facets <- function (
   # on the origin (0,0)
   # the main circle's radius is set so it encloses the furthest circle
   p_circs <- data.frame(phi = rep(NA, cplx + 1),
-                        rho = rep(NA, cplx + 1),
-                        radius = rep(NA, cplx + 1))
+                        rho = NA,
+                        radius = NA)
   row.names(p_circs) <- c(levels(data$cds$factor),
                           levels(data$cds$subfactor))
   p_circs$radius[1] <- max(data$cds$mean_cd) + 2 * subradius
@@ -68,6 +68,8 @@ coord_facets <- function (
   p_circs$rho <- c(0, tapply(data$cds$cd, data$cds$subfactor, mean) + subradius)
   # facet circles are spread evenly in a circle
   p_circs$phi <- c(0, 2 * pi / cplx * c(1:cplx)) + rotate
+  p_circs$phi[p_circs$phi > 2 * pi] <-
+    p_circs$phi[p_circs$phi > 2 * pi] - 2 * pi
 
   # cartesian coordinates
   # x = cos(phi) * rho
@@ -89,10 +91,10 @@ coord_facets <- function (
   # one from the outer edge of the facet circles (rho2) to the edge of
   # the main circle (rho3)
   p_axes <- data.frame(rho0 = rep(0, cplx),
-                       rho1 = rep(NA, cplx),
-                       rho2 = rep(NA, cplx),
-                       rho3 = rep(NA,cplx),
-                       phi = rep(NA,cplx))
+                       rho1 = NA,
+                       rho2 = NA,
+                       rho3 = NA,
+                       phi = NA)
   row.names(p_axes) <- c(levels(data$cds$subfactor))
   p_axes$phi <- utils::tail(p_circs$phi, cplx)
   p_axes$rho1 <- utils::tail(p_circs$rho, cplx) - subradius
@@ -100,10 +102,10 @@ coord_facets <- function (
   p_axes$rho3 <- rep(max(p_circs$radius))
 
   # cartesian coordinates
-  c_axes <- data.frame(x0 = rep(NA, cplx), y0 = rep(NA, cplx),
-                       x1 = rep(NA, cplx), y1 = rep(NA, cplx),
-                       x2 = rep(NA, cplx), y2 = rep(NA, cplx),
-                       x3 = rep(NA, cplx), y3 = rep(NA, cplx))
+  c_axes <- data.frame(x0 = rep(NA, cplx), y0 = NA,
+                       x1 = NA, y1 = NA,
+                       x2 = NA, y2 = NA,
+                       x3 = NA, y3 = NA)
   row.names(c_axes) <- c(levels(data$cds$subfactor))
   c_axes$x0 <- round(cos(p_axes$phi) * p_axes$rho0, digits = 7)
   c_axes$x1 <- round(cos(p_axes$phi) * p_axes$rho1, digits = 7)
@@ -121,7 +123,7 @@ coord_facets <- function (
   # the axis tick label is displayed between the rightmost axis and the next one
   # counter-clockwise
   axis_tick <- data.frame(rho = 1, phi = NA, x = NA, y = NA)
-  axis_tick$phi <- min(p_axes$phi) - pi / cplx
+  axis_tick$phi <- min(p_axes$phi) + pi / cplx
   axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
   axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
 
@@ -151,12 +153,12 @@ coord_facets <- function (
   # n = 2 * number of correlations
   n <- cplx * (cplx - 1)
   cors <- data.frame(x = rep(NA, n),
-                     y = rep(NA, n),
-                     V1 = rep(NA, n),
-                     V2 = rep(NA, n),
-                     label = rep(NA, n),
-                     xnew = rep(NA, n),
-                     ynew = rep(NA,n))
+                     y = NA,
+                     V1 = NA,
+                     V2 = NA,
+                     label = NA,
+                     xnew = NA,
+                     ynew = NA)
 
   # all pairs of subfactors are covered twice, once in every order,
   # excluding self-pairing

@@ -94,10 +94,10 @@ Use this function in conjunction with \code{\link{plot_nested}} for
 #
 # # adding xarrows
 # sc_arrows <- data.frame(V1_factor = rep(NA, 3),
-#                          V1_subfactor = rep(NA, 3),
-#                         V2_factor = rep(NA, 3),
-#                          V2_subfactor = rep(NA, 3),
-#                         value = rep(NA, 3))
+#                          V1_subfactor = NA,
+#                         V2_factor = NA,
+#                          V2_subfactor = NA,
+#                         value = NA)
 # sc_arrows[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
 # sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
 # sc_arrows[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")

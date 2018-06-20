@@ -6,14 +6,16 @@
 \alias{IPV-package}
 \title{IPV: A package to create Item Pool Visualizations}
 \description{
-The IPV package provides four categories of important functions: input,
-chart, coord, and plot.
+The IPV package provides two categories of important functions: input, and
+chart.
 }
 \section{Input Functions}{
 
 
   The input functions help preprocessing your data, so the other functions
-  can use them. \code{\link{input_excel}}
+  can use them. \code{\link{input_manual_simple}}
+  \code{\link{input_manual_nested}} \code{\link{input_manual_process}}
+  \code{\link{input_excel}}
 }
 
 \section{Chart Functions}{
@@ -28,8 +30,9 @@ chart, coord, and plot.
 \section{Workflow}{
 
 
-  Prepare your data using input functions. Choose a chart type and use the
-  proper chart function. Then \enumerate{\item choose parameter values of the
-  chart function \item check chart appearance \item repeat until satisfied}
+  Prepare your data using input functions or by hand. Choose a chart type and
+  use the proper chart function. Then \enumerate{\item choose parameter
+  values of the chart function \item check chart appearance \item repeat
+  until satisfied}
 }
 

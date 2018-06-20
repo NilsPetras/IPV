@@ -56,11 +56,13 @@ coord_items <- function (
   # axis ends at 120 % of the maximum center distance
   # axis labels at 110 % of the axis ends
   p_axes <- data.frame(phi = rep(NA, cplx),
-                       rho = rep(NA, cplx),
-                       rholabel = rep(NA, cplx))
+                       rho = NA,
+                       rholabel = NA)
   row.names(p_axes) <- levels(data$cds$subfactor)
   p_axes$rho <- maxcd * 1.2
   p_axes$phi <- c(2 * pi / cplx * c(1:cplx)) + rotate
+  p_axes$phi[p_axes$phi > 2 * pi] <-
+    p_axes$phi[p_axes$phi > 2 * pi] - 2 * pi
   p_axes$rholabel <- p_axes$rho * 1.1
 
   # cartesian coordinates
@@ -84,7 +86,7 @@ coord_items <- function (
     phi = NA,
     x = NA,
     y = NA)
-  axis_tick$phi <- min(p_axes$phi[p_axes$rho>.1] %% (2 * pi)) +
+  axis_tick$phi <- min(p_axes$phi[p_axes$rho>.1]) +
     pi / 32 / axis_tick$rho
   axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
   axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
@@ -100,11 +102,11 @@ coord_items <- function (
   # n = number of items
   n <- length(data$cds$item)
   items <- data.frame(
-    rho = rep(NA, n), phi = rep(NA, n),
-    x   = rep(NA, n), y   = rep(NA, n),
-    x1  = rep(NA, n), y1  = rep(NA, n),
-    x2  = rep(NA, n), y2  = rep(NA, n),
-    length = rep(NA, n))
+    rho = rep(NA, n), phi = NA,
+    x   = NA, y   = NA,
+    x1  = NA, y1  = NA,
+    x2  = NA, y2  = NA,
+    length = NA)
   row.names(items) <- data$cds$item
   items$phi <- p_axes$phi[data$cds$subfactor]
   items$rho <- data$cds$cd + .01
@@ -128,9 +130,9 @@ coord_items <- function (
   # n = number of grid lines
   n <- trunc(maxcd * 10)
   maingrid <- data.frame(x = rep(0, n),
-                         y = rep(0, n),
-                         r = rep(NA, n),
-                         alpha = rep(NA, n))
+                         y = 0,
+                         r = NA,
+                         alpha = NA)
   maingrid$r <- seq(from = .1, by = .1, to = round(maxcd, digits = 2))
   maingrid$alpha <- .5
   if (n > 4) maingrid$alpha[seq(from = 5, by = 5, to = n)] <- 1

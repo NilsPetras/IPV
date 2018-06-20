@@ -71,10 +71,10 @@
 #' #
 #' # # adding xarrows
 #' # sc_arrows <- data.frame(V1_factor = rep(NA, 3),
-#' #                          V1_subfactor = rep(NA, 3),
-#' #                         V2_factor = rep(NA, 3),
-#' #                          V2_subfactor = rep(NA, 3),
-#' #                         value = rep(NA, 3))
+#' #                          V1_subfactor = NA,
+#' #                         V2_factor = NA,
+#' #                          V2_subfactor = NA,
+#' #                         value = NA)
 #' # sc_arrows[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
 #' # sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
 #' # sc_arrows[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
@@ -186,13 +186,15 @@ coord_nested <- function (
 
   # polar coordinates of factor circles
   p_circs <- data.frame(phi = rep(NA, cplx + 1),
-                        rho = rep(0, cplx + 1),
-                        radius = rep(NA, cplx + 1))
+                        rho = 0,
+                        radius = NA)
   row.names(p_circs) <- c(levels(data$g$cds$factor), nam)
   p_circs[names(circsize), "radius"] <- circsize
   p_circs$radius[1] <- max(g_cds[nam, ] * rs + circsize[nam] * 2)
   p_circs[nam, "rho"] <- c(g_cds[nam, ] * rs + circsize[nam])
   p_circs$phi <- c(0, 2 * pi / cplx * c(1:cplx)) + rotate
+  p_circs$phi[p_circs$phi > 2 * pi] <-
+    p_circs$phi[p_circs$phi > 2 * pi] - 2 * pi
   p_circs$rho[-1] <- p_circs$rho[-1]
 
   # cartesian coordinates
@@ -208,8 +210,8 @@ coord_nested <- function (
   # polar coordinates of factor correlation rings
   if(correlations == T) {
     p_ring <- data.frame(phi = rep(NA, cplx + 1),
-                         rho = rep(NA, cplx + 1),
-                         radius = rep(NA, cplx + 1))
+                         rho = NA,
+                         radius = NA)
     row.names(p_ring) <- c(levels(data$g$cds$factor), nam)
     p_ring[names(circsize), "radius"] <- circsize - correlations * cor_spacing
     p_ring[nam, "rho"] <- c(g_cds[nam, ] * rs + circsize[nam])
@@ -237,10 +239,10 @@ coord_nested <- function (
   # one from the outer edge of the test circles (rho2) to the edge of
   # the main circle (rho3)
   p_axes <- data.frame(rho0 = rep(0, cplx),
-                       rho1 = rep(NA, cplx),
-                       rho2 = rep(NA, cplx),
-                       rho3 = rep(NA, cplx),
-                       phi = rep(NA, cplx))
+                       rho1 = NA,
+                       rho2 = NA,
+                       rho3 = NA,
+                       phi = NA)
   row.names(p_axes) <- nam
   p_axes$phi <- utils::tail(p_circs$phi, cplx)
   p_axes$rho1 <- utils::tail(p_circs$rho, cplx) -
@@ -249,10 +251,10 @@ coord_nested <- function (
   p_axes$rho3 <- rep(p_circs$radius[1])
 
   # cartesian coordinates
-  c_axes <- data.frame(x0 = rep(NA, cplx), y0 = rep(NA, cplx),
-                       x1 = rep(NA, cplx), y1 = rep(NA, cplx),
-                       x2 = rep(NA, cplx), y2 = rep(NA, cplx),
-                       x3 = rep(NA, cplx), y3 = rep(NA, cplx))
+  c_axes <- data.frame(x0 = rep(NA, cplx), y0 = NA,
+                       x1 = NA, y1 = NA,
+                       x2 = NA, y2 = NA,
+                       x3 = NA, y3 = NA)
   row.names(c_axes) <- nam
   c_axes$x0 <- round(cos(p_axes$phi) * p_axes$rho0, digits = 7)
   c_axes$x1 <- round(cos(p_axes$phi) * p_axes$rho1, digits = 7)
@@ -270,7 +272,7 @@ coord_nested <- function (
   # the axis tick label is displayed between the rightmost axis and
   # the next one counter-clockwise
   axis_tick <- data.frame(rho = 1, phi = NA, x = NA, y = NA)
-  axis_tick$phi <- min(p_axes$phi %% (2 * pi)) + pi / cplx
+  axis_tick$phi <- min(p_axes$phi) + pi / cplx
   axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
   axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
 
@@ -302,12 +304,12 @@ coord_nested <- function (
   # n = 2 * number of correlations
   n <- cplx * (cplx - 1)
   cors <- data.frame(x = rep(NA, n),
-                     y = rep(NA, n),
-                     V1 = rep(NA, n),
-                     V2 = rep(NA, n),
-                     label = rep(NA, n),
-                     xnew = rep(NA, n),
-                     ynew = rep(NA, n))
+                     y = NA,
+                     V1 = NA,
+                     V2 = NA,
+                     label = NA,
+                     xnew = NA,
+                     ynew = NA)
 
   # all pairs of subfactors are covered twice, once in every order, excluding
   # self-pairing
@@ -407,12 +409,12 @@ coord_nested <- function (
     # n = number of arrows
     n <- dim(xarrows)[1]
     arrows <- data.frame(x1 = rep(NA, n),
-                         x2 = rep(NA, n),
-                         y1 = rep(NA, n),
-                         y2 = rep(NA, n),
-                         label = rep(NA, n),
-                         xlabel = rep(NA, n),
-                         ylabel = rep(NA, n))
+                         x2 = NA,
+                         y1 = NA,
+                         y2 = NA,
+                         label = NA,
+                         xlabel = NA,
+                         ylabel = NA)
     arrows$label <- xarrows$value
     # note: facet circles are named as 'factor.facet' within nested$circles
     arrows$x1 <- nested$circles[paste(xarrows$V1_factor,
@@ -458,7 +460,7 @@ coord_nested <- function (
     dist_big <- sqrt(xdist_big ^ 2 + ydist_big ^ 2)
     dist_small <- sqrt(xdist_small ^ 2 + ydist_small ^ 2)
     # points halfway between the big circles
-    halfwaypoint <- data.frame(x = rep(NA, n),y = rep(NA, n))
+    halfwaypoint <- data.frame(x = rep(NA, n), y = NA)
     for (i in 1:n) {
       halfwaypoint$x[i] <- (c_circs[xarrows$V1_factor[i], "x"] +
                               c_circs[xarrows$V2_factor[i], "x"]) / 2 +

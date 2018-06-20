@@ -20,19 +20,19 @@ version of the questionnaire.
 \section{Items}{
 
 
-  __ Social (So) __
+  __ Social Competence (So) __
 
   1.  I usually feel as if I have handled myself well at social gatherings.
 
   5.  I feel secure in social situations.
 
-  9.  I feel confident of my social behavior.
+  9.  I feel confident of my social behaviour.
 
   13. I am often troubled with shyness. (R)
 
   17. At social gatherings I am often withdrawn, not at all outgoing. (R)
 
-  __ Ability (Ab) __
+  __ Task-Related Abilities (Ab) __
 
   2.  I feel as if I lack the necessary skills to really succeed at the work I
   do. (R)
@@ -45,7 +45,7 @@ version of the questionnaire.
 
   18. In general, I feel confident about my abilities.
 
-  __ Physical (Ph) __
+  __ Physical Appeal (Ph) __
 
   3.  I feel that others would consider me to be attractive.
 
@@ -57,7 +57,7 @@ version of the questionnaire.
 
   19. I feel unattractive compared to most people my age. (R)
 
-  __ Public (Pb) __
+  __ Public Presentation (Pb) __
 
   4.  When I speak in a large group discussion, I usually feel sure of myself.
 

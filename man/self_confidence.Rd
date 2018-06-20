@@ -23,7 +23,7 @@ german speaking participants using the german versions of the questionnaires.
 
  _____ RSES _____
 
- __ Positive (Ps) __
+ __ Positive Self-Esteem (Ps) __
 
  1. On the whole, I am satisfied with myself.
 
@@ -35,11 +35,11 @@ german speaking participants using the german versions of the questionnaires.
 
  10. I take a positive attitude toward myself.
 
- __ Negative (Ns) __
+ __ Lack of Negative Self-Esteem (Ns) __
 
  2. At times I think I am no good at all.
 
- 5. I feel 1do not have much to be proud of.
+ 5. I feel I do not have much to be proud of.
 
  6. I certainly feel useless at times.
 
