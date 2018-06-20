@@ -117,9 +117,9 @@ Call ?IPV for an overview of the functions of the package.
 
 ## Data Preparation
 
-UNDER CONSTRUCTION
+Currently there are two ways to prepare your data: manual input in R or excel sheets.
 
-Currently there are two ways to prepare your data: excel sheets or manual input in R. At the current beta state of this package I recommend using excel sheets.
+When using **manual data input**, first use the functions input_manual nested and/or input_manual_simple to fill in the factor loadings and latent correlations. Check for correctness and proceed with the second step, preprocessing the data using the input_manual_process function. At any step you can change false values or add missing values by hand. This way you do not need to set up lists and data frames yourself. Neither do you need to calculate any center distances. If any factor loading is below 0.1 or any center distance below 0, it is set to that value and a warning is displayed.
 
 When using data **input from excel**, you need to set up the cells matching the example files:
 ```{r, eval=FALSE}
@@ -129,9 +129,9 @@ system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV")
 ```
 The easiest way is to use one of the files as a template by copying it and replacing the values.
 
-On sheet 1 you need to provide the factor loadings from your SEM, on sheet 2 you need to provide latent correlations between the factors. Set up the following columns in sheet 1: "factor", "subfactor", "item", "factor_loading", "subfactor_loading". Each item will be a row. On sheet 2, set up the (named and complete) correlation matrix for the latent correlations between the correlated factors (=subfactors). Omit any empty rows and columns.
+On sheet 1 you need to provide the factor loadings from your SEM, on sheet 2 you need to provide the named and complete latent correlation matrix.
 
-"factor" contains the general factor name, "factor_loading" the factor loadings of items on that factor (not squared). "subfactor" contains the correlated factor names, "subfactor_loading" the factor loadings of items on these factors (not squared). "item" contains the item names. Each row contains full information on the respective item: the factors it is associated to, the respective factor loadings, and the item name.
+On sheet 1, "factor" contains the general factor name, "factor_loading" the factor loadings of items on that factor (not squared). "subfactor" contains the correlated factor names, "subfactor_loading" the factor loadings of items on these factors (not squared). "item" contains the item names. Each row contains full information on the respective item.
 
 Read excel sheets using input_excel:
 
@@ -150,12 +150,9 @@ x <- input_excel(global = global, tests = tests)
 # system.file(..., package = "IPV", ...) reads files that are installed with the IPV package to serve as examples
 ```
 
+This way, you do not need to calculate any center distances. If any factor loading is below 0.1 or any center distance below 0, it is set to that value and a warning is displayed.
 
-Note, that center distances are calculated automatically. You will be warned if factor loadings or center distances had to be corrected. Factor loadings below 0.1 will be set to 0.1 and center distances below 0 will be set to 0 to ensure sensible chart margins.
-
-For **manual data input**, a helper function is planned.
-
-Consider issuing desired input options on [github](https://github.com/NilsPetras/IPV/issues).
+Consider issuing desired input features on [github](https://github.com/NilsPetras/IPV/issues).
 
 ## Chart Creation {#fac}
 

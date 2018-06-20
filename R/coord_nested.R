@@ -154,7 +154,7 @@ coord_nested <- function (
   # helper variables -----------------------------------------------------------
 
   # names of factors
-  nam <- levels(data$g$cds$subfactor)
+  nam <- colnames(data$g$cors)
 
   # number of factors
   cplx <- data$g$pars$cplx

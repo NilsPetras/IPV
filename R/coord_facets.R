@@ -62,7 +62,7 @@ coord_facets <- function (
                         rho = NA,
                         radius = NA)
   row.names(p_circs) <- c(levels(data$cds$factor),
-                          levels(data$cds$subfactor))
+                          colnames(data$cors))
   p_circs$radius[1] <- max(data$cds$mean_cd) + 2 * subradius
   p_circs$radius[2:length(p_circs$radius)] <- subradius
   p_circs$rho <- c(0, tapply(data$cds$cd, data$cds$subfactor, mean) + subradius)
@@ -95,7 +95,7 @@ coord_facets <- function (
                        rho2 = NA,
                        rho3 = NA,
                        phi = NA)
-  row.names(p_axes) <- c(levels(data$cds$subfactor))
+  row.names(p_axes) <- c(colnames(data$cors))
   p_axes$phi <- utils::tail(p_circs$phi, cplx)
   p_axes$rho1 <- utils::tail(p_circs$rho, cplx) - subradius
   p_axes$rho2 <- p_axes$rho1 + 2 * subradius
@@ -106,7 +106,7 @@ coord_facets <- function (
                        x1 = NA, y1 = NA,
                        x2 = NA, y2 = NA,
                        x3 = NA, y3 = NA)
-  row.names(c_axes) <- c(levels(data$cds$subfactor))
+  row.names(c_axes) <- c(colnames(data$cors))
   c_axes$x0 <- round(cos(p_axes$phi) * p_axes$rho0, digits = 7)
   c_axes$x1 <- round(cos(p_axes$phi) * p_axes$rho1, digits = 7)
   c_axes$x2 <- round(cos(p_axes$phi) * p_axes$rho2, digits = 7)
