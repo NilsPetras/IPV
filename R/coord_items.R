@@ -144,7 +144,7 @@ coord_items <- function (
   # coordinates of factor name
   # the factor label automatically shows between the first two facets
   # the factor label shows at half the maximum center distance from the origin
-  title <- data.frame(phi = mean(p_axes$phi[1:2]),
+  title <- data.frame(phi = mean(p_axes$phi[1] + pi / cplx),
                       rho = .5 * maxcd,
                       label = data$cds$factor[1],
                       x = NA, y = NA)
