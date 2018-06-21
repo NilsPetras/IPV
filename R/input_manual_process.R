@@ -102,8 +102,7 @@ input_manual_process_factor <- function(data) {
   # return ---------------------------------------------------------------------
 
   mydata <- list(cds = cds,
-                 cors = data$cors,
-                 pars = data$pars)
+                 cors = data$cors)
 
   return(mydata)
 

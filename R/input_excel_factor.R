@@ -53,12 +53,6 @@ input_excel_factor <- function (file) {
   cds$mean_cd <- as.numeric(mean_cds[cds$subfactor])
 
 
-  ## model parameters ---------------
-
-  # number of facets
-  pars <- list(cplx = length(levels(cds$subfactor)))
-
-
   ## correlations -------------------
 
   # subfactor correlation matrix
@@ -69,8 +63,7 @@ input_excel_factor <- function (file) {
   # return ---------------------------------------------------------------------
 
   mydata <- list(cds = cds,
-                 cors = cors,
-                 pars = pars)
+                 cors = cors)
 
   return(mydata)
 }

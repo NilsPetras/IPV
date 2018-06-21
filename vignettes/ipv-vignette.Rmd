@@ -44,6 +44,8 @@ sc_nested <- nested_chart(self_confidence,
                           size = 1.5,
                           colour_tests = "red",
                           colour_facets = "darkorange",
+                          size_center_dot = .75,
+                          size_center_dot_inner = .75,
                           show_xarrows = TRUE)
 sc_nested
 
@@ -133,26 +135,17 @@ On sheet 1 you need to provide the factor loadings from your SEM, on sheet 2 you
 
 On sheet 1, "factor" contains the general factor name, "factor_loading" the factor loadings of items on that factor (not squared). "subfactor" contains the correlated factor names, "subfactor_loading" the factor loadings of items on these factors (not squared). "item" contains the item names. Each row contains full information on the respective item.
 
-Read excel sheets using input_excel:
+Then read these excel sheets using input_excel. This way, you do not need to calculate any center distances. If any factor loading is below 0.1 or any center distance below 0, it is set to that value and a warning is displayed.
 
-```{r,eval=FALSE}
-# simple model
-testfile <- system.file("extdata", "DSSEI.xlsx", package = "IPV", mustWork = TRUE)
-x <- input_excel(tests = testfile)
+After the preprocessing, the data should look like this:
 
-# nested model
-global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
-tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
-             system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
-             system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
-x <- input_excel(global = global, tests = tests)
-
-# system.file(..., package = "IPV", ...) reads files that are installed with the IPV package to serve as examples
+```{r, echo=FALSE}
+SMTQ
 ```
 
-This way, you do not need to calculate any center distances. If any factor loading is below 0.1 or any center distance below 0, it is set to that value and a warning is displayed.
+The first part consists of the center distances (cds), where for each item, the test name, the facet name, the item name, the center distance, and the mean center distance of its facet is given. The second part is the latent correlation matrix of the facets. Nested models combine multiple of these data segments, including one on the global scale.
 
-Consider issuing desired input features on [github](https://github.com/NilsPetras/IPV/issues).
+Consider issuing desired input features on [github](https://github.com/NilsPetras/IPV/issues), e.g. using output from your prefered statistics software.
 
 ## Chart Creation {#fac}
 

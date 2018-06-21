@@ -44,7 +44,7 @@ coord_facets <- function (
   # helper variables -----------------------------------------------------------
 
   # number of facets (=subfactors)
-  cplx <- data$pars$cplx
+  cplx <- length(colnames(data$cors))
 
   # total rotation value in radians from rotation parameters
   rotate <- rotate_radians + rotate_degrees * pi / 180

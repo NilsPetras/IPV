@@ -157,7 +157,7 @@ coord_nested <- function (
   nam <- colnames(data$g$cors)
 
   # number of factors
-  cplx <- data$g$pars$cplx
+  cplx <- length(colnames(data$g$cors))
 
   # total rotation value in radians
   rotate <- rotate_radians + rotate_degrees * pi / 180

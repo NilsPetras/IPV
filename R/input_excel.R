@@ -56,7 +56,7 @@ input_excel <- function(global = NULL, tests){
     # test level
     tests_input <- lapply(tests, input_excel_factor)
     # including test names
-    for (i in 1:global_input$pars$cplx) {
+    for (i in 1:length(colnames(global_input$cors))) {
       names(tests_input)[i] <- levels(tests_input[[c(i, 1)]]$factor)
     }
 

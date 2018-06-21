@@ -4,7 +4,7 @@
 \name{DSSEI}
 \alias{DSSEI}
 \title{Domain Specific Self-Esteem Inventory}
-\format{An object of class \code{list} of length 3.}
+\format{An object of class \code{list} of length 2.}
 \source{
 Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision).
   Introducing Item Pool Visualization (IPV)

@@ -83,8 +83,7 @@ input_manual_simple <- function(
                      item = NA,
                      factor_loading = NA,
                      subfactor_loading = NA),
-    cors = matrix(nrow = cplx, ncol = cplx),
-    pars = list(cplx = cplx))
+    cors = matrix(nrow = cplx, ncol = cplx))
 
 
   # factor loadings data frame--------------------------------------------------
