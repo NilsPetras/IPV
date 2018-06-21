@@ -17,8 +17,8 @@ from the facet level.}
 }
 \value{
 List containing formatted data including center distances for
-  \code{\link{coord_items}}, \code{\link{coord_facets}}, and
-  \code{\link{coord_nested}}.
+  \code{\link{item_chart}}, \code{\link{facet_chart}}, and
+  \code{\link{nested_chart}}.
 }
 \description{
 Reads excel files containing factor loadings and latent correlations for IPV
@@ -43,6 +43,6 @@ global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = 
 tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
              system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
              system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
-x <- input_excel(global = global,tests = tests)
+x <- input_excel(global = global, tests = tests)
 
 }

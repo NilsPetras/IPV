@@ -4,7 +4,7 @@
 \name{DSSEI}
 \alias{DSSEI}
 \title{Domain Specific Self-Esteem Inventory}
-\format{An object of class \code{list} of length 3.}
+\format{An object of class \code{list} of length 2.}
 \source{
 Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision).
   Introducing Item Pool Visualization (IPV)
@@ -17,4 +17,62 @@ A set of center distances and latent correlations for items and facets of the
 DSSEI, completed by 2272 german speaking participants using the german
 version of the questionnaire.
 }
+\section{Items}{
+
+
+  __ Social Competence (So) __
+
+  1.  I usually feel as if I have handled myself well at social gatherings.
+
+  5.  I feel secure in social situations.
+
+  9.  I feel confident of my social behaviour.
+
+  13. I am often troubled with shyness. (R)
+
+  17. At social gatherings I am often withdrawn, not at all outgoing. (R)
+
+  __ Task-Related Abilities (Ab) __
+
+  2.  I feel as if I lack the necessary skills to really succeed at the work I
+  do. (R)
+
+  6.  I am able to do things as well as most other people.
+
+  10. I usually expect to succeed at the things I do.
+
+  14. I almost always accomplish the goals I set for myself.
+
+  18. In general, I feel confident about my abilities.
+
+  __ Physical Appeal (Ph) __
+
+  3.  I feel that others would consider me to be attractive.
+
+  7.  I'm not as nice looking as most people. (R)
+
+  11. I feel confident that my physical appearance is appealing to others.
+
+  15. I am satisfied with the way I look.
+
+  19. I feel unattractive compared to most people my age. (R)
+
+  __ Public Presentation (Pb) __
+
+  4.  When I speak in a large group discussion, I usually feel sure of myself.
+
+  8.  I enjoy being in front of large audiences.
+
+  12. I feel quite confident when speaking before a group of my peers.
+
+  16. I find it very hard to talk in front of a group. (R)
+
+  20. When I talk in front of a group of people my own age, I am usually
+  somewhat worried or afraid. (R)
+
+  (Hoyle, R. H. (1991). Evaluating measurement models in clinical research:
+  Covariance structure analysis of latent variable models of self-conception.
+  Journal of Consulting and Clinical Psychology, 59(1), 67.)
+}
+
 \keyword{datasets}

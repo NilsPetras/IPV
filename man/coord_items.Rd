@@ -26,17 +26,21 @@ Generates coordinates for an item chart.
 Use this function in conjunction with \code{\link{plot_items}} for
   simple models.
 
+  Use \code{\link{item_chart}} to create the chart in a single step.
+
+  Rotate using this function, not \code{\link{plot_items}}.
+
   In a nested model, it is more efficient to use \code{\link{coord_nested}}
-  instead. Set \code{items = TRUE} to generate item chart coordinates for
-  all factors of the nested model.
+  instead. Set \code{prepare_item_charts = TRUE} to generate item chart
+  coordinates for all factors of the nested model.
 }
 \examples{
-# creating an item chart is a two step process, using this function and plot_items:
-coord <- coord_items(DSSEI)
-DSSEI_items <- plot_items(coord, filename = "DSSEI_items")
-DSSEI_items
-
+# # creating an item chart is a two step process, using this function and
+# # plot_items:
+# coord <- coord_items(DSSEI)
+# DSSEI_items <- plot_items(coord, filename = "DSSEI_items")
+# DSSEI_items
 }
 \seealso{
-\code{\link{plot_items}} \code{\link{coord_nested}}
+\code{\link{plot_items}} \code{\link{coord_nested}} \code{\link{item_chart}}
 }
