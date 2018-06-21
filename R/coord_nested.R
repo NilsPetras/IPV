@@ -70,10 +70,10 @@
 #' # sc_nested
 #' #
 #' # # adding xarrows
-#' # sc_arrows <- data.frame(V1_factor = rep(NA, 3),
-#' #                          V1_subfactor = NA,
-#' #                         V2_factor = NA,
-#' #                          V2_subfactor = NA,
+#' # sc_arrows <- data.frame(test1 = rep(NA, 3),
+#' #                          facet1 = NA,
+#' #                         test2 = NA,
+#' #                          facet2 = NA,
 #' #                         value = NA)
 #' # sc_arrows[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
 #' # sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
@@ -195,7 +195,6 @@ coord_nested <- function (
   p_circs$phi <- c(0, 2 * pi / cplx * c(1:cplx)) + rotate
   p_circs$phi[p_circs$phi > 2 * pi] <-
     p_circs$phi[p_circs$phi > 2 * pi] - 2 * pi
-  p_circs$rho[-1] <- p_circs$rho[-1]
 
   # cartesian coordinates
   # x=cos(phi)*rho
@@ -417,20 +416,20 @@ coord_nested <- function (
                          ylabel = NA)
     arrows$label <- xarrows$value
     # note: facet circles are named as 'factor.facet' within nested$circles
-    arrows$x1 <- nested$circles[paste(xarrows$V1_factor,
-                                      xarrows$V1_subfactor,
+    arrows$x1 <- nested$circles[paste(xarrows$test1,
+                                      xarrows$facet1,
                                       sep = "."),
                                 "x"]
-    arrows$y1 <- nested$circles[paste(xarrows$V1_factor,
-                                      xarrows$V1_subfactor,
+    arrows$y1 <- nested$circles[paste(xarrows$test1,
+                                      xarrows$facet1,
                                       sep = "."),
                                 "y"]
-    arrows$x2 <- nested$circles[paste(xarrows$V2_factor,
-                                      xarrows$V2_subfactor,
+    arrows$x2 <- nested$circles[paste(xarrows$test2,
+                                      xarrows$facet2,
                                       sep = "."),
                                 "x"]
-    arrows$y2 <- nested$circles[paste(xarrows$V2_factor,
-                                      xarrows$V2_subfactor,
+    arrows$y2 <- nested$circles[paste(xarrows$test2,
+                                      xarrows$facet2,
                                       sep = "."),
                                 "y"]
 
@@ -448,10 +447,10 @@ coord_nested <- function (
     xdist_big <- NULL
     ydist_big <- NULL
     for (i in 1:n) {
-      xdist_big[i] <- c_circs[xarrows$V2_factor[i], "x"] -
-        c_circs[xarrows$V1_factor[i], "x"]
-      ydist_big[i] <- c_circs[xarrows$V2_factor[i], "y"] -
-        c_circs[xarrows$V1_factor[i], "y"]
+      xdist_big[i] <- c_circs[xarrows$test2[i], "x"] -
+        c_circs[xarrows$test1[i], "x"]
+      ydist_big[i] <- c_circs[xarrows$test2[i], "y"] -
+        c_circs[xarrows$test1[i], "y"]
     }
     xdist_small <- arrows$x2 - arrows$x1
     ydist_small <- arrows$y2 - arrows$y1
@@ -462,16 +461,16 @@ coord_nested <- function (
     # points halfway between the big circles
     halfwaypoint <- data.frame(x = rep(NA, n), y = NA)
     for (i in 1:n) {
-      halfwaypoint$x[i] <- (c_circs[xarrows$V1_factor[i], "x"] +
-                              c_circs[xarrows$V2_factor[i], "x"]) / 2 +
+      halfwaypoint$x[i] <- (c_circs[xarrows$test1[i], "x"] +
+                              c_circs[xarrows$test2[i], "x"]) / 2 +
         xdist_big[i] / dist_big[i] /
-        2 * (c_circs[xarrows$V1_factor[i], "radius"] -
-               c_circs[xarrows$V2_factor[i], "radius"])
-      halfwaypoint$y[i] <- (c_circs[xarrows$V1_factor[i], "y"] +
-                              c_circs[xarrows$V2_factor[i], "y"]) / 2 +
+        2 * (c_circs[xarrows$test1[i], "radius"] -
+               c_circs[xarrows$test2[i], "radius"])
+      halfwaypoint$y[i] <- (c_circs[xarrows$test1[i], "y"] +
+                              c_circs[xarrows$test2[i], "y"]) / 2 +
         ydist_big[i] / dist_big[i] /
-        2 * (c_circs[xarrows$V1_factor[i], "radius"] -
-               c_circs[xarrows$V2_factor[i], "radius"])
+        2 * (c_circs[xarrows$test1[i], "radius"] -
+               c_circs[xarrows$test2[i], "radius"])
     }
     # placing the labels alongside the arrow on their final positions
     d <- NULL

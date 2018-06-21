@@ -27,10 +27,10 @@ Item Pool Visualization (IPV) is an original way to to display factor structures
 *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
 
 ```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", echo=FALSE}
-sc_arrows <- data.frame(V1_factor = rep(NA, 3),
-                        V1_subfactor = rep(NA, 3),
-                        V2_factor = rep(NA, 3),
-                        V2_subfactor = rep(NA, 3),
+sc_arrows <- data.frame(test1 = rep(NA, 3),
+                        facet1 = rep(NA, 3),
+                        test2 = rep(NA, 3),
+                        facet2 = rep(NA, 3),
                         value = rep(NA, 3))
 sc_arrows[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
 sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
@@ -171,10 +171,10 @@ The vast majority of parameters are size parameters for single elements of the c
 - **xarrows** adds custom correlation arrows to nested charts. Provide information about latent correlations between facets of different factors to the xarrow parameter (see below). Set *show_xarrows* = TRUE in plot_nested. Straighten out your chart with the subrotate parameters.
 
 ```{r, echo=FALSE}
-sc_arrows <- data.frame(V1_factor = rep(NA, 3),
-                        V1_subfactor = rep(NA, 3),
-                        V2_factor = rep(NA, 3),
-                        V2_subfactor = rep(NA, 3),
+sc_arrows <- data.frame(test1 = rep(NA, 3),
+                        facet1 = rep(NA, 3),
+                        test2 = rep(NA, 3),
+                        facet2 = rep(NA, 3),
                         value = rep(NA, 3))
 sc_arrows[1,] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
 sc_arrows[2,] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")

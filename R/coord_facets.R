@@ -59,13 +59,15 @@ coord_facets <- function (
   # on the origin (0,0)
   # the main circle's radius is set so it encloses the furthest circle
   p_circs <- data.frame(phi = rep(NA, cplx + 1),
-                        rho = NA,
+                        rho = 0,
                         radius = NA)
   row.names(p_circs) <- c(levels(data$cds$factor),
                           colnames(data$cors))
   p_circs$radius[1] <- max(data$cds$mean_cd) + 2 * subradius
   p_circs$radius[2:length(p_circs$radius)] <- subradius
-  p_circs$rho <- c(0, tapply(data$cds$cd, data$cds$subfactor, mean) + subradius)
+  mean_cds <- tapply(data$cds$cd, data$cds$subfactor, mean)
+  p_circs[colnames(data$cors), "rho"] <- c(mean_cds[colnames(data$cors)] + subradius)
+  rm(mean_cds)
   # facet circles are spread evenly in a circle
   p_circs$phi <- c(0, 2 * pi / cplx * c(1:cplx)) + rotate
   p_circs$phi[p_circs$phi > 2 * pi] <-

@@ -93,10 +93,10 @@
 #' # sc_nested
 #'#
 #' # # adding xarrows
-#' # sc_arrows <- data.frame(V1_factor = rep(NA, 3),
-#'#                          V1_subfactor = rep(NA, 3),
-#'#                          V2_factor = rep(NA, 3),
-#'#                          V2_subfactor = rep(NA, 3),
+#' # sc_arrows <- data.frame(test1 = rep(NA, 3),
+#'#                          facet1 = rep(NA, 3),
+#'#                          test2 = rep(NA, 3),
+#'#                          facet2 = rep(NA, 3),
 #'#                          value = rep(NA, 3))
 #' # sc_arrows[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
 #' # sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")

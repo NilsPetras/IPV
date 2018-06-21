@@ -93,10 +93,10 @@ Use this function in conjunction with \code{\link{plot_nested}} for
 # sc_nested
 #
 # # adding xarrows
-# sc_arrows <- data.frame(V1_factor = rep(NA, 3),
-#                          V1_subfactor = NA,
-#                         V2_factor = NA,
-#                          V2_subfactor = NA,
+# sc_arrows <- data.frame(test1 = rep(NA, 3),
+#                          facet1 = NA,
+#                         test2 = NA,
+#                          facet2 = NA,
 #                         value = NA)
 # sc_arrows[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
 # sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
