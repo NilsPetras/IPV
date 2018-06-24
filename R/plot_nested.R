@@ -94,10 +94,10 @@
 #'#
 #' # # adding xarrows
 #' # sc_arrows <- data.frame(test1 = rep(NA, 3),
-#'#                          facet1 = rep(NA, 3),
-#'#                          test2 = rep(NA, 3),
-#'#                          facet2 = rep(NA, 3),
-#'#                          value = rep(NA, 3))
+#'#                          facet1 = NA,
+#'#                          test2 = NA,
+#'#                          facet2 = NA,
+#'#                          value = NA)
 #' # sc_arrows[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
 #' # sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
 #' # sc_arrows[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
@@ -172,7 +172,7 @@ plot_nested <- function (
       panel.grid.minor = ggplot2::element_blank(),
       plot.background  = ggplot2::element_blank(),
       text             = ggplot2::element_text(size = 16, family = font),
-      plot.margin      = ggplot2::margin(1, 1, 1, 1, "in")) +
+      plot.margin      = ggplot2::margin(0, 0, 0, 0, "in")) +
     ggplot2::aes() +
 
 

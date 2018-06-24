@@ -8,6 +8,8 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
+#' @param dodge_axes integer; relative amount of horizontal outward dodge of
+#'   axis labels.
 #'
 #' @details Use this function in conjunction with \code{\link{plot_items}} for
 #'   simple models.
@@ -22,7 +24,8 @@
 #'
 #' @return List containing coordinates of chart objects.
 #'
-#' @seealso \code{\link{plot_items}} \code{\link{coord_nested}} \code{\link{item_chart}}
+#' @seealso \code{\link{plot_items}} \code{\link{coord_nested}}
+#'   \code{\link{item_chart}}
 #'
 #' @examples
 #' # # creating an item chart is a two step process, using this function and
@@ -33,7 +36,8 @@
 coord_items <- function (
   data,
   rotate_radians = 0,
-  rotate_degrees = 0) {
+  rotate_degrees = 0,
+  dodge_axes = 1) {
 
 
   # helper variables -----------------------------------------------------------
@@ -63,7 +67,7 @@ coord_items <- function (
   p_axes$phi <- c(2 * pi / cplx * c(1:cplx)) + rotate
   p_axes$phi[p_axes$phi > 2 * pi] <-
     p_axes$phi[p_axes$phi > 2 * pi] - 2 * pi
-  p_axes$rholabel <- p_axes$rho * 1.1
+  p_axes$rholabel <- p_axes$rho * 1.1 + abs(cos(p_axes$phi) * .05 * dodge_axes * p_axes$rho)
 
   # cartesian coordinates
   # x = cos(phi) * rho

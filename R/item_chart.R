@@ -8,11 +8,13 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
+#' @param dodge_axes integer; relative amount of horizontal outward dodge of
+#'   axis labels.
 #' @param size integer; smartly scaled size of chart objects.
 #' @param filename character; name of the file to save. Supported formats are:
 #'   "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
 #'   suppress file output; defaults to "myipv.pdf".
-#' @param filewidth integer; width of the .pdf document; defaults to 10; dpi is
+#' @param filewidth integer; width of the .pdf document; defaults to 12; dpi is
 #'   3000.
 #' @param fileheight integer; height of the .pdf document; defaults to 10, dpi
 #'   is 3000.
@@ -54,9 +56,10 @@ item_chart <- function(
   data,
   rotate_radians = 0,
   rotate_degrees = 0,
+  dodge_axes = 1,
   size = 1,
   filename = "myipv.pdf",
-  filewidth = 10,
+  filewidth = 12,
   fileheight = 10,
   colour = "black",
   colour2 = "black",
@@ -75,7 +78,8 @@ item_chart <- function(
   coord <- coord_items(
     data = data,
     rotate_radians = rotate_radians,
-    rotate_degrees = rotate_degrees)
+    rotate_degrees = rotate_degrees,
+    dodge_axes = dodge_axes)
 
   myipv <- plot_items(
     coord = coord,

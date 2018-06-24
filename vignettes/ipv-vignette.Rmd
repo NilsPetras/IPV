@@ -172,10 +172,10 @@ The vast majority of parameters are size parameters for single elements of the c
 
 ```{r, echo=FALSE}
 sc_arrows <- data.frame(test1 = rep(NA, 3),
-                        facet1 = rep(NA, 3),
-                        test2 = rep(NA, 3),
-                        facet2 = rep(NA, 3),
-                        value = rep(NA, 3))
+                        facet1 = NA,
+                        test2 = NA,
+                        facet2 = NA,
+                        value = NA)
 sc_arrows[1,] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
 sc_arrows[2,] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
 sc_arrows[3,] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")

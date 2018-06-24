@@ -8,7 +8,7 @@
 #' @param filename character; name of the file to save. Supported formats are:
 #'   "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
 #'   suppress file output; defaults to "myipv.pdf".
-#' @param filewidth integer; width of the .pdf document; defaults to 10; dpi is
+#' @param filewidth integer; width of the .pdf document; defaults to 12; dpi is
 #'   3000.
 #' @param fileheight integer; height of the .pdf document; defaults to 10, dpi
 #'   is 3000.
@@ -65,7 +65,7 @@ plot_items <- function (
   coord,
   size = 1,
   filename = "myipv.pdf",
-  filewidth = 10,
+  filewidth = 12,
   fileheight = 10,
   colour = "black",
   colour2 = "black",
@@ -107,20 +107,13 @@ plot_items <- function (
       panel.grid.minor = ggplot2::element_blank(),
       plot.background  = ggplot2::element_blank(),
       text             = ggplot2::element_text(size = 16, family = font),
-      plot.margin      = ggplot2::margin(1, 1, 1, 1, "in")) +
+      plot.margin      = ggplot2::margin(0, 0, 0, 0, "in")) +
     ggplot2::aes() +
 
 
     ## layers -----------------------
 
   # layers ordered from bottom to top
-
-    # axis labels
-    ggplot2::geom_text(
-      ggplot2::aes(x = xlabel, y = ylabel, label = row.names(coord$c_axes)),
-      family = font,
-      size = 6 * sqrt(size) * size_facet_labels,
-      hjust = "inward") +
 
     # center dot
     ggplot2::geom_point(
@@ -174,7 +167,14 @@ plot_items <- function (
       family = font,
       size = 6 * sqrt(size) * size_title,
       color = colour,
-      fontface = "bold")
+      fontface = "bold") +
+
+    # axis labels
+    ggplot2::geom_text(
+      ggplot2::aes(x = xlabel, y = ylabel, label = row.names(coord$c_axes)),
+      family = font,
+      size = 6 * sqrt(size) * size_facet_labels,
+      hjust = "inward")
 
 
   ## optional layers ----------------
