@@ -4,7 +4,7 @@
 \alias{plot_items}
 \title{Plot Items}
 \usage{
-plot_items(coord, size = 1, filename = "myipv.pdf", filewidth = 10,
+plot_items(coord, size = 1, filename = "myipv.pdf", filewidth = 12,
   fileheight = 10, colour = "black", colour2 = "black", fade = 90,
   font = "sans", tick_label = TRUE, size_tick_label = 1, size_title = 1,
   size_facet_labels = 1, width_axes = 1, size_arrow_heads = 1,
@@ -20,7 +20,7 @@ plot_items(coord, size = 1, filename = "myipv.pdf", filewidth = 10,
 "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
 suppress file output; defaults to "myipv.pdf".}
 
-\item{filewidth}{integer; width of the .pdf document; defaults to 10; dpi is
+\item{filewidth}{integer; width of the .pdf document; defaults to 12; dpi is
 3000.}
 
 \item{fileheight}{integer; height of the .pdf document; defaults to 10, dpi

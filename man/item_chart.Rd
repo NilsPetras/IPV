@@ -4,8 +4,8 @@
 \alias{item_chart}
 \title{Item Chart}
 \usage{
-item_chart(data, rotate_radians = 0, rotate_degrees = 0, size = 1,
-  filename = "myipv.pdf", filewidth = 10, fileheight = 10,
+item_chart(data, rotate_radians = 0, rotate_degrees = 0, dodge_axes = 1,
+  size = 1, filename = "myipv.pdf", filewidth = 12, fileheight = 10,
   colour = "black", colour2 = "black", fade = 90, font = "sans",
   tick_label = TRUE, size_tick_label = 1, size_title = 1,
   size_facet_labels = 1, width_axes = 1, size_arrow_heads = 1,
@@ -21,13 +21,16 @@ counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
 \item{rotate_degrees}{integer; angle in degrees to rotate the chart
 counter-clockwise by.}
 
+\item{dodge_axes}{integer; relative amount of horizontal outward dodge of
+axis labels.}
+
 \item{size}{integer; smartly scaled size of chart objects.}
 
 \item{filename}{character; name of the file to save. Supported formats are:
 "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
 suppress file output; defaults to "myipv.pdf".}
 
-\item{filewidth}{integer; width of the .pdf document; defaults to 10; dpi is
+\item{filewidth}{integer; width of the .pdf document; defaults to 12; dpi is
 3000.}
 
 \item{fileheight}{integer; height of the .pdf document; defaults to 10, dpi
