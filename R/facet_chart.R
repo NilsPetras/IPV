@@ -7,26 +7,30 @@
 #' @param subradius integer; (arbitrary) radius of the circles representing
 #'   facets (same unit as center distances), use to avoid circle overlap and
 #'   optimize appearance.
+#' @param filename character; name of the file to save. Supported formats are:
+#'   "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
+#'   suppress file output; defaults to "myipv.pdf".
+#' @param size integer; smartly scaled size of chart objects.
+#' @param font character; text font; defaults to 'sans' (use extrafonts to
+#'   install additional fonts).
 #' @param rotate_radians integer; radian angle to rotate the chart
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
-#' @param size integer; smartly scaled size of chart objects.
-#' @param filename character; name of the file to save. Supported formats are:
-#'   "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
-#'   suppress file output; defaults to "myipv.pdf".
-#' @param filewidth integer; width of the .pdf file; defaults to 10, dpi is
-#'   3000.
-#' @param fileheight integer; height of the .pdf file; defaults to 10, dpi is
-#'   3000.
+#' @param filewidth integer; width of the graphic in inches; defaults to 10, dpi is
+#'   3000 for pdf files and 500 for png and jpeg files.
+#' @param fileheight integer; height of the graphic in inches; defaults to 10, dpi is
+#'   3000 for pdf files and 500 for png and jpeg files.
 #' @param colour character; name of the accent colour.
 #' @param fade integer; brightness of the gray tones between 0 (black) and 100
 #'   (white) in steps of 1; defaults to 90.
+#' @param tick numeric; axis tick position; defaults to .1.
 #' @param cor_labels logical; if \code{TRUE}, draws latent correlations between
 #'   facets as text.
-#' @param tick numeric; axis tick position; defaults to .1.
-#' @param font character; text font; defaults to 'sans' (use extrafonts to
-#'   install additional fonts).
+#' @param rotate_title_radians integer; radian angle to rotate the global label
+#'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
+#' @param rotate_title_degrees integer; angle in degrees to rotate the global
+#'   label counter-clockwise by.
 #' @param size_test_label integer; font size of the test label (relative to
 #'   default).
 #' @param size_facet_labels integer; font size of the facet labels (relative to
@@ -57,17 +61,19 @@
 facet_chart <- function(
   data,
   subradius,
+  filename = "myipv.pdf",
+  size = 1,
+  font = "sans",
   rotate_radians = 0,
   rotate_degrees = 0,
-  size = 1,
-  filename = "myipv.pdf",
   filewidth = 10,
   fileheight = 10,
   colour = "black",
   fade = 90,
-  font = "sans",
   tick = .1,
   cor_labels = TRUE,
+  rotate_title_radians = 0,
+  rotate_title_degrees = 0,
   size_cor_labels = 1,
   size_test_label = 1,
   size_facet_labels = 1,
@@ -81,7 +87,9 @@ facet_chart <- function(
     data = data,
     subradius = subradius,
     rotate_radians = rotate_radians,
-    rotate_degrees = rotate_degrees)
+    rotate_degrees = rotate_degrees,
+    rotate_title_radians =rotate_title_radians,
+    rotate_title_degrees = rotate_title_degrees)
 
   myipv <- plot_facets(
     coord = coord,

@@ -11,6 +11,10 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
+#' @param rotate_title_radians integer; radian angle to rotate the global label
+#'  counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
+#' @param rotate_title_degrees integer; angle in degrees to rotate the global
+#'  label counter-clockwise by.
 #'
 #' @details Use this function in conjunction with \code{\link{plot_facets}} for
 #'   simple models.
@@ -38,7 +42,9 @@ coord_facets <- function (
   data,
   subradius,
   rotate_radians = 0,
-  rotate_degrees = 0) {
+  rotate_degrees = 0,
+  rotate_title_radians = 0,
+  rotate_title_degrees = 0) {
 
 
   # helper variables -----------------------------------------------------------
@@ -48,6 +54,9 @@ coord_facets <- function (
 
   # total rotation value in radians from rotation parameters
   rotate <- rotate_radians + rotate_degrees * pi / 180
+
+  # total title rotation value in radians
+  rotate_title <- rotate_title_radians + rotate_title_degrees * pi / 180
 
 
   # chart objects --------------------------------------------------------------
@@ -142,7 +151,7 @@ coord_facets <- function (
                       label = row.names(p_circs)[1],
                       phi = NA,
                       rho = NA)
-  title$phi <- p_circs[which.min(p_circs$rho), "phi"] - pi / cplx
+  title$phi <- p_circs[which.min(p_circs$rho), "phi"] - pi / cplx + rotate_title
   title$rho <- 2 / 3 * max(p_circs$radius)
   title$x <- round(cos(title$phi) * title$rho, digits = 7)
   title$y <- round(sin(title$phi) * title$rho, digits = 7)

@@ -23,6 +23,11 @@ input_excel_factor <- function (file) {
 
   ## factor loadings ----------------
 
+  # checking for negative factor loadings
+  bad <- min(c(sheet1$factor_loading, sheet1$subfactor_loading))
+  bad <- bad < 0
+  if (bad) stop ("data contains negative factor loading")
+
   # checking for factor loadings below .1
   bad <- min(c(sheet1$factor_loading, sheet1$subfactor_loading))
   bad <- bad < 0.1

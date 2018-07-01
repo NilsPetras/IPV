@@ -66,6 +66,14 @@ input_manual_simple <- function(
   correlation_matrix = NULL) {
 
 
+  # checking -------------------------------------------------------------------
+
+  # checking for negative factor loadings
+  bad <- min(c(general_loadings, correlated_loadings))
+  bad <- bad < 0
+  if (bad) stop ("data contains negative factor loading")
+
+
   # helper variables -----------------------------------------------------------
 
   cplx <- length(facet_names)

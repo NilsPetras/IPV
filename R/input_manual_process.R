@@ -69,6 +69,11 @@ input_manual_process_factor <- function(data) {
 
   ## factor loadings ---------------------------------------
 
+  # checking for negative factor loadings
+  bad <- min(c(data$fls$factor_loading, data$fls$subfactor_loading))
+  bad <- bad < 0
+  if (bad) stop ("data contains negative factor loading")
+
   # checking for factor loadings below .1
   bad <- min(c(data$fls$factor_loading, data$fls$subfactor_loading))
   bad <- bad < 0.1

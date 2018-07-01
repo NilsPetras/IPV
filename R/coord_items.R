@@ -8,6 +8,10 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
+#' @param rotate_title_radians integer; radian angle to rotate the global label
+#'  counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
+#' @param rotate_title_degrees integer; angle in degrees to rotate the global
+#'  label counter-clockwise by.
 #' @param dodge_axes integer; relative amount of horizontal outward dodge of
 #'   axis labels.
 #'
@@ -37,6 +41,8 @@ coord_items <- function (
   data,
   rotate_radians = 0,
   rotate_degrees = 0,
+  rotate_title_radians = 0,
+  rotate_title_degrees = 0,
   dodge_axes = 1) {
 
 
@@ -47,6 +53,9 @@ coord_items <- function (
 
   # total rotation value in radians
   rotate <- rotate_radians + rotate_degrees * pi / 180
+
+  # total title rotation value in radians
+  rotate_title <- rotate_title_radians + rotate_title_degrees * pi / 180
 
   # maximum center distance (determining the chart size)
   maxcd <- max(data$cds$cd)
@@ -148,7 +157,7 @@ coord_items <- function (
   # coordinates of factor name
   # the factor label automatically shows between the first two facets
   # the factor label shows at half the maximum center distance from the origin
-  title <- data.frame(phi = mean(p_axes$phi[1] + pi / cplx),
+  title <- data.frame(phi = mean(p_axes$phi[1] + pi / cplx) + rotate_title,
                       rho = .5 * maxcd,
                       label = data$cds$factor[1],
                       x = NA, y = NA)
