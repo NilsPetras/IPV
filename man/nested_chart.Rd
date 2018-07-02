@@ -8,7 +8,7 @@ nested_chart(data, xarrows = NULL, subradius, filename = "myipv.pdf",
   size = 1, relative_scaling = 3, show_xarrows = FALSE, font = "sans",
   rotate_radians = 0, rotate_degrees = 0, subrotate_radians = 0,
   subrotate_degrees = 0, filewidth = 10, fileheight = 10,
-  colour_tests = "black", colour_facets = "black", fade = 90,
+  colour_tests = "black", colour_facets = "black", fade = 85,
   correlations = TRUE, cor_spacing = 0.4, tick = 0.1,
   rotate_title_radians = 0, rotate_title_degrees = 0,
   cor_labels_tests = TRUE, cor_labels_facets = TRUE, size_title = 1,
@@ -69,7 +69,7 @@ degrees to rotate the nested facet charts counter-clockwise by.}
 \item{colour_facets}{character; name of the nested accent colour.}
 
 \item{fade}{integer; brightness of the gray tones between 0 (black) and 100
-(white) in steps of 1; defaults to 90.}
+(white) in steps of 1; defaults to 85.}
 
 \item{correlations}{logical; if \code{TRUE}, generates coordinates for latent
 correlations between tests and sets up a ring to draw them in. If

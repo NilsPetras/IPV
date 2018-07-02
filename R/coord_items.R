@@ -9,9 +9,13 @@
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
 #' @param rotate_title_radians integer; radian angle to rotate the global label
-#'  counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
+#'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_title_degrees integer; angle in degrees to rotate the global
-#'  label counter-clockwise by.
+#'   label counter-clockwise by.
+#' @param width_items integer; width of the item bars (relative to default).
+#' @param length_items integer; length of the item bars (relative to default).
+#' @param length_ratio_items integer; relative length of every other item bar;
+#'   defaults to 1.5.
 #' @param dodge_axes integer; relative amount of horizontal outward dodge of
 #'   axis labels.
 #'
@@ -43,6 +47,9 @@ coord_items <- function (
   rotate_degrees = 0,
   rotate_title_radians = 0,
   rotate_title_degrees = 0,
+  width_items = 1,
+  length_items = 1,
+  length_ratio_items = 1.5,
   dodge_axes = 1) {
 
 
@@ -94,13 +101,14 @@ coord_items <- function (
   # the axis tick of 0.1 is labeled
   # the axis tick label automatically shows within the first quadrant
   axis_tick <- data.frame(
-    rho = 0.14,
-    label = "0.1",
+    rho = c(.15, .55),
+    label = c("0.1", "0.5"),
     phi = NA,
     x = NA,
     y = NA)
-  axis_tick$phi <- min(p_axes$phi[p_axes$rho>.1]) +
-    pi / 32 / axis_tick$rho
+  axis_tick$phi <- min(p_axes$phi[p_axes$rho > .1]) -
+    pi / cplx
+
   axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
   axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
 
@@ -122,12 +130,24 @@ coord_items <- function (
     length = NA)
   row.names(items) <- data$cds$item
   items$phi <- p_axes$phi[data$cds$subfactor]
-  items$rho <- data$cds$cd + .01
+  items$rho <- data$cds$cd + .015 * width_items
   items <- items[order(items$phi, items$rho), ]
   items$x <- round(cos(items$phi) * items$rho, digits = 7)
   items$y <- round(sin(items$phi) * items$rho, digits = 7)
-  items$length <- 0.85 * maxcd
-  items$length[seq(from = 1, by = 2, to = length(items$length))] <- 1.15 * maxcd
+
+  # items are split by facets so each facet gets its own sequence of item
+  # lengths (alternating, beginning with long, short, long, ...)
+  # the anonymous function uses placeholder values to limit its environment
+  items$length <-  unlist(lapply(split(items, data$cds$subfactor),
+                                 function (x) {
+    x$length <- 1
+    x$length[seq(from = 1, by = 2, to = length(x$length))] <- 2
+  return(x$length)}))
+
+  items$length[items$length == 1] <- 1.2 * length_items * maxcd
+  items$length[items$length == 2] <-
+    1.2 * length_items * length_ratio_items * maxcd
+
   items$x1 <- items$x-items$y / items$rho * .03 * items$length
   items$y1 <- items$y + items$x / items$rho * .03 * items$length
   items$x2 <- items$x + items$y / items$rho * .03 * items$length

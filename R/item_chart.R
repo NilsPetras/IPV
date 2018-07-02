@@ -7,21 +7,21 @@
 #' @param filename character; name of the file to save. Supported formats are:
 #'   "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
 #'   suppress file output; defaults to "myipv.pdf".
-#' @param size integer; smartly scaled size of chart objects.
+#' @param size integer; smartly scaled size of chart objects except item bars.
 #' @param font character; text font; defaults to 'sans' (use extrafonts to
 #'   install additional fonts).
 #' @param rotate_radians integer; radian angle to rotate the chart
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
-#' @param filewidth integer; width of the graphic in inches; defaults to 12; dpi is
-#'   3000 for pdf files and 500 for png and jpeg files.
-#' @param fileheight integer; height of the graphic in inches; defaults to 10, dpi is
-#'   3000 for pdf files and 500 for png and jpeg files.
+#' @param filewidth integer; width of the graphic in inches; defaults to 12; dpi
+#'   is 3000 for pdf files and 500 for png and jpeg files.
+#' @param fileheight integer; height of the graphic in inches; defaults to 10,
+#'   dpi is 3000 for pdf files and 500 for png and jpeg files.
 #' @param colour character; name of the first accent colour.
 #' @param colour2 character; name of the second accent colour.
 #' @param fade integer; brightness of minor grid lines, gray tones between 0
-#'   (black) and 100 (white) in steps of 1; defaults to 90.
+#'   (black) and 100 (white) in steps of 1; defaults to 85.
 #' @param dodge_axes integer; relative amount of horizontal outward dodge of
 #'   axis labels.
 #' @param tick_label logical; if \code{TRUE}, draws a text label for the axis
@@ -30,6 +30,10 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_title_degrees integer; angle in degrees to rotate the global
 #'   label counter-clockwise by.
+#' @param width_items integer; width of the item bars (relative to default).
+#' @param length_items integer; length of the item bars (relative to default).
+#' @param length_ratio_items integer; relative length of every other item bar;
+#'   defaults to 1.5.
 #' @param size_title integer; font size of the test label (relative to default).
 #' @param size_facet_labels integer; font size of the axis labels (relative to
 #'   default).
@@ -37,8 +41,6 @@
 #'   distances (relative to default).
 #' @param size_arrow_heads integer; length of the arrow heads at the end of the
 #'   axes (relative to default).
-#' @param width_items integer; width of the item bars (relative to default).
-#'   Currently not supported!
 #' @param width_grid integer; width of the dotted grid lines (relative to
 #'   default).
 #' @param size_tick_label integer; font size of the axis tick label (relative to
@@ -48,6 +50,14 @@
 #'
 #' @return Object of the class "ggplot" and optionally the same object saved as
 #'   a file.
+#'
+#' @details When changing the size of objects, consider the \code{size}
+#'   parameter first and make specific adjustments with the other \code{size_}
+#'   and \code{width_} parameters after.
+#'
+#'   To better display overlapping item values, change the width of the item
+#'   bars, or set the accent colours to different values, or change the ratio of
+#'   item lengths.
 #'
 #' @seealso \code{\link{facet_chart}} \code{\link{nested_chart}}
 #'
@@ -67,17 +77,19 @@ item_chart <- function(
   fileheight = 10,
   colour = "black",
   colour2 = "black",
-  fade = 90,
+  fade = 85,
   dodge_axes = 1,
   tick_label = TRUE,
   rotate_title_radians = 0,
   rotate_title_degrees = 0,
+  width_items = 1,
+  length_items = 1,
+  length_ratio_items = 1.5,
   size_tick_label = 1,
   size_title = 1,
   size_facet_labels = 1,
   width_axes = 1,
   size_arrow_heads = 1,
-  width_items = 1,
   width_grid = 1,
   size_center_dot = 1){
 
@@ -86,6 +98,9 @@ item_chart <- function(
     rotate_radians = rotate_radians,
     rotate_degrees = rotate_degrees,
     dodge_axes = dodge_axes,
+    width_items = width_items,
+    length_items = length_items,
+    length_ratio_items = length_ratio_items,
     rotate_title_radians =rotate_title_radians,
     rotate_title_degrees = rotate_title_degrees)
 

@@ -121,7 +121,7 @@ Call ?IPV for an overview of the functions of the package.
 
 Currently there are two ways to prepare your data: manual input in R or excel sheets.
 
-When using **manual data input**, first use the functions input_manual nested and/or input_manual_simple to fill in the factor loadings and latent correlations. Check for correctness and proceed with the second step, preprocessing the data using the input_manual_process function. At any step you can change false values or add missing values by hand. This way you do not need to set up lists and data frames yourself. Neither do you need to calculate any center distances. If any factor loading is below 0.1 or any center distance below 0, it is set to that value and a warning is displayed.
+When using **manual data input**, first use the functions input_manual nested and/or input_manual_simple to fill in the factor loadings and latent correlations. Check for correctness and proceed with the second step, preprocessing the data using the input_manual_process function. At any step you can change false values or add missing values by hand. This way you do not need to set up lists and data frames yourself. Neither do you need to calculate any center distances. If any factor loading is below 0.1 or any center distance below 0, it is set to that value and a warning is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
 
 When using data **input from excel**, you need to set up the cells matching the example files:
 ```{r, eval=FALSE}
@@ -135,7 +135,7 @@ On sheet 1 you need to provide the factor loadings from your SEM, on sheet 2 you
 
 On sheet 1, "factor" contains the general factor name, "factor_loading" the factor loadings of items on that factor (not squared). "subfactor" contains the correlated factor names, "subfactor_loading" the factor loadings of items on these factors (not squared). "item" contains the item names. Each row contains full information on the respective item.
 
-Then read these excel sheets using input_excel. This way, you do not need to calculate any center distances. If any factor loading is below 0.1 or any center distance below 0, it is set to that value and a warning is displayed.
+Then read these excel sheets using input_excel. This way, you do not need to calculate any center distances. If any factor loading is below 0.1 or any center distance below 0, it is set to that value and a warning is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
 
 After the preprocessing, the data should look like this:
 
@@ -151,7 +151,7 @@ Consider issuing desired input features on [github](https://github.com/NilsPetra
 
 Functions are named according to the chart concept. For example, creating a facet chart works like this:
 
-```{r,fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+```{r,fig.width=10, fig.height=10, dpi=300, out.height="342px", out.width="342px",fig.align='center'}
 SMTQ_facets <- facet_chart(SMTQ, subradius = .6, filename = "none")
 SMTQ_facets
 ```
@@ -163,7 +163,7 @@ As you can see, almost all function parameters have a default value, so you can 
 The vast majority of parameters are size parameters for single elements of the chart, all named size_xyz or width_xyz. Those are pretty straightforward: linear scaling sizes defaulting to 1. Some other parameters are self-explanatory. These important parameters are more complex:
 
 - **size** scales all elements of the chart. This is the most important cosmetic parameter. Not all elements are scaled linearly to produce harmonious results across a variety of sizes (let's call it "smart" scaling).
-- **colour**, **colour2**, **colour_tests**,**colour_facets** [full set of colours including gray](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). Colours are used to add visual contrast to important parts of the chart, I recommend using colours whenever possible. In the item chart, use different tones for *colour* and *colour2* to make overlapping items more visible.
+- **colour**, **colour2**, **colour_tests**,**colour_facets** [full set of colours including gray](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). Colours are used to add visual contrast to important parts of the chart, I recommend using colours whenever possible.
 - **subradius** sets the radius of facet circles. Use this parameter to avoid overlapping or too small circles.
 - **relative_scaling** of the global and the test level in nested charts. For a clear chart, you need to hit the sweet spot between allowing big fonts and emphasizing relative positions.
 - **rotate_degrees**, **rotate_radians** rotate the whole chart by the given value. A full circle is equivalent to 360 degrees or 2*pi radians.

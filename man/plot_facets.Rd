@@ -30,7 +30,7 @@ suppress file output; defaults to "myipv.pdf".}
 \item{colour}{character; name of the accent colour.}
 
 \item{fade}{integer; brightness of the gray tones between 0 (black) and 100
-(white) in steps of 1; defaults to 90.}
+(white) in steps of 1; defaults to 85.}
 
 \item{font}{character; text font; defaults to 'sans' (use extrafonts to
 install additional fonts).}

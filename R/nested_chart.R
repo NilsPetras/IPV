@@ -36,7 +36,7 @@
 #' @param colour_tests character; name of the global accent colour.
 #' @param colour_facets character; name of the nested accent colour.
 #' @param fade integer; brightness of the gray tones between 0 (black) and 100
-#'   (white) in steps of 1; defaults to 90.
+#'   (white) in steps of 1; defaults to 85.
 #' @param correlations logical; if \code{TRUE}, generates coordinates for latent
 #'   correlations between tests and sets up a ring to draw them in. If
 #'   \code{FALSE}, the ring and the correlations are omitted, simplifying the
@@ -150,7 +150,7 @@ nested_chart <- function(
   fileheight = 10,
   colour_tests = "black",
   colour_facets = "black",
-  fade = 90,
+  fade = 85,
   correlations = TRUE,
   cor_spacing = .4,
   tick = .1,

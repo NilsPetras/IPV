@@ -23,7 +23,7 @@
 #'   3000 for pdf files and 500 for png and jpeg files.
 #' @param colour character; name of the accent colour.
 #' @param fade integer; brightness of the gray tones between 0 (black) and 100
-#'   (white) in steps of 1; defaults to 90.
+#'   (white) in steps of 1; defaults to 85.
 #' @param tick numeric; axis tick position; defaults to .1.
 #' @param cor_labels logical; if \code{TRUE}, draws latent correlations between
 #'   facets as text.
@@ -69,7 +69,7 @@ facet_chart <- function(
   filewidth = 10,
   fileheight = 10,
   colour = "black",
-  fade = 90,
+  fade = 85,
   tick = .1,
   cor_labels = TRUE,
   rotate_title_radians = 0,

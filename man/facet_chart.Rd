@@ -6,7 +6,7 @@
 \usage{
 facet_chart(data, subradius, filename = "myipv.pdf", size = 1,
   font = "sans", rotate_radians = 0, rotate_degrees = 0, filewidth = 10,
-  fileheight = 10, colour = "black", fade = 90, tick = 0.1,
+  fileheight = 10, colour = "black", fade = 85, tick = 0.1,
   cor_labels = TRUE, rotate_title_radians = 0, rotate_title_degrees = 0,
   size_cor_labels = 1, size_test_label = 1, size_facet_labels = 1,
   width_axes = 1, width_circles = 1, width_tick = 1,
@@ -44,7 +44,7 @@ counter-clockwise by.}
 \item{colour}{character; name of the accent colour.}
 
 \item{fade}{integer; brightness of the gray tones between 0 (black) and 100
-(white) in steps of 1; defaults to 90.}
+(white) in steps of 1; defaults to 85.}
 
 \item{tick}{numeric; axis tick position; defaults to .1.}
 

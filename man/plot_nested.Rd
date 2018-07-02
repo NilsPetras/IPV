@@ -6,7 +6,7 @@
 \usage{
 plot_nested(coord, size = 1, filename = "myipv.pdf", filewidth = 10,
   fileheight = 10, cor_labels_tests = TRUE, cor_labels_facets = TRUE,
-  colour_tests = "black", colour_facets = "black", fade = 90,
+  colour_tests = "black", colour_facets = "black", fade = 85,
   font = "sans", show_xarrows = FALSE, tick = 0.1, size_title = 1,
   size_test_labels = 1, size_facet_labels = 1, width_axes = 1,
   width_axes_inner = 1, width_circles = 1, width_circles_inner = 1,
@@ -41,7 +41,7 @@ between facets as text.}
 \item{colour_facets}{character; name of the nested accent colour.}
 
 \item{fade}{integer; brightness of the gray tones between 0 (black) and 100
-(white) in steps of 1; defaults to 90.}
+(white) in steps of 1; defaults to 85.}
 
 \item{font}{character; text font; defaults to 'sans' (use extrafonts to
 install additional fonts).}

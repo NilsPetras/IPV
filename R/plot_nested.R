@@ -19,7 +19,7 @@
 #' @param colour_tests character; name of the global accent colour.
 #' @param colour_facets character; name of the nested accent colour.
 #' @param fade integer; brightness of the gray tones between 0 (black) and 100
-#'   (white) in steps of 1; defaults to 90.
+#'   (white) in steps of 1; defaults to 85.
 #' @param show_xarrows logical; if \code{TRUE}, draws correlation arrows between
 #'   facets of different tests.
 #' @param tick numeric; axis tick position; defaults to .1.
@@ -114,7 +114,7 @@ plot_nested <- function (
   cor_labels_facets = TRUE,
   colour_tests = "black",
   colour_facets = "black",
-  fade = 90,
+  fade = 85,
   font = "sans",
   show_xarrows = FALSE,
   tick = .1,

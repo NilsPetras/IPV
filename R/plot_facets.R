@@ -14,7 +14,7 @@
 #'   3000.
 #' @param colour character; name of the accent colour.
 #' @param fade integer; brightness of the gray tones between 0 (black) and 100
-#'   (white) in steps of 1; defaults to 90.
+#'   (white) in steps of 1; defaults to 85.
 #' @param cor_labels logical; if \code{TRUE}, draws latent correlations between
 #'   facets as text.
 #' @param tick numeric; axis tick position; defaults to .1.
