@@ -91,6 +91,13 @@ plot_facets <- function(
     cors <- coord$cors
   } else cors <- NULL
 
+  # calculations are not possible within aes_string(), so aesthetics are
+  # prepared here
+  facet_labels <- row.names(coord$c_circs)
+  tick_label_x <- coord$axis_tick$x * tick + sign(coord$axis_tick$x) * .02
+  tick_label_y <- coord$axis_tick$y * tick + sign(coord$axis_tick$y) * .02
+  tick_label_label <- as.character(tick)
+
 
   # chart ----------------------------------------------------------------------
 
@@ -136,22 +143,22 @@ plot_facets <- function(
     # outer axis segments
     ggplot2::geom_segment(
       data = coord$c_axes,
-      ggplot2::aes(x = x2, y = y2, xend = x3, yend = y3),
+      ggplot2::aes_string(x = "x2", y = "y2", xend = "x3", yend = "y3"),
       size = size * width_axes,
       color = paste("gray", fade, sep = "")) +
 
     # facet labels
     ggplot2::geom_text(
-      ggplot2::aes(x, y, label = row.names(coord$c_circs)),
+      ggplot2::aes_string(x = "x", y = "y", label = "facet_labels"),
       family = font,
       size = 8 * sqrt(size) * size_facet_labels) +
 
     # tick label
     ggplot2::geom_text(
       data = coord$axis_tick,
-      ggplot2::aes(x = x * tick + sign(x) * .02,
-                   y = y * tick + sign(y) * .02,
-                   label = as.character(tick)),
+      ggplot2::aes(x = tick_label_x,
+                   y = tick_label_y,
+                   label = tick_label_label),
       angle = (coord$axis_tick$phi - pi / 48 - pi / 2) * 180 / pi,
       family = font,
       size = 2 * sqrt(size) * size_tick_label) +
@@ -159,28 +166,28 @@ plot_facets <- function(
     # test circle
     ggforce::geom_circle(
       data = coord$c_circs[1, ],
-      ggplot2::aes(x0 = x, y0 = y, r = radius),
+      ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
       size = size * width_axes,
       color = paste("gray", fade, sep = "")) +
 
     # facet circles
     ggforce::geom_circle(
       data = coord$c_circs[-1, ],
-      ggplot2::aes(x0 = x, y0 = y, r = radius),
+      ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
       size = size * width_circles,
       color = colour) +
 
     # inner axis segments
     ggplot2::geom_segment(
       data = coord$c_axes,
-      ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1),
+      ggplot2::aes_string(x = "x0", y = "y0", xend = "x1", yend = "y1"),
       size = (sqrt(size) + size) * width_axes,
       color = colour) +
 
     # title
     ggplot2::geom_text(
       data = coord$title,
-      ggplot2::aes(x = x, y = y, label = label),
+      ggplot2::aes_string(x = "x", y = "y", label = "label"),
       family = font,
       size = 8 * sqrt(size) * size_test_label,
       fontface = "bold")
@@ -193,7 +200,7 @@ plot_facets <- function(
     myipv <- myipv +
       ggplot2::geom_text(
         data = cors,
-        ggplot2::aes(x = x, y = y, label = label),
+        ggplot2::aes_string(x = "x", y = "y", label = "label"),
         family = font,
         size = 4 * sqrt(size) * size_cor_labels)
   }

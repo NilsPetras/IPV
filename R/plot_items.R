@@ -82,6 +82,13 @@ plot_items <- function (
   size_center_dot = 1) {
 
 
+  # preparation ----------------------------------------------------------------
+
+  # calculations are not possible within aes_string(), so aesthetics are
+  # prepared here
+  axis_labels <- row.names(coord$c_axes)
+
+
   # chart ----------------------------------------------------------------------
 
   myipv <- ggplot2::ggplot(coord$c_axes) + # x has placeholder value
@@ -120,7 +127,7 @@ plot_items <- function (
     # minor grid
     ggforce::geom_circle(
       data = coord$maingrid[coord$maingrid$alpha == .5, ],
-      ggplot2::aes(x0 = x, y0 = y, r = r),
+      ggplot2::aes_string(x0 = "x", y0 = "y", r = "r"),
       color = paste("gray", fade, sep = ""),
       linetype = "dotted",
       size = sqrt(size) * min(c(size, .6)) * width_grid) +
@@ -128,7 +135,7 @@ plot_items <- function (
     # major grid
     ggforce::geom_circle(
       data = coord$maingrid[coord$maingrid$alpha == 1, ],
-      ggplot2::aes(x0 = x, y0 = y, r = r),
+      ggplot2::aes_string(x0 = "x", y0 = "y", r = "r"),
       color = "gray20",
       linetype = "dotted",
       size = sqrt(size) * min(c(size, .7)) * width_grid) +
@@ -136,7 +143,7 @@ plot_items <- function (
     # axes
     ggplot2::geom_segment(
       data = coord$c_axes,
-      ggplot2::aes(x = 0, y = 0, xend = x, yend = y),
+      ggplot2::aes_string(x = 0, y = 0, xend = "x", yend = "y"),
       arrow = ggplot2::arrow(
         ends = "last",
         length = ggplot2::unit(.02*sqrt(size) * size_arrow_heads, "native"),
@@ -146,21 +153,21 @@ plot_items <- function (
     # items 2
     ggplot2::geom_segment(
       data = coord$items[coord$items$length == max(coord$items$length), ],
-      ggplot2::aes(x = x1, y = y1, xend = x2, yend = y2),
+      ggplot2::aes_string(x = "x1", y = "y1", xend = "x2", yend = "y2"),
       size = 1.5 * width_items,
       color = colour2) +
 
     # items 1
     ggplot2::geom_segment(
       data = coord$items[coord$items$length == min(coord$items$length), ],
-      ggplot2::aes(x = x1, y = y1, xend = x2, yend = y2),
+      ggplot2::aes_string(x = "x1", y = "y1", xend = "x2", yend = "y2"),
       size = 1.5 * width_items,
       color = colour) +
 
     # title
     ggplot2::geom_text(
       data = coord$title,
-      ggplot2::aes(x = x, y = y, label = label),
+      ggplot2::aes_string(x = "x", y = "y", label = "label"),
       family = font,
       size = 8 * sqrt(size) * size_title,
       color = colour,
@@ -168,7 +175,7 @@ plot_items <- function (
 
     # axis labels
     ggplot2::geom_text(
-      ggplot2::aes(x = xlabel, y = ylabel, label = row.names(coord$c_axes)),
+      ggplot2::aes_string(x = "xlabel", y = "ylabel", label = "axis_labels"),
       family = font,
       size = 6 * sqrt(size) * size_facet_labels,
       hjust = "inward")
@@ -181,7 +188,7 @@ plot_items <- function (
     myipv <- myipv +
       ggplot2::geom_text(
         data = coord$axis_tick[coord$axis_tick$rho < max(coord$maingrid$r), ],
-        ggplot2::aes(x, y, label = label),
+        ggplot2::aes_string(x = "x", y = "y", label = "label"),
         angle =
           (coord$axis_tick[coord$axis_tick$rho <
                              max(coord$maingrid$r), "phi"] -

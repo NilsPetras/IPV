@@ -149,6 +149,14 @@ plot_nested <- function (
     cors_inner <- coord$g$nested$cors
   } else cors_inner <- NULL
 
+  # calculations are not possible within aes_string(), so aesthetics are
+  # prepared here
+  tick_label_x <- coord$g$rs *
+    (coord$g$axis_tick$x * tick + sign(coord$g$axis_tick$x) * .02)
+  tick_label_y <- coord$g$rs *
+    (coord$g$axis_tick$y * tick + sign(coord$g$axis_tick$y) * .02)
+  tick_label_label <- as.character(tick)
+
 
   # chart ----------------------------------------------------------------------
 
@@ -183,9 +191,9 @@ plot_nested <- function (
     # tick label
     ggplot2::geom_text(
       data = coord$g$axis_tick,
-      ggplot2::aes(x = coord$g$rs * (x * tick + sign(x) * .02),
-                   y = coord$g$rs * (y * tick + sign(y) * .02),
-                   label = as.character(tick)),
+      ggplot2::aes(x = tick_label_x,
+                   y = tick_label_y,
+                   label = tick_label_label),
       angle = (coord$g$axis_tick$phi - pi / 48 - pi / 2) * 180 / pi,
       family = font,
       size = 1.95 * sqrt(size) * size_tick_label) +
@@ -199,14 +207,14 @@ plot_nested <- function (
     # global outer axis segments
     ggplot2::geom_segment(
       data = coord$g$c_axes,
-      ggplot2::aes(x = x2, y = y2, xend = x3, yend = y3),
+      ggplot2::aes_string(x = "x2", y = "y2", xend = "x3", yend = "y3"),
       size = .5 * size * width_axes,
       color = paste("gray", fade, sep = "")) +
 
     # global circle
     ggforce::geom_circle(
       data = coord$g$c_circs[1, ],
-      ggplot2::aes(x0 = x, y0 = y, r = radius),
+      ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
       size = .5 * size * width_axes,
       color = paste("gray", fade, sep = "")) +
 
@@ -218,62 +226,62 @@ plot_nested <- function (
     # nested outer axis segments
     ggplot2::geom_segment(
       data = coord$g$nested$axes,
-      ggplot2::aes(x = x2, y = y2, xend = x3, yend = y3),
+      ggplot2::aes_string(x = "x2", y = "y2", xend = "x3", yend = "y3"),
       size = .3 * size * width_axes_inner,
       color = paste("gray", fade, sep = "")) +
 
     # nested center dots
     ggplot2::geom_point(
       data = coord$g$c_circs,
-      ggplot2::aes(x = x, y = y),
+      ggplot2::aes_string(x = "x", y = "y"),
       size = 2.5 * sqrt(size) * size_center_dot_inner) +
 
     # test circles
     ggforce::geom_circle(
       data = coord$g$c_circs[-1, ],
-      ggplot2::aes(x0 = x, y0 = y, r = radius),
+      ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
       size = .5 * size * width_circles,
       color = colour_tests) +
 
     # nested tick
     ggforce::geom_circle(
       data = coord$g$c_circs[-1, ],
-      ggplot2::aes(x0 = x, y0 = y, r = tick),
+      ggplot2::aes_string(x0 = "x", y0 = "y", r = "tick"),
       size = 0.5 * min(c(size, .25)) * width_tick_inner,
       linetype = "dotted") +
 
     # global inner axis segments
     ggplot2::geom_segment(
       data = coord$g$c_axes,
-      ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1),
+      ggplot2::aes_string(x = "x0", y = "y0", xend = "x1", yend = "y1"),
       size = .5 * (sqrt(size) + size) * width_axes,
       color = colour_tests) +
 
     # facet circles
     ggforce::geom_circle(
       data = coord$g$nested$circles,
-      ggplot2::aes(x0 = x, y0 = y, r = radius),
+      ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
       size = .25 * size * width_circles_inner,
       color = colour_facets) +
 
     # facet labels
     ggplot2::geom_text(
       data = coord$g$nested$circles,
-      ggplot2::aes(x, y, label = label),
+      ggplot2::aes_string(x = "x", y = "y", label = "label"),
       family = font,
       size = 3.125 * sqrt(size) * size_facet_labels) +
 
     # nested inner axis segments
     ggplot2::geom_segment(
       data = coord$g$nested$axes,
-      ggplot2::aes(x = x0, y = y0, xend = x1, yend = y1),
+      ggplot2::aes_string(x = "x0", y = "y0", xend = "x1", yend = "y1"),
       size = .25 * (sqrt(size) + size) * width_axes_inner,
       color = colour_facets) +
 
     # title
     ggplot2::geom_text(
       data = coord$g$title,
-      ggplot2::aes(x = x, y = y, label = label),
+      ggplot2::aes_string(x = "x", y = "y", label = "label"),
       family = font,
       size = 16 / 3 * sqrt(size) * size_title,
       fontface = "bold") +
@@ -281,7 +289,7 @@ plot_nested <- function (
     # test labels
     ggplot2::geom_text(
       data = coord$g$nested$title,
-      ggplot2::aes(x = x, y = y, label = label),
+      ggplot2::aes_string(x = "x", y = "y", label = "label"),
       family = font,
       size = 4 * sqrt(size) * size_test_labels,
       fontface = "bold")
@@ -294,7 +302,7 @@ plot_nested <- function (
     myipv <- myipv +
       ggplot2::geom_text(
         data = cors_inner,
-        ggplot2::aes(x = x, y = y, label = label),
+        ggplot2::aes_string(x = "x", y = "y", label = "label"),
         family = font,
         size = 2.25 * sqrt(size) * size_cor_labels_inner)
   }
@@ -307,7 +315,7 @@ plot_nested <- function (
     myipv$layers <- c(
       ggforce::geom_circle(
         data = coord$g$c_ring,
-        ggplot2::aes(x0 = x, y0 = y, r = radius),
+        ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
         size = .3 * size * width_axes_inner,
         color = paste("gray", fade, sep = "")),
       myipv$layers)
@@ -316,7 +324,7 @@ plot_nested <- function (
     myipv <-  myipv +
       ggplot2::geom_text(
         data = cors,
-        ggplot2::aes(x = x, y = y, label = label),
+        ggplot2::aes_string(x = "x", y = "y", label = "label"),
         family = font,
         size = coord$g$cor_spacing * 6.75 * sqrt(size) * size_cor_labels,
         fontface = "bold")
@@ -329,7 +337,7 @@ plot_nested <- function (
       # arrows
       ggplot2::geom_segment(
         data = coord$g$arrows,
-        ggplot2::aes(x = x1, y = y1, xend = x2, yend = y2),
+        ggplot2::aes_string(x = "x1", y = "y1", xend = "x2", yend = "y2"),
         arrow = ggplot2::arrow(
           ends = "both",
           length = ggplot2::unit(.003 * sqrt(size) * size_xarrow_heads,
@@ -342,7 +350,7 @@ plot_nested <- function (
       # labels
       ggplot2::geom_text(
         data = coord$g$arrows,
-        ggplot2::aes(x = xlabel, y = ylabel, label = label),
+        ggplot2::aes_string(x = "xlabel", y = "ylabel", label = "label"),
         size = 2.25 * sqrt(size) * size_xarrow_labels,
         family = font,
         color = "gray20")
