@@ -8,120 +8,192 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
+#' @param rotate_title_radians integer; radian angle to rotate the global label
+#'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
+#' @param rotate_title_degrees integer; angle in degrees to rotate the global
+#'   label counter-clockwise by.
+#' @param width_items integer; width of the item bars (relative to default).
+#' @param length_items integer; length of the item bars (relative to default).
+#' @param length_ratio_items integer; relative length of every other item bar;
+#'   defaults to 1.5.
+#' @param dodge_axes integer; relative amount of horizontal outward dodge of
+#'   axis labels.
 #'
 #' @details Use this function in conjunction with \code{\link{plot_items}} for
 #'   simple models.
 #'
+#'   Use \code{\link{item_chart}} to create the chart in a single step.
+#'
+#'   Rotate using this function, not \code{\link{plot_items}}.
+#'
 #'   In a nested model, it is more efficient to use \code{\link{coord_nested}}
-#'   instead. Set \code{items = TRUE} to generate item chart coordinates for
-#'   all factors of the nested model.
+#'   instead. Set \code{prepare_item_charts = TRUE} to generate item chart
+#'   coordinates for all factors of the nested model.
 #'
 #' @return List containing coordinates of chart objects.
 #'
 #' @seealso \code{\link{plot_items}} \code{\link{coord_nested}}
+#'   \code{\link{item_chart}}
 #'
 #' @examples
-#' # creating an item chart is a two step process, using this function and plot_items:
-#' coord <- coord_items(DSSEI)
-#' DSSEI_items <- plot_items(coord, filename = "DSSEI_items")
-#' DSSEI_items
-#'
-#' @export
-coord_items <- function(data, rotate_radians = 0, rotate_degrees = 0){
+#' # # creating an item chart is a two step process, using this function and
+#' # # plot_items:
+#' # coord <- coord_items(DSSEI)
+#' # DSSEI_items <- plot_items(coord, filename = "DSSEI_items")
+#' # DSSEI_items
+coord_items <- function (
+  data,
+  rotate_radians = 0,
+  rotate_degrees = 0,
+  rotate_title_radians = 0,
+  rotate_title_degrees = 0,
+  width_items = 1,
+  length_items = 1,
+  length_ratio_items = 1.5,
+  dodge_axes = 1) {
 
 
-    ## helper variables
+  # helper variables -----------------------------------------------------------
 
-  # number of facets
-  cplx <- data$parameters$complexity
+  # number of facets (=subfactors)
+  cplx <- length(colnames(data$cors))
 
   # total rotation value in radians
   rotate <- rotate_radians + rotate_degrees * pi / 180
 
+  # total title rotation value in radians
+  rotate_title <- rotate_title_radians + rotate_title_degrees * pi / 180
+
   # maximum center distance (determining the chart size)
-  maxcd <- max(data$center_distances$center_distance)
+  maxcd <- max(data$cds$cd)
 
 
-    ## coordinates of chart objects
+  # chart objects --------------------------------------------------------------
+
+  ## axes ---------------------------
 
   # polar coordinates of axis line ends and axis labels
-    # axis ends are at 120% of the maximum center distance
-    # axis labels are at 110% of the axis ends
-  pol_axes <- data.frame(phi = rep(NA, cplx), rho = rep(NA, cplx), rholabel = rep(NA, cplx))
-  row.names(pol_axes) <- levels(data$center_distances$subfactor)
-  pol_axes$rho <- maxcd * 1.2
-  pol_axes$phi <- c(2 * pi / cplx * c(1:cplx)) + rotate
-  pol_axes$rholabel <- pol_axes$rho * 1.1
+  # axis ends at 120 % of the maximum center distance
+  # axis labels at 110 % of the axis ends
+  p_axes <- data.frame(phi = rep(NA, cplx),
+                       rho = NA,
+                       rholabel = NA)
+  row.names(p_axes) <- levels(data$cds$subfactor)
+  p_axes$rho <- maxcd * 1.2
+  p_axes$phi <- c(2 * pi / cplx * c(1:cplx)) + rotate
+  p_axes$phi[p_axes$phi > 2 * pi] <-
+    p_axes$phi[p_axes$phi > 2 * pi] - 2 * pi
+  p_axes$rholabel <- p_axes$rho * 1.1 + abs(cos(p_axes$phi) * .05 * dodge_axes * p_axes$rho)
 
-  # cartesian coordinates of axis lines and axis labels
-    # x = cos(phi) * rho
-    # y = sin(phi) * rho
-  cart_axes <- pol_axes
-  cart_axes[, 1] <- round(cos(pol_axes$phi) * pol_axes$rho, digits = 7)
-  cart_axes[, 2] <- round(sin(pol_axes$phi) * pol_axes$rho, digits = 7)
-  cart_axes[, 3] <- round(cos(pol_axes$phi) * pol_axes$rholabel, digits = 7)
-  cart_axes[, 4] <- round(sin(pol_axes$phi) * pol_axes$rholabel, digits = 7)
-  names(cart_axes) <- c("x", "y", "xlabel", "ylabel")
+  # cartesian coordinates
+  # x = cos(phi) * rho
+  # y = sin(phi) * rho
+  c_axes <- p_axes
+  # rounded values to decrease display length in console
+  c_axes[ ,1] <- round(cos(p_axes$phi) * p_axes$rho, digits = 7)
+  c_axes[ ,2] <- round(sin(p_axes$phi) * p_axes$rho, digits = 7)
+  c_axes[ ,3] <- round(cos(p_axes$phi) * p_axes$rholabel, digits = 7)
+  c_axes[ ,4] <- round(sin(p_axes$phi) * p_axes$rholabel, digits = 7)
+  names(c_axes) <- c("x", "y", "xlabel", "ylabel")
 
-  # coordinates of item bars
-    # the width of item bars alternates between long and short to better distinguish similar items
-    # the width of item bars is relative to the overall size of the chart determined by the maximum center distance
-    # the center distances of items are equal to the distance from the origin to the inner edge of the item bar
-    # n = number of items
-  n <- length(data$center_distances$item)
-  items <- data.frame(rho = rep(NA, n), phi = rep(NA, n), x = rep(NA, n), y = rep(NA, n), x1 = rep(NA, n), y1 = rep(NA, n), x2 = rep(NA, n), y2 = rep(NA, n), width = rep(NA, n))
-  row.names(items) <- data$center_distances$item
-  items$phi <- pol_axes$phi[data$center_distances$subfactor]
-  items$rho <- data$center_distances$center_distance + .01
-  items <- items[order(items$phi, items$rho), ]
-  items$x <- round(cos(items$phi) * items$rho, digits = 7)
-  items$y <- round(sin(items$phi) * items$rho, digits = 7)
-  items$width <- 0.85 * maxcd
-  items$width[seq(from = 1, by = 2, to = length(items$width))] <- 1.15 * maxcd
-  items$x1 <- items$x-items$y / items$rho * .03 * items$width
-  items$y1 <- items$y + items$x / items$rho * .03 * items$width
-  items$x2 <- items$x + items$y / items$rho * .03 * items$width
-  items$y2 <- items$y-items$x / items$rho * .03 * items$width
+  # axis tick label
+  # reflecting the default settings of other charts,
+  # the axis tick of 0.1 is labeled
+  # the axis tick label automatically shows within the first quadrant
+  axis_tick <- data.frame(
+    rho = c(.15, .55),
+    label = c("0.1", "0.5"),
+    phi = NA,
+    x = NA,
+    y = NA)
+  axis_tick$phi <- min(p_axes$phi[p_axes$rho > .1]) -
+    pi / cplx
 
-  # coordinates of main grid
-    # grid density is one line every 0.1 center distance
-    # the grid ends right before the maximum center distance
-    # grid lines are accentuated at 0.1 and multiples of 0.5
-  n <- trunc(maxcd * 10)
-  maingrid <- data.frame(x = rep(0, n), y = rep(0, n), r = rep(NA, n), alpha = rep(NA, n))
-  maingrid$r <- seq(from = .1, by = .1, to = round(maxcd, digits = 2))
-  maingrid$alpha <- .5
-  if(n>4)maingrid$alpha[seq(from = 5, by = 5, to = n)] <- 1
-  maingrid$alpha[1] <- 1
-
-  # coordinates of axis tick label
-    # reflecting the default settings of other charts, the axis tick of 0.1 is labeled
-    # the axis tick label automatically shows within the first quadrant
-  axis_tick <- data.frame(rho = 0.14,label = "0.1", phi = NA, x = NA, y = NA)
-  axis_tick$phi <- min(pol_axes$phi[pol_axes$rho>.1] %% (2 * pi)) + pi / 32 / axis_tick$rho
   axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
   axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
 
+
+  ## items --------------------------
+
+  # coordinates of item bars
+  # the length of item bars alternates between long and short to better
+  # distinguish similar items
+  # the length of item bars is relative to the overall size of the chart
+  # center distances = from the origin to the inner edge of the item bar
+  # n = number of items
+  n <- length(data$cds$item)
+  items <- data.frame(
+    rho = rep(NA, n), phi = NA,
+    x   = NA, y   = NA,
+    x1  = NA, y1  = NA,
+    x2  = NA, y2  = NA,
+    length = NA)
+  row.names(items) <- data$cds$item
+  items$phi <- p_axes$phi[data$cds$subfactor]
+  items$rho <- data$cds$cd + .015 * width_items
+  items <- items[order(items$phi, items$rho), ]
+  items$x <- round(cos(items$phi) * items$rho, digits = 7)
+  items$y <- round(sin(items$phi) * items$rho, digits = 7)
+
+  # items are split by facets so each facet gets its own sequence of item
+  # lengths (alternating, beginning with long, short, long, ...)
+  # the anonymous function uses placeholder values to limit its environment
+  items$length <-  unlist(lapply(split(items, data$cds$subfactor),
+                                 function (x) {
+    x$length <- 1
+    x$length[seq(from = 1, by = 2, to = length(x$length))] <- 2
+  return(x$length)}))
+
+  items$length[items$length == 1] <- 1.2 * length_items * maxcd
+  items$length[items$length == 2] <-
+    1.2 * length_items * length_ratio_items * maxcd
+
+  items$x1 <- items$x-items$y / items$rho * .03 * items$length
+  items$y1 <- items$y + items$x / items$rho * .03 * items$length
+  items$x2 <- items$x + items$y / items$rho * .03 * items$length
+  items$y2 <- items$y-items$x / items$rho * .03 * items$length
+
+
+  ## grid ---------------------------
+
+  # coordinates of grid
+  # grid density is one line every 0.1 center distance
+  # the grid ends right before the maximum center distance
+  # grid lines are accentuated at 0.1 and multiples of 0.5
+  # n = number of grid lines
+  n <- trunc(maxcd * 10)
+  maingrid <- data.frame(x = rep(0, n),
+                         y = 0,
+                         r = NA,
+                         alpha = NA)
+  maingrid$r <- seq(from = .1, by = .1, to = round(maxcd, digits = 2))
+  maingrid$alpha <- .5
+  if (n > 4) maingrid$alpha[seq(from = 5, by = 5, to = n)] <- 1
+  maingrid$alpha[1] <- 1
+
+
+  ## title --------------------------
+
   # coordinates of factor name
-    # the factor label automatically shows between the first two facets
-    # the factor label shows at half the maximum center distance from the origin
-  factor_label <- data.frame(phi = mean(pol_axes$phi[1:2]),
-                             rho = .5 * maxcd,
-                             label = data$center_distances$factor[1],
-                             x = NA, y = NA)
-  factor_label$x <- round(cos(factor_label$phi) * factor_label$rho, digits = 7)
-  factor_label$y <- round(sin(factor_label$phi) * factor_label$rho, digits = 7)
+  # the factor label automatically shows between the first two facets
+  # the factor label shows at half the maximum center distance from the origin
+  title <- data.frame(phi = mean(p_axes$phi[1] + pi / cplx) + rotate_title,
+                      rho = .5 * maxcd,
+                      label = data$cds$factor[1],
+                      x = NA, y = NA)
+  title$x <- round(cos(title$phi) * title$rho, digits = 7)
+  title$y <- round(sin(title$phi) * title$rho, digits = 7)
 
 
-    ## return
+  # return ---------------------------------------------------------------------
 
-  # returns a list of all dataframes above containing the coordinates of the chart objects
-  coor <- list(pol_axes = pol_axes,
-               cart_axes = cart_axes,
-               items = items,
-               maingrid = maingrid,
-               axis_tick = axis_tick,
-               factor_label = factor_label)
+  # list of all dataframes containing the coordinates of the chart objects
+  coord <- list(p_axes    = p_axes,
+                c_axes    = c_axes,
+                items     = items,
+                maingrid  = maingrid,
+                axis_tick = axis_tick,
+                title     = title)
 
-  return(coor)
+  return(coord)
 }

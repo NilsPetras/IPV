@@ -7,7 +7,7 @@
 \format{An object of class \code{list} of length 2.}
 \source{
 Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision).
-  Introducing Item Pool Visualization (IPV)
+ Introducing Item Pool Visualization (IPV)
 }
 \usage{
 self_confidence
@@ -15,8 +15,48 @@ self_confidence
 \description{
 A set of center distances and latent correlations for items and facets of the
 Domain Specific Self-Esteem Inventory (DSSEI), Sports Mental Toughness
-Questionnaire (SMTQ), and Rosenberg Self-Esteem Scale (RSES) completed by
-2272 german speaking participants using the german versions of the
-questionnaires.
+Questionnaire (SMTQ), and Rosenberg Self-Esteem Scale (RSES) completed by 2272
+german speaking participants using the german versions of the questionnaires.
 }
+\section{Items}{
+
+
+ _____ RSES _____
+
+ __ Positive Self-Esteem (Ps) __
+
+ 1. On the whole, I am satisfied with myself.
+
+ 3. I feel that I have a number of good qualities.
+
+ 4. I am able to do things as well as most other people.
+
+ 7.I feel that I'm a person of worth.
+
+ 10. I take a positive attitude toward myself.
+
+ __ Lack of Negative Self-Esteem (Ns) __
+
+ 2. At times I think I am no good at all.
+
+ 5. I feel I do not have much to be proud of.
+
+ 6. I certainly feel useless at times.
+
+ 8. I wish I could have more respect for myself.
+
+ 9. All in all, I am inclined to think that I am a failure.
+
+ (Rosenberg, M. (1965). Rosenberg self-esteem scale (RSE). Acceptance and
+ commitment therapy. Measures package, 61, 52.)
+
+ _____ SMTQ _____
+
+ \code{\link{SMTQ}}
+
+ _____ DSSEI _____
+
+ \code{\link{DSSEI}}
+}
+
 \keyword{datasets}

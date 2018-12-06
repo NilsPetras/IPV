@@ -11,7 +11,7 @@ input_excel_factor(file)
 }
 \value{
 list containing formatted data including center distances for
-  \code{\link{coord_items}}, \code{\link{coord_facets}}
+  \code{\link{item_chart}}, \code{\link{facet_chart}}
 }
 \description{
 Reads factor loadings and latent correlations from an excel file.

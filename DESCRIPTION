@@ -1,8 +1,8 @@
 Package: IPV
 Title: Item Pool Visualization
 Type: Package
-Version: 0.0.0.9003
-Authors@R: person("Nils", "Petras", email = "nils.petras@uni-konstanz.de",
+Version: 0.0.0.9008
+Authors@R: person("Nils", "Petras", email = "nils.petras@mailbox.org",
     role = c("aut", "cre"))
 Description: Generate plots based on the Item Pool Visualization concept.
     Item Pool Visualizations are derived from multiple structure equation
@@ -11,14 +11,13 @@ Description: Generate plots based on the Item Pool Visualization concept.
 Depends:R (>= 3.0.0),
 Imports:
     ggforce,
-    ggplot2,
-    readxl,
-    utils
+    ggplot2
 Suggests:
     knitr,
     rmarkdown,
     testthat,
-    extrafont
+    extrafont,
+    readxl
 VignetteBuilder: knitr    
 Date: 2018-03-30
 License: GPL-2
