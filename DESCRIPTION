@@ -1,8 +1,8 @@
 Package: IPV
 Title: Item Pool Visualization
 Type: Package
-Version: 0.0.0.9007
-Authors@R: person("Nils", "Petras", email = "nils.petras@uni-konstanz.de",
+Version: 0.0.0.9008
+Authors@R: person("Nils", "Petras", email = "nils.petras@mailbox.org",
     role = c("aut", "cre"))
 Description: Generate plots based on the Item Pool Visualization concept.
     Item Pool Visualizations are derived from multiple structure equation
