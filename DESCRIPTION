@@ -2,8 +2,12 @@ Package: IPV
 Title: Item Pool Visualization
 Type: Package
 Version: 0.0.0.9008
-Authors@R: person("Nils", "Petras", email = "nils.petras@mailbox.org",
-    role = c("aut", "cre"))
+Authors@R: c(
+    person("Nils", "Petras", email = "nils.petras@mailbox.org",
+    role = c("aut", "cre")),
+    person("Michael", "Dantlgraber", role = "aut"),
+    person("Ulf-Dietrich", "Reips", role = "ctb"),
+    person("Matthias", "Bannert", role = "ctb"))
 Description: Generate plots based on the Item Pool Visualization concept.
     Item Pool Visualizations are derived from multiple structure equation
     models (SEMs) of the same item pool. They are used to show the conceptual

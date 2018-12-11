@@ -47,14 +47,36 @@ input_excel <- function(global = NULL, tests){
 
     # global level
     global_input <- input_excel_factor(global)
+
+
+    # check if all files are given
+    if (length(levels(global_input$cds$subfactor)) != length(tests)
+        ) stop ("Missing file")
+
+    # test level
+    tests_input <- lapply(tests, input_excel_factor)
+
+    # check matches between global and test level
+      # factor names matching
+    x <- lapply(tests_input, `[[`, 1)
+    x <- sort(as.character(unlist(lapply(x, `[[`, "factor"))))
+    if (!isTRUE(all.equal(sort(as.character(global_input$cds$subfactor)), x))
+        ) stop ("Factor name or item per factor count mismatch between global
+                and tests")
+
+      # item names and number of items
+    x <- lapply(tests_input, `[[`, 1)
+    x <- sort(as.character(unlist(lapply(x, `[[`, "item"))))
+    if (!isTRUE(all.equal(sort(as.character(global_input$cds$item)), x))
+        ) stop ("Number of items or item name mismatch between global and
+                tests")
+
     # including the factor name in the item name to distinguish between items
     # from different tests but with the same name
     global_input$cds$item <- paste(global_input$cds$subfactor,
                                    global_input$cds$item,
                                    sep = ".")
 
-    # test level
-    tests_input <- lapply(tests, input_excel_factor)
     # including test names
     for (i in 1:length(colnames(global_input$cors))) {
       names(tests_input)[i] <- levels(tests_input[[c(i, 1)]]$factor)

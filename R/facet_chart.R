@@ -17,10 +17,9 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
-#' @param filewidth integer; width of the graphic in inches; defaults to 10, dpi is
-#'   3000 for pdf files and 500 for png and jpeg files.
-#' @param fileheight integer; height of the graphic in inches; defaults to 10, dpi is
-#'   3000 for pdf files and 500 for png and jpeg files.
+#' @param filewidth integer; width of the graphic in inches; defaults to 10.
+#' @param fileheight integer; height of the graphic in inches; defaults to 10.
+#' @param dpi integer; resolution in dots per inch; defaults to 500.
 #' @param colour character; name of the accent colour.
 #' @param fade integer; brightness of the gray tones between 0 (black) and 100
 #'   (white) in steps of 1; defaults to 85.
@@ -68,6 +67,7 @@ facet_chart <- function(
   rotate_degrees = 0,
   filewidth = 10,
   fileheight = 10,
+  dpi = 500,
   colour = "black",
   fade = 85,
   tick = .1,
@@ -97,6 +97,7 @@ facet_chart <- function(
     filename = filename,
     filewidth = filewidth,
     fileheight = fileheight,
+    dpi = dpi,
     colour = colour,
     fade = fade,
     font = font,

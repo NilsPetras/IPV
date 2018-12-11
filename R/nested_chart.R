@@ -29,10 +29,9 @@
 #'   (e.g. pi/2 = 90 degrees).
 #' @param subrotate_degrees integer; angle in degrees or vector of angles in
 #'   degrees to rotate the nested facet charts counter-clockwise by.
-#' @param filewidth integer; width of the graphic in inches; defaults to 10, dpi is
-#'   3000 for pdf files and 500 for png and jpeg files.
-#' @param fileheight integer; height of the graphic in inches; defaults to 10, dpi is
-#'   3000 for pdf files and 500 for png and jpeg files.
+#' @param filewidth integer; width of the graphic in inches; defaults to 10.
+#' @param fileheight integer; height of the graphic in inches; defaults to 10.
+#' @param dpi integer; resolution in dots per inch; defaults to 500.
 #' @param colour_tests character; name of the global accent colour.
 #' @param colour_facets character; name of the nested accent colour.
 #' @param fade integer; brightness of the gray tones between 0 (black) and 100
@@ -148,6 +147,7 @@ nested_chart <- function(
   subrotate_degrees = 0,
   filewidth = 10,
   fileheight = 10,
+  dpi = 500,
   colour_tests = "black",
   colour_facets = "black",
   fade = 85,
@@ -197,6 +197,7 @@ nested_chart <- function(
     filename = filename,
     filewidth = filewidth,
     fileheight = fileheight,
+    dpi = dpi,
     cor_labels_tests = cor_labels_tests,
     cor_labels_facets = cor_labels_facets,
     colour_tests = colour_tests,

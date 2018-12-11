@@ -8,10 +8,9 @@
 #' @param filename character; name of the file to save. Supported formats are:
 #'   "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
 #'   suppress file output; defaults to "myipv.pdf".
-#' @param filewidth integer; width of the .pdf document; defaults to 12; dpi is
-#'   3000.
-#' @param fileheight integer; height of the .pdf document; defaults to 10, dpi
-#'   is 3000.
+#' @param filewidth integer; width of the .pdf document; defaults to 12.
+#' @param fileheight integer; height of the .pdf document; defaults to 10.
+#' @param dpi integer; resolution in dots per inch; defaults to 500.
 #' @param font character; text font; defaults to 'sans' (use extrafonts to
 #'   install additional fonts).
 #' @param colour character; name of the first accent colour.
@@ -67,6 +66,7 @@ plot_items <- function (
   filename = "myipv.pdf",
   filewidth = 12,
   fileheight = 10,
+  dpi = 500,
   colour = "black",
   colour2 = "black",
   fade = 85,
@@ -209,7 +209,7 @@ plot_items <- function (
                     width = filewidth,
                     height = fileheight,
                     units = "in",
-                    dpi = 3000)
+                    dpi = dpi)
   }
 
 
@@ -221,7 +221,7 @@ plot_items <- function (
                     width = filewidth,
                     height = fileheight,
                     units = "in",
-                    dpi = 500)
+                    dpi = dpi)
   }
 
 
@@ -233,7 +233,7 @@ plot_items <- function (
                     width = filewidth,
                     height = fileheight,
                     units = "in",
-                    dpi = 500)
+                    dpi = dpi)
   }
 
 

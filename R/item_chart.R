@@ -14,10 +14,9 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
-#' @param filewidth integer; width of the graphic in inches; defaults to 12; dpi
-#'   is 3000 for pdf files and 500 for png and jpeg files.
-#' @param fileheight integer; height of the graphic in inches; defaults to 10,
-#'   dpi is 3000 for pdf files and 500 for png and jpeg files.
+#' @param filewidth integer; width of the graphic in inches; defaults to 12.
+#' @param fileheight integer; height of the graphic in inches; defaults to 10.
+#' @param dpi integer; resolution in dots per inch; defaults to 500.
 #' @param colour character; name of the first accent colour.
 #' @param colour2 character; name of the second accent colour.
 #' @param fade integer; brightness of minor grid lines, gray tones between 0
@@ -75,6 +74,7 @@ item_chart <- function(
   rotate_degrees = 0,
   filewidth = 12,
   fileheight = 10,
+  dpi = 500,
   colour = "black",
   colour2 = "black",
   fade = 85,
@@ -110,6 +110,7 @@ item_chart <- function(
     filename = filename,
     filewidth = filewidth,
     fileheight = fileheight,
+    dpi = dpi,
     colour = colour,
     colour2 = colour2,
     fade = fade,

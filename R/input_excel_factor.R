@@ -21,12 +21,21 @@ input_excel_factor <- function (file) {
 
   # checking and recalculating -------------------------------------------------
 
+  ## missing values -----------------
+
+  # checking for wrong number of columns
+  if (length(sheet1) != 5) stop ("Wrong number of columns")
+
+  # checking for missing values
+  sheet1 <- na.fail(sheet1)
+
+
   ## factor loadings ----------------
 
   # checking for negative factor loadings
   bad <- min(c(sheet1$factor_loading, sheet1$subfactor_loading))
   bad <- bad < 0
-  if (bad) stop ("data contains negative factor loading")
+  if (bad) stop ("Negative factor loading")
 
   # checking for factor loadings below .1
   bad <- min(c(sheet1$factor_loading, sheet1$subfactor_loading))
@@ -34,6 +43,41 @@ input_excel_factor <- function (file) {
   if (bad) warning ("At least one factor loading set to minimum of 0.1")
   sheet1$factor_loading[sheet1$factor_loading < .1] <- .1
   sheet1$subfactor_loading[sheet1$subfactor_loading < .1] <- .1
+
+  # checking for factor loadings above 1
+  bad <- max(c(sheet1$factor_loading, sheet1$subfactor_loading))
+  bad <- bad > 1
+  if (bad) warning (
+    "At least one factor loading above 1, check for correctness")
+
+
+  ## names
+
+  # checking for multiple factor names
+  if (length(levels(as.factor(sheet1$factor))) > 1) stop (
+    "The column \"factor\" contains more than one factor")
+
+  # checking for doubled item names within subfactor
+  a <- split(sheet1, f = sheet1$subfactor)
+  lapply(a, function(x) if (length(levels(as.factor(x$item))) <
+                            length(x$item)
+                            ) stop ("Item name occuring more than once"))
+
+
+  # subfactor with only one item
+  a <- table(as.factor(sheet1$subfactor))
+  bad <- names(which(a == min(a)))
+
+  if (min(table(as.factor(sheet1$subfactor))) < 2) warning (
+    c("These subfactors only refer to a single item: ", bad))
+
+  # checking for wrong column names
+  if (!isTRUE(all.equal(names(sheet1), c("factor",
+                                        "subfactor",
+                                        "item",
+                                        "factor_loading",
+                                        "subfactor_loading")))
+      ) stop ("Wrong or missing column names")
 
 
   ## center distances ---------------
@@ -60,9 +104,34 @@ input_excel_factor <- function (file) {
 
   ## correlations -------------------
 
+  # checking for wrong row or column names or order
+  if (!isTRUE(all.equal(names(sheet2)[-1], sheet2[[1]]))) stop (
+    "Wrong names or order in correlation matrix"
+  )
+
+  # checking for unknown or missing variable names
+  if (!isTRUE(all.equal(levels(as.factor(sheet1$subfactor)),
+                        levels(as.factor(sheet2[[1]]))))
+      ) stop ("Variables in correlation matrix do not match subfactors")
+
+  # checking for missing values
+  sheet2 <- na.fail(sheet2)
+
   # subfactor correlation matrix
   cors <- apply(as.matrix(sheet2)[ ,-1], c(1,2), as.numeric)
   row.names(cors) <- colnames(cors)
+
+  # checking if main diagonal values are 1
+  if (any(diag(cors)!=1)) warning (
+    "Main diagonal in correlation matrix set to 1")
+  diag(cors) <- 1
+
+  # checking if any correlation value out of bounds
+  if (any(cors > 1)) stop ("Correlation > 1")
+  if (any(cors < -1)) stop ("Correlation < -1")
+
+  # checking if values in matrix are symmetrical (Hermitian)
+  if (!isSymmetric(cors)) stop ("Correlation matrix asymmetrical")
 
 
   # return ---------------------------------------------------------------------

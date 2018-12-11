@@ -30,7 +30,7 @@
 #'  Check the output for correctness and complete missing data before continuing
 #'  with \code{\link{input_manual_process}}!
 #'
-#'@return list containing raw data, that needs to be preprocessed using
+#'@return list containing "raw" data, that needs to be preprocessed using
 #'  \code{\link{input_manual_process}}.
 #'
 #'@seealso \code{\link{input_manual_nested}} \code{\link{input_manual_process}}
