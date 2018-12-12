@@ -6,19 +6,16 @@
 #'@param test_names character; the names of the tests in correct order.
 #'@param items_per_test integer; number of items per test in correct order
 #'  (determined by test_names), if all tests have the same number of items a
-#'  single number can be used.
+#'  single number can be used, e.g. 10 instead of c(10, 10, 10).
 #'@param item_names character or integer; the names of the items in correct
-#'  order (determined by test_names); defaults to NULL, in this case the items
-#'  will be ennumerated.
+#'  order (determined by test_names).
 #'@param general_loadings integer; vector of the items' loadings on the general
-#'  factor (overall construct) in correct order (determined by item_names);
-#'  defaults to NULL, in this case complete by hand.
+#'  factor (overall construct) in correct order (determined by item_names).
 #'@param correlated_loadings integer; vector of the items' loadings on their
-#'  correlated factor (test) in correct order (determined by item_names);
-#'  defaults to NULL, in this case complete by hand.
+#'  correlated factor (test) in correct order (determined by item_names).
 #'@param correlation_matrix matrix containing the latent correlations between
 #'  tests, pay attention to the order of rows and columns, which is determined
-#'  by test_names; defaults to NULL, in this case complete by hand.
+#'  by test_names.
 #'
 #'@details Pay attention to the order of tests and items, it has to be coherent
 #'  throughout the whole data. test_names and items_per_test determine which
@@ -31,12 +28,12 @@
 #'  those tests, the data on the facets needs to be added using
 #'  \code{\link{input_manual_simple}}.
 #'
-#'  Check the output for correctness and complete missing data before continuing
-#'  with \code{\link{input_manual_process}}!
+#'  Visually inspect the returned object before continuing with
+#'  \code{\link{input_manual_process}}!
 #'
-#'@return list containing "raw" data. The data on the facets of the tests needs to
-#'  be added using \code{\link{input_manual_simple}}. Afterwards, the whole data
-#'  needs to be preprocessed using \code{\link{input_manual_process}}.
+#'@return list containing "raw" data. The data on the facets of the tests needs
+#'  to be added using \code{\link{input_manual_simple}}. Afterwards, the whole
+#'  data needs to be preprocessed using \code{\link{input_manual_process}}.
 #'
 #'@seealso \code{\link{input_manual_simple}} \code{\link{input_manual_process}}
 #'
@@ -89,22 +86,22 @@ input_manual_nested <- function(
   title,
   test_names,
   items_per_test,
-  item_names = NULL,
-  general_loadings = NULL,
-  correlated_loadings = NULL,
-  correlation_matrix = NULL) {
+  item_names,
+  general_loadings,
+  correlated_loadings,
+  correlation_matrix) {
 
 
   # helper variables -----------------------------------------------------------
 
+  # number of tests
   cplx <- length(test_names)
-
-
-  # initializing object --------------------------------------------------------
-
   if (length(items_per_test) == 1) {
     items_per_test <- rep(items_per_test, cplx)
   }
+
+
+  # initializing object --------------------------------------------------------
 
   mydata <- list(
     global = input_manual_simple(
@@ -123,13 +120,6 @@ input_manual_nested <- function(
     names(mydata$tests) <- test_names
 
   # item name correction
-  if (is.null(item_names)) {
-    item <- NULL
-    for (i in 1:cplx) {
-      item <- c(item, 1:items_per_test[i])
-    }
-    mydata$global$fls$item <- as.factor(item)
-  }
   mydata$global$fls$item <- as.character(paste(mydata$global$fls$subfactor,
                                             sep = ".",
                                             mydata$global$fls$item))

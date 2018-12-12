@@ -32,23 +32,22 @@ input_excel_factor <- function (file) {
 
   ## factor loadings ----------------
 
-  # checking for negative factor loadings
+  # factor loadings < 0
   bad <- min(c(sheet1$factor_loading, sheet1$subfactor_loading))
   bad <- bad < 0
   if (bad) stop ("Negative factor loading")
 
-  # checking for factor loadings below .1
+  # factor loadings < .1
   bad <- min(c(sheet1$factor_loading, sheet1$subfactor_loading))
   bad <- bad < 0.1
   if (bad) warning ("At least one factor loading set to minimum of 0.1")
   sheet1$factor_loading[sheet1$factor_loading < .1] <- .1
   sheet1$subfactor_loading[sheet1$subfactor_loading < .1] <- .1
 
-  # checking for factor loadings above 1
+  # factor loadings > 1
   bad <- max(c(sheet1$factor_loading, sheet1$subfactor_loading))
   bad <- bad > 1
-  if (bad) warning (
-    "At least one factor loading above 1, check for correctness")
+  if (bad) warning ("At least one factor loading > 1, check for correctness")
 
 
   ## names
@@ -61,7 +60,7 @@ input_excel_factor <- function (file) {
   a <- split(sheet1, f = sheet1$subfactor)
   lapply(a, function(x) if (length(levels(as.factor(x$item))) <
                             length(x$item)
-                            ) stop ("Item name occuring more than once"))
+                            ) stop ("Item name reoccuring within subfactor"))
 
 
   # subfactor with only one item
@@ -121,17 +120,17 @@ input_excel_factor <- function (file) {
   cors <- apply(as.matrix(sheet2)[ ,-1], c(1,2), as.numeric)
   row.names(cors) <- colnames(cors)
 
-  # checking if main diagonal values are 1
-  if (any(diag(cors)!=1)) warning (
-    "Main diagonal in correlation matrix set to 1")
-  diag(cors) <- 1
-
   # checking if any correlation value out of bounds
   if (any(cors > 1)) stop ("Correlation > 1")
   if (any(cors < -1)) stop ("Correlation < -1")
 
   # checking if values in matrix are symmetrical (Hermitian)
   if (!isSymmetric(cors)) stop ("Correlation matrix asymmetrical")
+
+  # checking if main diagonal values are 1
+  if (any(diag(cors)!=1)) warning (
+    "Main diagonal in correlation matrix set to 1")
+  diag(cors) <- 1
 
 
   # return ---------------------------------------------------------------------

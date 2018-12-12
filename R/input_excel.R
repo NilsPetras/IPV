@@ -64,7 +64,7 @@ input_excel <- function(global = NULL, tests){
         ) stop ("Factor name or item per factor count mismatch between global
                 and tests")
 
-      # item names and number of items
+      # item names and number of items matching
     x <- lapply(tests_input, `[[`, 1)
     x <- sort(as.character(unlist(lapply(x, `[[`, "item"))))
     if (!isTRUE(all.equal(sort(as.character(global_input$cds$item)), x))

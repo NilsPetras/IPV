@@ -35,11 +35,53 @@
 #' @export
 input_manual_process <- function(data) {
 
-  if (names(data)[1] == "global") { # nested case
+
+  # nested case ----------------------------------------------------------------
+  if (names(data)[2] == "tests") {
+
+    # checking ---------------------------------------------
+
+    # missing data
+    if (any(unlist(lapply(data$tests, is.na)))
+    ) stop ("Missing data on test")
+
+    # factor names mismatching
+    x <- lapply(data$tests, `[[`, 1)
+    x <- sort(as.character(unlist(lapply(x, `[[`, "factor"))))
+    if (!isTRUE(all.equal(sort(as.character(data$global$fls$subfactor)), x))
+    ) stop ("Factor name or item per factor count mismatch between global
+                and tests")
+
+    # item names or number of items mismatching
+    x <- lapply(data$tests, `[[`, 1)
+    x <- as.character(unlist(lapply(x, `[[`, "item")))
+    x <- sort(paste(data$global$fls$subfactor, sep = ".", x))
+    if (!isTRUE(all.equal(sort(as.character(data$global$fls$item)), x))
+    ) stop ("Number of items or item name mismatch between global and
+                tests")
+
+    # factor loadings mismatching
+    y <- data$global$fls
+    y <- y[order(as.character(y$subfactor), y$item),]
+    x <- do.call(rbind, lapply(data$tests, `[[`, 1))
+    x <- x[order(as.character(x$factor)),]
+    x$item <- paste(y$subfactor, sep = ".", x$item)
+    x <- x[order(as.character(x$factor), x$item),]
+    y <- y$subfactor_loading
+    x <- x$factor_loading
+    if (!isTRUE(all.equal(x, y))
+        ) stop ("Factor loadings inconsistent between global and tests")
+
+
+    # processing -------------------------------------------
+
     mydata$global <- input_manual_process_factor(data$global)
     mydata$tests <- lapply(data$tests, input_manual_process_factor)
 
-  } else { # simple case
+
+  # simple case ----------------------------------------------------------------
+
+  } else {
     mydata <- input_manual_process_factor(data)
   }
 
@@ -65,24 +107,7 @@ input_manual_process <- function(data) {
 #'   single factor.
 input_manual_process_factor <- function(data) {
 
-  # checking and recalculating -------------------------------------------------
-
-  ## factor loadings ---------------------------------------
-
-  # checking for negative factor loadings
-  bad <- min(c(data$fls$factor_loading, data$fls$subfactor_loading))
-  bad <- bad < 0
-  if (bad) stop ("data contains negative factor loading")
-
-  # checking for factor loadings below .1
-  bad <- min(c(data$fls$factor_loading, data$fls$subfactor_loading))
-  bad <- bad < 0.1
-  if (bad) warning ("At least one factor loading set to minimum of 0.1")
-  data$fls$factor_loading[data$fls$factor_loading < .1] <- .1
-  data$fls$subfactor_loading[data$fls$subfactor_loading < .1] <- .1
-
-
-  ## center distances --------------------------------------
+  # calculating and checking center distances ----------------------------------
 
   # calculating the center distances
   cds <- data.frame(
