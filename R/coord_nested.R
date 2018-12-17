@@ -328,7 +328,7 @@ coord_nested <- function (
     cors$label[k] <- data$g$cors[cors$V1[k], cors$V2[k]]
   }
   cors$label <- as.character(cors$label)
-  cors$label[cors$label < 1] <- substr(cors$label, 2, 4)
+  cors$label[cors$label != 1 && cors$label != 0] <- substr(cors$label, 2, 4)
 
   # label coordinates
   cors$x <- c_circs[cors$V2, "x"]

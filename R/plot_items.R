@@ -126,7 +126,7 @@ plot_items <- function (
 
     # minor grid
     ggforce::geom_circle(
-      data = coord$maingrid[coord$maingrid$alpha == .5, ],
+      data = coord$grid[coord$grid$alpha == .5, ],
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "r"),
       color = paste("gray", fade, sep = ""),
       linetype = "dotted",
@@ -134,7 +134,7 @@ plot_items <- function (
 
     # major grid
     ggforce::geom_circle(
-      data = coord$maingrid[coord$maingrid$alpha == 1, ],
+      data = coord$grid[coord$grid$alpha == 1, ],
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "r"),
       color = "gray20",
       linetype = "dotted",
@@ -187,12 +187,9 @@ plot_items <- function (
   if(tick_label == TRUE) {
     myipv <- myipv +
       ggplot2::geom_text(
-        data = coord$axis_tick[coord$axis_tick$rho < max(coord$maingrid$r), ],
+        data = coord$axis_tick,
         ggplot2::aes_string(x = "x", y = "y", label = "label"),
-        angle =
-          (coord$axis_tick[coord$axis_tick$rho <
-                             max(coord$maingrid$r), "phi"] -
-             pi / 48 - pi / 2) * 180 / pi,
+        angle = (coord$axis_tick$phi - pi / 48 - pi / 2) * 180 / pi,
         family = font,
         size = 3 * sqrt(size) * size_tick_label,
         color = "gray20")

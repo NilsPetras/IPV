@@ -96,22 +96,6 @@ coord_items <- function (
   c_axes[ ,4] <- round(sin(p_axes$phi) * p_axes$rholabel, digits = 7)
   names(c_axes) <- c("x", "y", "xlabel", "ylabel")
 
-  # axis tick label
-  # reflecting the default settings of other charts,
-  # the axis tick of 0.1 is labeled
-  # the axis tick label automatically shows within the first quadrant
-  axis_tick <- data.frame(
-    rho = c(.15, .55),
-    label = c("0.1", "0.5"),
-    phi = NA,
-    x = NA,
-    y = NA)
-  axis_tick$phi <- min(p_axes$phi[p_axes$rho > .1]) -
-    pi / cplx
-
-  axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
-  axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
-
 
   ## items --------------------------
 
@@ -130,7 +114,7 @@ coord_items <- function (
     length = NA)
   row.names(items) <- data$cds$item
   items$phi <- p_axes$phi[data$cds$subfactor]
-  items$rho <- data$cds$cd + .015 * width_items
+  items$rho <- data$cds$cd + .0001 * maxcd # + .015 * width_items
   items <- items[order(items$phi, items$rho), ]
   items$x <- round(cos(items$phi) * items$rho, digits = 7)
   items$y <- round(sin(items$phi) * items$rho, digits = 7)
@@ -148,28 +132,63 @@ coord_items <- function (
   items$length[items$length == 2] <-
     1.2 * length_items * length_ratio_items * maxcd
 
-  items$x1 <- items$x-items$y / items$rho * .03 * items$length
+  items$x1 <- items$x - items$y / items$rho * .03 * items$length
   items$y1 <- items$y + items$x / items$rho * .03 * items$length
   items$x2 <- items$x + items$y / items$rho * .03 * items$length
-  items$y2 <- items$y-items$x / items$rho * .03 * items$length
+  items$y2 <- items$y - items$x / items$rho * .03 * items$length
 
 
   ## grid ---------------------------
 
-  # coordinates of grid
-  # grid density is one line every 0.1 center distance
-  # the grid ends right before the maximum center distance
-  # grid lines are accentuated at 0.1 and multiples of 0.5
-  # n = number of grid lines
-  n <- trunc(maxcd * 10)
-  maingrid <- data.frame(x = rep(0, n),
-                         y = 0,
-                         r = NA,
-                         alpha = NA)
-  maingrid$r <- seq(from = .1, by = .1, to = round(maxcd, digits = 2))
-  maingrid$alpha <- .5
-  if (n > 4) maingrid$alpha[seq(from = 5, by = 5, to = n)] <- 1
-  maingrid$alpha[1] <- 1
+  # coordinates of grid lines
+  # m = magnitude, d = digits, u = unit
+  m <- floor(log10(maxcd))
+  d <- maxcd / 10 ^ m
+  u <- 10 ^ (m - 1)
+
+  if (floor(d) < 3) {
+    grid <- data.frame(x = rep(0, floor(10 * d)),
+                       y = 0,
+                       r = NA,
+                       alpha = .5)
+    grid$r <- seq(from = u,
+                  by = u,
+                  to = floor(10 * d) * u)
+    grid$alpha[seq(10, length(grid$alpha), 10)] <- 1
+  }  else if (floor(d) < 5) {
+    grid <- data.frame(x = rep(0, floor(5 * d)),
+                       y = 0,
+                       r = NA,
+                       alpha = .5)
+    grid$r <- seq(from = 2 * u,
+                  by = 2 * u,
+                  to = floor(5 * d) * 2 * u)
+    grid$alpha[seq(5, length(grid$alpha), 5)] <- 1
+  } else {
+    grid <- data.frame(x = rep(0, floor(2 * d)),
+                       y = 0,
+                       r = NA,
+                       alpha = .5)
+    grid$r <- seq(from = 5 * u,
+                  by = 5 * u,
+                  to = floor(2 * d) * 5 * u)
+    grid$alpha[seq(2, length(grid$alpha), 2)]
+  }
+
+  # axis tick label
+  # the first major grid line is marked
+  # the axis tick label automatically shows within the first quadrant
+  axis_tick <- data.frame(
+    rho = grid[which.max(grid$alpha), "r"] + u / 2,
+    label = as.character(grid[which.max(grid$alpha), "r"]),
+    phi = NA,
+    x = NA,
+    y = NA)
+  axis_tick$phi <- min(p_axes[p_axes$rho > 0, "phi"]) -
+    pi / cplx
+
+  axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
+  axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
 
 
   ## title --------------------------
@@ -191,7 +210,7 @@ coord_items <- function (
   coord <- list(p_axes    = p_axes,
                 c_axes    = c_axes,
                 items     = items,
-                maingrid  = maingrid,
+                grid      = grid,
                 axis_tick = axis_tick,
                 title     = title)
 

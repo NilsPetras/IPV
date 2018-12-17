@@ -75,6 +75,7 @@ input_manual_process <- function(data) {
 
     # processing -------------------------------------------
 
+    mydata <- list()
     mydata$global <- input_manual_process_factor(data$global)
     mydata$tests <- lapply(data$tests, input_manual_process_factor)
 

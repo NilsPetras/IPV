@@ -190,7 +190,7 @@ coord_facets <- function (
   }
   cors$label <- as.character(cors$label)
   # exclude leading 0's for aesthetic reasons
-  cors$label[cors$label < 1] <- substr(cors$label, 2, 4)
+  cors$label[cors$label != 1 && cors$label != 0] <- substr(cors$label, 2, 4)
 
 
   # label coordinates
