@@ -7,9 +7,9 @@
 #'   containing formatted data.
 #' @param xarrows data frame containing information about additional correlation
 #'   arrows between facets of different tests; see examples.
-#' @param subradius integer; (arbitrary) radius of the circles representing
-#'   facets (same unit as center distances), use to avoid circle overlap and
-#'   optimize appearance.
+#' @param subradius integer; same unit as center distances; radius of the
+#'   circles representing facets; use to avoid circle overlap and optimize
+#'   appearance; if 0 (default) a value is chosen automatically.
 #' @param filename character; name of the file to save. Supported formats are:
 #'   "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
 #'   suppress file output; defaults to "myipv.pdf".
@@ -41,8 +41,10 @@
 #'   \code{FALSE}, the ring and the correlations are omitted, simplifying the
 #'   chart significantly.
 #' @param cor_spacing integer; if \code{correlations = TRUE}: width of the ring
-#'   the latent correlations between tests are drawn in; defaults to 0.4.
-#' @param tick numeric; axis tick position; defaults to .1.
+#'  the latent correlations between tests are drawn in; if 0 (default) a value
+#'  is chosen automatically.
+#' @param tick numeric; axis tick position; if 0 (default) a value is chosen
+#'   automatically.
 #' @param rotate_title_radians integer; radian angle to rotate the global label
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_title_degrees integer; angle in degrees to rotate the global
@@ -135,7 +137,7 @@
 nested_chart <- function(
   data,
   xarrows = NULL,
-  subradius,
+  subradius = 0,
   filename = "myipv.pdf",
   size = 1,
   relative_scaling = 3,
@@ -152,8 +154,8 @@ nested_chart <- function(
   colour_facets = "black",
   fade = 85,
   correlations = TRUE,
-  cor_spacing = .4,
-  tick = .1,
+  cor_spacing = 0,
+  tick = 0,
   rotate_title_radians = 0,
   rotate_title_degrees = 0,
   cor_labels_tests = TRUE,
@@ -179,6 +181,7 @@ nested_chart <- function(
   coord <- coord_nested(
     data = data,
     subradius = subradius,
+    tick = tick,
     rotate_radians = rotate_radians,
     rotate_degrees = rotate_degrees,
     subrotate_radians = subrotate_radians,
@@ -205,7 +208,6 @@ nested_chart <- function(
     fade = fade,
     font = font,
     show_xarrows = show_xarrows,
-    tick = tick,
     size_title = size_title,
     size_test_labels = size_test_labels,
     size_facet_labels = size_facet_labels,

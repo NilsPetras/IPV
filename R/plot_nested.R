@@ -21,7 +21,6 @@
 #'  (white) in steps of 1; defaults to 85.
 #'@param show_xarrows logical; if \code{TRUE}, draws correlation arrows between
 #'  facets of different tests.
-#'@param tick numeric; axis tick position; defaults to .1.
 #'@param font character; text font; defaults to 'sans' (use extrafonts to
 #'  install additional fonts).
 #'@param size_title integer; font size of the global label (relative to
@@ -117,7 +116,6 @@ plot_nested <- function (
   fade = 85,
   font = "sans",
   show_xarrows = FALSE,
-  tick = .1,
   size_title = 1,
   size_test_labels = 1,
   size_facet_labels = 1,
@@ -151,11 +149,10 @@ plot_nested <- function (
 
   # calculations are not possible within aes_string(), so aesthetics are
   # prepared here
-  tick_label_x <- coord$g$rs *
-    (coord$g$axis_tick$x * tick + sign(coord$g$axis_tick$x) * .02)
-  tick_label_y <- coord$g$rs *
-    (coord$g$axis_tick$y * tick + sign(coord$g$axis_tick$y) * .02)
-  tick_label_label <- as.character(tick)
+  tick <- sqrt((coord$g$axis_tick$x ^ 2) + (coord$g$axis_tick$y ^ 2))
+  tick_label_x <- 1.2 * coord$g$rs * coord$g$axis_tick$x
+  tick_label_y <- 1.2 * coord$g$rs * coord$g$axis_tick$y
+  tick_label_label <- as.character(formatC(tick, format = "fg"))
 
 
   # chart ----------------------------------------------------------------------
@@ -221,7 +218,7 @@ plot_nested <- function (
     # global center dot
     ggplot2::geom_point(
       ggplot2::aes(x = 0, y = 0),
-      size = 5 * sqrt(size) * size_center_dot) +
+      size = 2 * size * size_center_dot) +
 
     # nested outer axis segments
     ggplot2::geom_segment(
@@ -234,7 +231,7 @@ plot_nested <- function (
     ggplot2::geom_point(
       data = coord$g$c_circs,
       ggplot2::aes_string(x = "x", y = "y"),
-      size = 2.5 * sqrt(size) * size_center_dot_inner) +
+      size = 1 * size * size_center_dot_inner) +
 
     # test circles
     ggforce::geom_circle(
@@ -326,7 +323,7 @@ plot_nested <- function (
         data = cors,
         ggplot2::aes_string(x = "x", y = "y", label = "label"),
         family = font,
-        size = coord$g$cor_spacing * 6.75 * sqrt(size) * size_cor_labels,
+        size = 3 * sqrt(size) * size_cor_labels,
         fontface = "bold")
   }
 

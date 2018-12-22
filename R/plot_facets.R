@@ -16,7 +16,6 @@
 #'   (white) in steps of 1; defaults to 85.
 #' @param cor_labels logical; if \code{TRUE}, draws latent correlations between
 #'   facets as text.
-#' @param tick numeric; axis tick position; defaults to .1.
 #' @param font character; text font; defaults to 'sans' (use extrafonts to
 #'   install additional fonts).
 #' @param size_test_label integer; font size of the test label (relative to
@@ -72,7 +71,6 @@ plot_facets <- function(
   colour = "black",
   fade = 90,
   font = "sans",
-  tick = .1,
   cor_labels = TRUE,
   size_cor_labels = 1,
   size_test_label = 1,
@@ -94,9 +92,10 @@ plot_facets <- function(
   # calculations are not possible within aes_string(), so aesthetics are
   # prepared here
   facet_labels <- row.names(coord$c_circs)
-  tick_label_x <- coord$axis_tick$x * tick + sign(coord$axis_tick$x) * .02
-  tick_label_y <- coord$axis_tick$y * tick + sign(coord$axis_tick$y) * .02
-  tick_label_label <- as.character(tick)
+  tick <- signif(sqrt((coord$axis_tick$x ^ 2) + (coord$axis_tick$y ^ 2)), 1)
+  tick_label_label <- as.character(formatC(tick, format = "fg"))
+  tick_label_x <- 1.2 * coord$axis_tick$x
+  tick_label_y <- 1.2 * coord$axis_tick$y
 
 
   # chart ----------------------------------------------------------------------
@@ -132,7 +131,7 @@ plot_facets <- function(
     # center dot
     ggplot2::geom_point(
       ggplot2::aes(x = 0, y = 0),
-      size = 5 * sqrt(size) * size_center_dot) +
+      size = 2 * size * size_center_dot) +
 
     # axis tick
     ggforce::geom_circle(
@@ -146,12 +145,6 @@ plot_facets <- function(
       ggplot2::aes_string(x = "x2", y = "y2", xend = "x3", yend = "y3"),
       size = size * width_axes,
       color = paste("gray", fade, sep = "")) +
-
-    # facet labels
-    ggplot2::geom_text(
-      ggplot2::aes_string(x = "x", y = "y", label = "facet_labels"),
-      family = font,
-      size = 8 * sqrt(size) * size_facet_labels) +
 
     # tick label
     ggplot2::geom_text(
@@ -176,6 +169,12 @@ plot_facets <- function(
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
       size = size * width_circles,
       color = colour) +
+
+    # facet labels
+    ggplot2::geom_text(
+      ggplot2::aes_string(x = "x", y = "y", label = "facet_labels"),
+      family = font,
+      size = 8 * sqrt(size) * size_facet_labels) +
 
     # inner axis segments
     ggplot2::geom_segment(
