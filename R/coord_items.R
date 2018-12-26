@@ -114,7 +114,7 @@ coord_items <- function (
     length = NA)
   row.names(items) <- data$cds$item
   items$phi <- p_axes$phi[data$cds$subfactor]
-  items$rho <- data$cds$cd + .0001 * maxcd # + .015 * width_items
+  items$rho <- data$cds$cd + maxcd * .00625 * width_items
   items <- items[order(items$phi, items$rho), ]
   items$x <- round(cos(items$phi) * items$rho, digits = 7)
   items$y <- round(sin(items$phi) * items$rho, digits = 7)

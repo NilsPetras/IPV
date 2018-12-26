@@ -13,12 +13,12 @@
 #' @param dpi integer; resolution in dots per inch; defaults to 500.
 #' @param font character; text font; defaults to 'sans' (use extrafonts to
 #'   install additional fonts).
-#' @param colour character; name of the first accent colour.
-#' @param colour2 character; name of the second accent colour.
+#' @param colour character; name of the first accent colour; defaults to black.
+#' @param colour2 character; name of the second accent colour; defaults to black.
 #' @param fade integer; brightness of minor grid lines, gray tones between 0
-#'   (black) and 100 (white) in steps of 1; defaults to 85.
+#'   ("white") and 100 ("black") in steps of 1; defaults to 15.
 #' @param tick_label logical; if \code{TRUE}, draws a text label for the axis
-#'   tick
+#'   tick.
 #' @param size_title integer; font size of the test label (relative to default).
 #' @param size_facet_labels integer; font size of the axis labels (relative to
 #'   default).
@@ -69,7 +69,7 @@ plot_items <- function (
   dpi = 500,
   colour = "black",
   colour2 = "black",
-  fade = 85,
+  fade = 15,
   font = "sans",
   tick_label = TRUE,
   size_tick_label = 1,
@@ -128,7 +128,7 @@ plot_items <- function (
     ggforce::geom_circle(
       data = coord$grid[coord$grid$alpha == .5, ],
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "r"),
-      color = paste("gray", fade, sep = ""),
+      color = paste("gray", 100 - fade, sep = ""),
       linetype = "dotted",
       size = sqrt(size) * min(c(size, .6)) * width_grid) +
 
@@ -138,7 +138,7 @@ plot_items <- function (
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "r"),
       color = "gray20",
       linetype = "dotted",
-      size = sqrt(size) * min(c(size, .7)) * width_grid) +
+      size = sqrt(size) * min(size, .7) * width_grid) +
 
     # axes
     ggplot2::geom_segment(

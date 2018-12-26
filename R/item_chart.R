@@ -17,14 +17,14 @@
 #' @param filewidth integer; width of the graphic in inches; defaults to 12.
 #' @param fileheight integer; height of the graphic in inches; defaults to 10.
 #' @param dpi integer; resolution in dots per inch; defaults to 500.
-#' @param colour character; name of the first accent colour.
-#' @param colour2 character; name of the second accent colour.
+#' @param colour character; name of the first accent colour; defaults to black.
+#' @param colour2 character; name of the second accent colour; defaults to black.
 #' @param fade integer; brightness of minor grid lines, gray tones between 0
-#'   (black) and 100 (white) in steps of 1; defaults to 85.
+#'   ("white") and 100 ("black") in steps of 1; defaults to 15.
 #' @param dodge_axes integer; relative amount of horizontal outward dodge of
 #'   axis labels.
 #' @param tick_label logical; if \code{TRUE}, draws a text label for the axis
-#'   tick
+#'   tick.
 #' @param rotate_title_radians integer; radian angle to rotate the global label
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_title_degrees integer; angle in degrees to rotate the global
@@ -77,7 +77,7 @@ item_chart <- function(
   dpi = 500,
   colour = "black",
   colour2 = "black",
-  fade = 85,
+  fade = 15,
   dodge_axes = 1,
   tick_label = TRUE,
   rotate_title_radians = 0,

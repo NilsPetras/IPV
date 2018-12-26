@@ -32,7 +32,7 @@
 #'  the latent correlations between tests are drawn in; if 0 (default) a value
 #'  is chosen automatically.
 #'@param relative_scaling integer; relative size of the global chart compared to
-#'  the nested facet charts; defaults to 3.
+#'  the nested facet charts; if 0 (default), a value is chosen automatically.
 #'@param xarrows data frame containing information about additional correlation
 #'  arrows between facets of different tests; see examples.
 #'
@@ -106,7 +106,7 @@ coord_nested <- function (
   prepare_item_charts = FALSE,
   correlations = TRUE,
   cor_spacing = 0,
-  relative_scaling = 3,
+  relative_scaling = 0,
   xarrows = NULL) {
 
 
@@ -114,13 +114,6 @@ coord_nested <- function (
 
   # total subrotation value in radians
   subrotate <- subrotate_radians + subrotate_degrees * pi / 180
-
-  # relative scaling
-  rs <- relative_scaling
-
-  # default axis tick
-  if (tick == 0) tick <- signif(
-    max(.15 * max(data$g$cds$mean_cd), .3 * min(data$g$cds$mean_cd)), 1)
 
 
   # listwise calculation for single factors ------------------------------------
@@ -188,6 +181,27 @@ coord_nested <- function (
                              function (x) y <- x$mean_cd[1]))
   g_cds <- t(g_cds)
   g_cds <- data.frame(g_cds)
+
+  # relative scaling
+  rs <- relative_scaling
+  if (rs == 0) {
+    rs <- mean(circsize) / mean(g_cds$g_cds) * 3 * (cplx + 3) / (20 - cplx / 2)
+  }
+
+  # default axis tick
+  if (tick == 0){
+    tick <- signif(
+      max(.15 * max(data$g$cds$mean_cd),
+          .3 * min(data$g$cds$mean_cd)) *
+        rs ^ .25,
+      1)
+    if (rs < 3 * (cplx + 3) / 200){
+      tick <- signif(tick * rs, 1)
+    }
+    if (rs > 1.5 * (cplx + 3)) {
+      tick <- signif(10 * tick / rs, 1)
+    }
+  }
 
 
   # global chart objects -------------------------------------------------------

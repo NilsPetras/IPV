@@ -14,8 +14,8 @@
 #'   "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
 #'   suppress file output; defaults to "myipv.pdf".
 #' @param size integer; smartly scaled size of chart objects.
-#' @param relative_scaling integer; relative size of the global chart compared
-#'   to the nested facet charts; defaults to 3.
+#' @param relative_scaling integer; relative size of the global chart compared to
+#'  the nested facet charts; if 0 (default), a value is chosen automatically.
 #' @param show_xarrows logical; if \code{TRUE}, draws correlation arrows between
 #'   facets of different tests.
 #' @param font character; text font; defaults to 'sans' (use extrafonts to
@@ -140,7 +140,7 @@ nested_chart <- function(
   subradius = 0,
   filename = "myipv.pdf",
   size = 1,
-  relative_scaling = 3,
+  relative_scaling = 0,
   show_xarrows = FALSE,
   font = "sans",
   rotate_radians = 0,

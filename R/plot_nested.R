@@ -199,7 +199,7 @@ plot_nested <- function (
     ggforce::geom_circle(
       ggplot2::aes(x0 = 0, y0 = 0, r = coord$g$rs * tick),
       linetype = "dotted",
-      size = coord$g$rs * .5 * min(c(size, .25)) * width_tick) +
+      size = min(size, .5) * width_tick) +
 
     # global outer axis segments
     ggplot2::geom_segment(
@@ -244,7 +244,7 @@ plot_nested <- function (
     ggforce::geom_circle(
       data = coord$g$c_circs[-1, ],
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "tick"),
-      size = 0.5 * min(c(size, .25)) * width_tick_inner,
+      size = .5 * min(size, .5) * width_tick_inner,
       linetype = "dotted") +
 
     # global inner axis segments
