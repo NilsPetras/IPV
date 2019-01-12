@@ -65,13 +65,17 @@ coord_facets <- function (
   mcd <- data$cds$mean_cd
 
   # default axis tick
-  if (tick == 0) tick <- signif(max(.15 * max(mcd), .3 * min(mcd)), 1)
+  if (tick == 0){
+    tick <- signif(max(.15 * max(mcd), .3 * min(mcd)), 1)
+    sc <- rep(c(1, 2, 5), 5) * 10 ^ rep(-3:1, each = 3)
+    tick <- sc[which.min(abs(tick - sc))]
+  }
 
   # default subradius
   if (subradius == 0) {
     subradius <- max(mean(mcd), .25 * max(mcd)) *
     (5 / (3 + cplx)) *
-    (.25 + .25 * (min(max(mean(mcd), .25 * max(mcd)) / sd(mcd), 3)))
+    (.25 + .25 * (min(max(mean(mcd), .25 * max(mcd)) / stats::sd(mcd), 3)))
   }
 
   # chart objects --------------------------------------------------------------

@@ -149,7 +149,7 @@ plot_nested <- function (
 
   # calculations are not possible within aes_string(), so aesthetics are
   # prepared here
-  tick <- sqrt((coord$g$axis_tick$x ^ 2) + (coord$g$axis_tick$y ^ 2))
+  tick <- coord$g$axis_tick$tick
   tick_label_x <- 1.2 * coord$g$rs * coord$g$axis_tick$x
   tick_label_y <- 1.2 * coord$g$rs * coord$g$axis_tick$y
   tick_label_label <- as.character(formatC(tick, format = "fg"))

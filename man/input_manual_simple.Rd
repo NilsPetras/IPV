@@ -4,9 +4,8 @@
 \alias{input_manual_simple}
 \title{Input Manual Simple}
 \usage{
-input_manual_simple(test_name, facet_names, items_per_facet,
-  item_names = NULL, general_loadings = NULL, correlated_loadings = NULL,
-  correlation_matrix = NULL)
+input_manual_simple(test_name, facet_names, items_per_facet, item_names,
+  general_loadings, correlated_loadings, correlation_matrix)
 }
 \arguments{
 \item{test_name}{character; the name of the test.}
@@ -15,26 +14,23 @@ input_manual_simple(test_name, facet_names, items_per_facet,
 
 \item{items_per_facet}{integer; number of items per facet in correct order
 (determined by facet_names), if all facets have the same number of items a
-single number can be used.}
+single number can be used, e.g. 5 instead of c(5, 5, 5, 5).}
 
 \item{item_names}{character or integer; the names of the items in correct
-order (determined by facet_names); defaults to NULL, in this case the items
-will be ennumerated.}
+order (determined by facet_names).}
 
 \item{general_loadings}{integer; vector of the items' loadings on the general
-factor (test) in correct order (determined by item_names); defaults to NULL,
-in this case complete by hand.}
+factor (test) in correct order (determined by item_names).}
 
 \item{correlated_loadings}{integer; vector of the items' loadings on their
-correlated factor (facet) in correct order (determined by item_names);
-defaults to NULL, in this case complete by hand.}
+correlated factor (facet) in correct order (determined by item_names).}
 
 \item{correlation_matrix}{matrix containing the latent correlations between
 facets, pay attention to the order of rows and columns, which is determined
-by facet_names; defaults to NULL, in this case complete by hand.}
+by facet_names.}
 }
 \value{
-list containing raw data, that needs to be preprocessed using
+list containing "raw" data, that needs to be preprocessed using
  \code{\link{input_manual_process}}.
 }
 \description{
@@ -48,8 +44,8 @@ Pay attention to the order of facets and items, it has to be coherent
  order. The correlation matrix uses the order in facet_names for rows and
  columns.
 
- Check the output for correctness and complete missing data before continuing
- with \code{\link{input_manual_process}}!
+ Visually inspect the returned object before continuing with
+ \code{\link{input_manual_process}}!
 }
 \examples{
 # these RSES data can also be seen in self_confidence, the example data of

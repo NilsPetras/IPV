@@ -4,9 +4,8 @@
 \alias{input_manual_nested}
 \title{Input Manual Nested}
 \usage{
-input_manual_nested(title, test_names, items_per_test, item_names = NULL,
-  general_loadings = NULL, correlated_loadings = NULL,
-  correlation_matrix = NULL)
+input_manual_nested(title, test_names, items_per_test, item_names,
+  general_loadings, correlated_loadings, correlation_matrix)
 }
 \arguments{
 \item{title}{character; the name of the overall construct.}
@@ -15,46 +14,43 @@ input_manual_nested(title, test_names, items_per_test, item_names = NULL,
 
 \item{items_per_test}{integer; number of items per test in correct order
 (determined by test_names), if all tests have the same number of items a
-single number can be used.}
+single number can be used, e.g. 10 instead of c(10, 10, 10).}
 
 \item{item_names}{character or integer; the names of the items in correct
-order (determined by test_names); defaults to NULL, in this case the items
-will be ennumerated.}
+order (determined by test_names).}
 
 \item{general_loadings}{integer; vector of the items' loadings on the general
-factor (overall construct) in correct order (determined by item_names);
-defaults to NULL, in this case complete by hand.}
+factor (overall construct) in correct order (determined by item_names).}
 
 \item{correlated_loadings}{integer; vector of the items' loadings on their
-correlated factor (test) in correct order (determined by item_names);
-defaults to NULL, in this case complete by hand.}
+correlated factor (test) in correct order (determined by item_names).}
 
 \item{correlation_matrix}{matrix containing the latent correlations between
 tests, pay attention to the order of rows and columns, which is determined
-by test_names; defaults to NULL, in this case complete by hand.}
+by test_names.}
 }
 \value{
-list containing raw data. The data on the facets of the tests needs
-  to be added using \code{\link{input_manual_simple}}. Afterwards, the whole
-  data needs to be preprocessed using \code{\link{input_manual_process}}.
+list containing "raw" data. The data on the facets of the tests needs
+ to be added using \code{\link{input_manual_simple}}. Afterwards, the whole
+ data needs to be preprocessed using \code{\link{input_manual_process}}.
 }
 \description{
 Generates manual data input for a nested model with several tests.
 }
 \details{
 Pay attention to the order of tests and items, it has to be coherent
-  throughout the whole data. test_names and items_per_test determine which
-  test is listed first and how many items there are listed for that test.
-  item_names, general_loadings and correlated_loadings have to match that
-  order. The correlation matrix uses the order in test_names for rows and
-  columns.
+ throughout the whole data. test_names and items_per_test determine which
+ test is listed first and how many items are listed for that test.
+ item_names, general_loadings and correlated_loadings have to match that
+ order. The correlation matrix uses the order in test_names for rows and
+ columns.
 
-  This function only lists the name of the tests in output$tests. For each of
-  those tests, the data on the facets needs to be added using
-  \code{\link{input_manual_simple}}.
+ This function only lists the name of the tests in output$tests. For each of
+ those tests, the data on the facets needs to be added using
+ \code{\link{input_manual_simple}}.
 
-  Check the output for correctness and complete missing data before
-  continuing with \code{\link{input_manual_process}}!
+ Visually inspect the returned object before continuing with
+ \code{\link{input_manual_process}}!
 }
 \examples{
 # these data can also be seen in self_confidence, the example data of

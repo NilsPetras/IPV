@@ -115,6 +115,8 @@ coord_nested <- function (
   # total subrotation value in radians
   subrotate <- subrotate_radians + subrotate_degrees * pi / 180
 
+  # default subradius
+  subradius <- min(unlist(lapply(data$tests, def_subradius)))
 
   # listwise calculation for single factors ------------------------------------
 
@@ -201,6 +203,8 @@ coord_nested <- function (
     if (rs > 1.5 * (cplx + 3)) {
       tick <- signif(10 * tick / rs, 1)
     }
+    sc <- rep(c(1, 2, 5), 5) * 10 ^ rep(-3:1, each = 3)
+    tick <- sc[which.min(abs(tick - sc))]
   }
 
 
@@ -293,10 +297,14 @@ coord_nested <- function (
   # overwritten manually
   # the axis tick label is displayed between the rightmost axis and the next one
   # counter-clockwise
-  axis_tick <- data.frame(rho = tick, phi = NA, x = NA, y = NA)
+  axis_tick <- data.frame(tick = tick, rho = tick, phi = NA, x = NA, y = NA)
   axis_tick$phi <- min(p_circs$phi) + pi / cplx
-  axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
-  axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
+  axis_tick$x <- round(cos(axis_tick$phi) *
+                         max(axis_tick$rho, .1 * max(g_cds)),
+                       digits = 7)
+  axis_tick$y <- round(sin(axis_tick$phi) *
+                         max(axis_tick$rho, .1 * max(g_cds)),
+                       digits = 7)
 
 
   ## title --------------------------

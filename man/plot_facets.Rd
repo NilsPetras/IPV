@@ -5,8 +5,8 @@
 \title{Plot Facets}
 \usage{
 plot_facets(coord, size = 1, filename = "myipv.pdf", filewidth = 10,
-  fileheight = 10, colour = "black", fade = 90, font = "sans",
-  tick = 0.1, cor_labels = TRUE, size_cor_labels = 1,
+  fileheight = 10, dpi = 500, colour = "black", fade = 90,
+  font = "sans", cor_labels = TRUE, size_cor_labels = 1,
   size_test_label = 1, size_facet_labels = 1, width_axes = 1,
   width_circles = 1, width_tick = 1, size_tick_label = 1,
   size_center_dot = 1)
@@ -21,11 +21,11 @@ plot_facets(coord, size = 1, filename = "myipv.pdf", filewidth = 10,
 "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
 suppress file output; defaults to "myipv.pdf".}
 
-\item{filewidth}{integer; width of the .pdf file; defaults to 10, dpi is
-3000.}
+\item{filewidth}{integer; width of the .pdf file; defaults to 10.}
 
-\item{fileheight}{integer; height of the .pdf file; defaults to 10, dpi is
-3000.}
+\item{fileheight}{integer; height of the .pdf file; defaults to 10.}
+
+\item{dpi}{integer; resolution in dots per inch; defaults to 500.}
 
 \item{colour}{character; name of the accent colour.}
 
@@ -34,8 +34,6 @@ suppress file output; defaults to "myipv.pdf".}
 
 \item{font}{character; text font; defaults to 'sans' (use extrafonts to
 install additional fonts).}
-
-\item{tick}{numeric; axis tick position; defaults to .1.}
 
 \item{cor_labels}{logical; if \code{TRUE}, draws latent correlations between
 facets as text.}

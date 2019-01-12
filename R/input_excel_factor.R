@@ -27,7 +27,7 @@ input_excel_factor <- function (file) {
   if (length(sheet1) != 5) stop ("Wrong number of columns")
 
   # checking for missing values
-  sheet1 <- na.fail(sheet1)
+  sheet1 <- stats::na.fail(sheet1)
 
 
   ## factor loadings ----------------
@@ -114,7 +114,7 @@ input_excel_factor <- function (file) {
       ) stop ("Variables in correlation matrix do not match subfactors")
 
   # checking for missing values
-  sheet2 <- na.fail(sheet2)
+  sheet2 <- stats::na.fail(sheet2)
 
   # subfactor correlation matrix
   cors <- apply(as.matrix(sheet2)[ ,-1], c(1,2), as.numeric)
