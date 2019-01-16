@@ -20,7 +20,7 @@
 #' @param filewidth integer; width of the graphic in inches; defaults to 10.
 #' @param fileheight integer; height of the graphic in inches; defaults to 10.
 #' @param dpi integer; resolution in dots per inch; defaults to 500.
-#' @param colour character; name of the accent colour.
+#' @param color character; name of the accent color.
 #' @param fade integer; brightness of the gray tones between 0 (black) and 100
 #'   (white) in steps of 1; defaults to 85.
 #' @param tick numeric; axis tick position; if 0 (default) a value is chosen
@@ -45,8 +45,6 @@
 #'   default).
 #' @param size_cor_labels integer; font size of the latent correlations between
 #'   facets (relative to default).
-#' @param size_center_dot integer; size of the center dot marking the origin
-#'   (relative to default).
 #'
 #' @return Object of the class "ggplot" and optionally the same object saved as
 #'   a file.
@@ -69,7 +67,7 @@ facet_chart <- function(
   filewidth = 10,
   fileheight = 10,
   dpi = 500,
-  colour = "black",
+  color = "black",
   fade = 85,
   tick = 0,
   cor_labels = TRUE,
@@ -81,8 +79,7 @@ facet_chart <- function(
   width_axes = 1,
   width_circles = 1,
   width_tick = 1,
-  size_tick_label = 1,
-  size_center_dot = 1){
+  size_tick_label = 1){
 
   coord <- coord_facets(
     data = data,
@@ -100,7 +97,7 @@ facet_chart <- function(
     filewidth = filewidth,
     fileheight = fileheight,
     dpi = dpi,
-    colour = colour,
+    color = color,
     fade = fade,
     font = font,
     cor_labels = cor_labels,
@@ -110,8 +107,7 @@ facet_chart <- function(
     width_axes = width_axes,
     width_circles = width_circles,
     width_tick = width_tick,
-    size_tick_label = size_tick_label,
-    size_center_dot = size_center_dot)
+    size_tick_label = size_tick_label)
 
   return(myipv)
 }

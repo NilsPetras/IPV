@@ -16,8 +16,8 @@
 #' @param length_items integer; length of the item bars (relative to default).
 #' @param length_ratio_items integer; relative length of every other item bar;
 #'   defaults to 1.5.
-#' @param dodge_axes integer; relative amount of horizontal outward dodge of
-#'   axis labels.
+#' @param dodge integer; relative amount of horizontal outward dodge of
+#'   facet labels.
 #'
 #' @details Use this function in conjunction with \code{\link{plot_items}} for
 #'   simple models.
@@ -50,7 +50,7 @@ coord_items <- function (
   width_items = 1,
   length_items = 1,
   length_ratio_items = 1.5,
-  dodge_axes = 1) {
+  dodge = 1) {
 
 
   # helper variables -----------------------------------------------------------
@@ -83,7 +83,7 @@ coord_items <- function (
   p_axes$phi <- c(2 * pi / cplx * c(1:cplx)) + rotate
   p_axes$phi[p_axes$phi > 2 * pi] <-
     p_axes$phi[p_axes$phi > 2 * pi] - 2 * pi
-  p_axes$rholabel <- p_axes$rho * 1.1 + abs(cos(p_axes$phi) * .05 * dodge_axes * p_axes$rho)
+  p_axes$rholabel <- p_axes$rho * 1.1
 
   # cartesian coordinates
   # x = cos(phi) * rho
@@ -92,7 +92,8 @@ coord_items <- function (
   # rounded values to decrease display length in console
   c_axes[ ,1] <- round(cos(p_axes$phi) * p_axes$rho, digits = 7)
   c_axes[ ,2] <- round(sin(p_axes$phi) * p_axes$rho, digits = 7)
-  c_axes[ ,3] <- round(cos(p_axes$phi) * p_axes$rholabel, digits = 7)
+  c_axes[ ,3] <- round(cos(p_axes$phi) * p_axes$rholabel, digits = 7) +
+    cos(p_axes$phi) * .1 * dodge * p_axes$rho
   c_axes[ ,4] <- round(sin(p_axes$phi) * p_axes$rholabel, digits = 7)
   names(c_axes) <- c("x", "y", "xlabel", "ylabel")
 
@@ -172,15 +173,15 @@ coord_items <- function (
     grid$r <- seq(from = 5 * u,
                   by = 5 * u,
                   to = floor(2 * d) * 5 * u)
-    grid$alpha[seq(2, length(grid$alpha), 2)]
+    grid$alpha[seq(2, length(grid$alpha), 2)] <- 1
   }
 
   # axis tick label
   # the first major grid line is marked
   # the axis tick label automatically shows within the first quadrant
   axis_tick <- data.frame(
-    rho = grid[which.max(grid$alpha), "r"] + u / 2,
-    label = as.character(grid[which.max(grid$alpha), "r"]),
+    rho = grid[grid$alpha == 1, "r"] + u / 2,
+    label = as.character(grid[grid$alpha == 1, "r"]),
     phi = NA,
     x = NA,
     y = NA)

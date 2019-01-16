@@ -7,7 +7,7 @@
 #' @param filename character; name of the file to save. Supported formats are:
 #'   "pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
 #'   suppress file output; defaults to "myipv.pdf".
-#' @param size integer; smartly scaled size of chart objects except item bars.
+#' @param size integer; size of all chart objects except item bars.
 #' @param font character; text font; defaults to 'sans' (use extrafonts to
 #'   install additional fonts).
 #' @param rotate_radians integer; radian angle to rotate the chart
@@ -17,14 +17,13 @@
 #' @param filewidth integer; width of the graphic in inches; defaults to 12.
 #' @param fileheight integer; height of the graphic in inches; defaults to 10.
 #' @param dpi integer; resolution in dots per inch; defaults to 500.
-#' @param colour character; name of the first accent colour; defaults to black.
-#' @param colour2 character; name of the second accent colour; defaults to black.
-#' @param fade integer; brightness of minor grid lines, gray tones between 0
-#'   ("white") and 100 ("black") in steps of 1; defaults to 15.
-#' @param dodge_axes integer; relative amount of horizontal outward dodge of
-#'   axis labels.
-#' @param tick_label logical; if \code{TRUE}, draws a text label for the axis
-#'   tick.
+#' @param color character; name of the first accent color; defaults to black.
+#' @param color2 character; name of the second accent color; defaults to black.
+#' @param fade integer; brightness of grid lines, axes, and center dot; values
+#'   can range from -4 (almost white) to 2.6 (almost black) in steps of .2;
+#'   defaults to 0.
+#' @param dodge integer; relative amount of horizontal outward dodge of
+#'   facet labels.
 #' @param rotate_title_radians integer; radian angle to rotate the global label
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_title_degrees integer; angle in degrees to rotate the global
@@ -44,8 +43,6 @@
 #'   default).
 #' @param size_tick_label integer; font size of the axis tick label (relative to
 #'   default).
-#' @param size_center_dot integer; size of the center dot marking the origin
-#'   (relative to default).
 #'
 #' @return Object of the class "ggplot" and optionally the same object saved as
 #'   a file.
@@ -55,7 +52,7 @@
 #'   and \code{width_} parameters after.
 #'
 #'   To better display overlapping item values, change the width of the item
-#'   bars, or set the accent colours to different values, or change the ratio of
+#'   bars, or set the accent colors to different values, or change the ratio of
 #'   item lengths.
 #'
 #' @seealso \code{\link{facet_chart}} \code{\link{nested_chart}}
@@ -75,11 +72,10 @@ item_chart <- function(
   filewidth = 12,
   fileheight = 10,
   dpi = 500,
-  colour = "black",
-  colour2 = "black",
-  fade = 15,
-  dodge_axes = 1,
-  tick_label = TRUE,
+  color = "black",
+  color2 = "black",
+  fade = 0,
+  dodge = 1,
   rotate_title_radians = 0,
   rotate_title_degrees = 0,
   width_items = 1,
@@ -90,14 +86,13 @@ item_chart <- function(
   size_facet_labels = 1,
   width_axes = 1,
   size_arrow_heads = 1,
-  width_grid = 1,
-  size_center_dot = 1){
+  width_grid = 1){
 
   coord <- coord_items(
     data = data,
     rotate_radians = rotate_radians,
     rotate_degrees = rotate_degrees,
-    dodge_axes = dodge_axes,
+    dodge = dodge,
     width_items = width_items,
     length_items = length_items,
     length_ratio_items = length_ratio_items,
@@ -111,19 +106,17 @@ item_chart <- function(
     filewidth = filewidth,
     fileheight = fileheight,
     dpi = dpi,
-    colour = colour,
-    colour2 = colour2,
+    color = color,
+    color2 = color2,
     fade = fade,
     font = font,
-    tick_label = tick_label,
     size_tick_label = size_tick_label,
     size_title = size_title,
     size_facet_labels = size_facet_labels,
     width_axes = width_axes,
     size_arrow_heads = size_arrow_heads,
     width_items = width_items,
-    width_grid = width_grid,
-    size_center_dot = size_center_dot)
+    width_grid = width_grid)
 
   return(myipv)
 }

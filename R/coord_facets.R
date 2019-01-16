@@ -94,7 +94,7 @@ coord_facets <- function (
   p_circs$radius[1] <- max(mcd) + 2 * subradius
   p_circs$radius[2:length(p_circs$radius)] <- subradius
   mean_cds <- tapply(data$cds$cd, data$cds$subfactor, mean)
-  p_circs[colnames(data$cors), "rho"] <- c(mean_cds[colnames(data$cors)] + subradius)
+  p_circs[colnames(data$cors), "rho"] <- mean_cds[colnames(data$cors)] + subradius
   rm(mean_cds)
   # facet circles are spread evenly in a circle
   p_circs$phi <- c(0, 2 * pi / cplx * c(1:cplx)) + rotate
@@ -169,7 +169,9 @@ coord_facets <- function (
                       label = row.names(p_circs)[1],
                       phi = NA,
                       rho = NA)
-  title$phi <- p_circs[which.min(p_circs$rho), "phi"] - pi / cplx + rotate_title
+  cs <- p_circs[-1, ]
+  title$phi <- cs[which.min(cs$rho), "phi"] - pi / cplx + rotate_title
+  rm(cs)
   title$rho <- 2 / 3 * max(p_circs$radius)
   title$x <- round(cos(title$phi) * title$rho, digits = 7)
   title$y <- round(sin(title$phi) * title$rho, digits = 7)

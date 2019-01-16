@@ -15,8 +15,8 @@
 #'  between tests as text.
 #'@param cor_labels_facets logical; if \code{TRUE}, draws latent correlations
 #'  between facets as text.
-#'@param colour_tests character; name of the global accent colour.
-#'@param colour_facets character; name of the nested accent colour.
+#'@param color_tests character; name of the global accent color.
+#'@param color_facets character; name of the nested accent color.
 #'@param fade integer; brightness of the gray tones between 0 (black) and 100
 #'  (white) in steps of 1; defaults to 85.
 #'@param show_xarrows logical; if \code{TRUE}, draws correlation arrows between
@@ -47,10 +47,6 @@
 #'  tests (relative to default).
 #'@param size_cor_labels_inner integer; font size of the latent correlations
 #'  between facets (relative to default).
-#'@param size_center_dot integer; size of the center dot marking the global
-#'  origin (relative to default).
-#'@param size_center_dot_inner integer; size of the center dots marking the
-#'  nested origins (relative to default).
 #'@param width_xarrows integer; width of the extra arrow lines (relative to
 #'  default).
 #'@param size_xarrow_heads integer; length of the extra arrow heads (relative to
@@ -111,8 +107,8 @@ plot_nested <- function (
   dpi = 500,
   cor_labels_tests = TRUE,
   cor_labels_facets = TRUE,
-  colour_tests = "black",
-  colour_facets = "black",
+  color_tests = "black",
+  color_facets = "black",
   fade = 85,
   font = "sans",
   show_xarrows = FALSE,
@@ -128,8 +124,6 @@ plot_nested <- function (
   size_tick_label = 1,
   size_cor_labels = 1,
   size_cor_labels_inner = 1,
-  size_center_dot = 1,
-  size_center_dot_inner = 1,
   width_xarrows = 1,
   size_xarrow_heads = 1,
   size_xarrow_labels = 1) {
@@ -205,7 +199,7 @@ plot_nested <- function (
     ggplot2::geom_segment(
       data = coord$g$c_axes,
       ggplot2::aes_string(x = "x2", y = "y2", xend = "x3", yend = "y3"),
-      size = .5 * size * width_axes,
+      size = .5 * sqrt(size) * width_axes,
       color = paste("gray", fade, sep = "")) +
 
     # global circle
@@ -218,7 +212,7 @@ plot_nested <- function (
     # global center dot
     ggplot2::geom_point(
       ggplot2::aes(x = 0, y = 0),
-      size = 2 * size * size_center_dot) +
+      size = 3 * sqrt(size) * size_center_dot) +
 
     # nested outer axis segments
     ggplot2::geom_segment(
@@ -231,14 +225,14 @@ plot_nested <- function (
     ggplot2::geom_point(
       data = coord$g$c_circs,
       ggplot2::aes_string(x = "x", y = "y"),
-      size = 1 * size * size_center_dot_inner) +
+      size = 1.5 * sqrt(size) * size_center_dot_inner) +
 
     # test circles
     ggforce::geom_circle(
       data = coord$g$c_circs[-1, ],
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
       size = .5 * size * width_circles,
-      color = colour_tests) +
+      color = color_tests) +
 
     # nested tick
     ggforce::geom_circle(
@@ -251,15 +245,15 @@ plot_nested <- function (
     ggplot2::geom_segment(
       data = coord$g$c_axes,
       ggplot2::aes_string(x = "x0", y = "y0", xend = "x1", yend = "y1"),
-      size = .5 * (sqrt(size) + size) * width_axes,
-      color = colour_tests) +
+      size = 2 * sqrt(size) * width_axes,
+      color = color_tests) +
 
     # facet circles
     ggforce::geom_circle(
       data = coord$g$nested$circles,
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
       size = .25 * size * width_circles_inner,
-      color = colour_facets) +
+      color = color_facets) +
 
     # facet labels
     ggplot2::geom_text(
@@ -272,8 +266,8 @@ plot_nested <- function (
     ggplot2::geom_segment(
       data = coord$g$nested$axes,
       ggplot2::aes_string(x = "x0", y = "y0", xend = "x1", yend = "y1"),
-      size = .25 * (sqrt(size) + size) * width_axes_inner,
-      color = colour_facets) +
+      size = .25 * sqrt(size) * width_axes_inner,
+      color = color_facets) +
 
     # title
     ggplot2::geom_text(

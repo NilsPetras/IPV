@@ -32,8 +32,8 @@
 #' @param filewidth integer; width of the graphic in inches; defaults to 10.
 #' @param fileheight integer; height of the graphic in inches; defaults to 10.
 #' @param dpi integer; resolution in dots per inch; defaults to 500.
-#' @param colour_tests character; name of the global accent colour.
-#' @param colour_facets character; name of the nested accent colour.
+#' @param color_tests character; name of the global accent color.
+#' @param color_facets character; name of the nested accent color.
 #' @param fade integer; brightness of the gray tones between 0 (black) and 100
 #'   (white) in steps of 1; defaults to 85.
 #' @param correlations logical; if \code{TRUE}, generates coordinates for latent
@@ -77,10 +77,6 @@
 #'   tests (relative to default).
 #' @param size_cor_labels_inner integer; font size of the latent correlations
 #'   between facets (relative to default).
-#' @param size_center_dot integer; size of the center dot marking the global
-#'   origin (relative to default).
-#' @param size_center_dot_inner integer; size of the center dots marking the
-#'   nested origins (relative to default).
 #' @param width_xarrows integer; width of the extra arrow lines (relative to
 #'   default).
 #' @param size_xarrow_heads integer; length of the extra arrow heads (relative
@@ -150,8 +146,8 @@ nested_chart <- function(
   filewidth = 10,
   fileheight = 10,
   dpi = 500,
-  colour_tests = "black",
-  colour_facets = "black",
+  color_tests = "black",
+  color_facets = "black",
   fade = 85,
   correlations = TRUE,
   cor_spacing = 0,
@@ -172,8 +168,6 @@ nested_chart <- function(
   size_tick_label = 1,
   size_cor_labels = 1,
   size_cor_labels_inner = 1,
-  size_center_dot = 1,
-  size_center_dot_inner = 1,
   width_xarrows = 1,
   size_xarrow_heads = 1,
   size_xarrow_labels = 1){
@@ -203,8 +197,8 @@ nested_chart <- function(
     dpi = dpi,
     cor_labels_tests = cor_labels_tests,
     cor_labels_facets = cor_labels_facets,
-    colour_tests = colour_tests,
-    colour_facets = colour_facets,
+    color_tests = color_tests,
+    color_facets = color_facets,
     fade = fade,
     font = font,
     show_xarrows = show_xarrows,
@@ -220,8 +214,6 @@ nested_chart <- function(
     size_tick_label = size_tick_label,
     size_cor_labels = size_cor_labels,
     size_cor_labels_inner = size_cor_labels_inner,
-    size_center_dot = size_center_dot,
-    size_center_dot_inner = size_center_dot_inner,
     width_xarrows = width_xarrows,
     size_xarrow_heads = size_xarrow_heads,
     size_xarrow_labels = size_xarrow_labels)

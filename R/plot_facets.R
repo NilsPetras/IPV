@@ -11,7 +11,7 @@
 #' @param filewidth integer; width of the .pdf file; defaults to 10.
 #' @param fileheight integer; height of the .pdf file; defaults to 10.
 #' @param dpi integer; resolution in dots per inch; defaults to 500.
-#' @param colour character; name of the accent colour.
+#' @param color character; name of the accent color.
 #' @param fade integer; brightness of the gray tones between 0 (black) and 100
 #'   (white) in steps of 1; defaults to 85.
 #' @param cor_labels logical; if \code{TRUE}, draws latent correlations between
@@ -32,8 +32,6 @@
 #'   default).
 #' @param size_cor_labels integer; font size of the latent correlations between
 #'   facets (relative to default).
-#' @param size_center_dot integer; size of the center dot marking the origin
-#'   (relative to default).
 #'
 #' @details Use this function in conjunction with \code{\link{coord_facets}} or
 #'   \code{\link{coord_nested}} for simple models.
@@ -68,7 +66,7 @@ plot_facets <- function(
   filewidth = 10,
   fileheight = 10,
   dpi = 500,
-  colour = "black",
+  color = "black",
   fade = 90,
   font = "sans",
   cor_labels = TRUE,
@@ -78,8 +76,7 @@ plot_facets <- function(
   width_axes = 1,
   width_circles = 1,
   width_tick = 1,
-  size_tick_label = 1,
-  size_center_dot = 1){
+  size_tick_label = 1){
 
 
   # preparation ----------------------------------------------------------------
@@ -94,8 +91,8 @@ plot_facets <- function(
   facet_labels <- row.names(coord$c_circs)
   tick <- signif(sqrt((coord$axis_tick$x ^ 2) + (coord$axis_tick$y ^ 2)), 1)
   tick_label_label <- as.character(formatC(tick, format = "fg"))
-  tick_label_x <- 1.2 * coord$axis_tick$x
-  tick_label_y <- 1.2 * coord$axis_tick$y
+  tick_label_x <- 1.3 * coord$axis_tick$x
+  tick_label_y <- 1.3 * coord$axis_tick$y
 
 
   # chart ----------------------------------------------------------------------
@@ -131,19 +128,19 @@ plot_facets <- function(
     # center dot
     ggplot2::geom_point(
       ggplot2::aes(x = 0, y = 0),
-      size = 2 * size * size_center_dot) +
+      size = 3 * size * width_axes) +
 
     # axis tick
     ggforce::geom_circle(
       ggplot2::aes(x0 = 0, y0 = 0, r = tick),
       linetype = "dotted",
-      size = .5 * min(c(size, .5)) * width_tick) +
+      size = .5 * min(size, 1) * width_tick) +
 
     # outer axis segments
     ggplot2::geom_segment(
       data = coord$c_axes,
       ggplot2::aes_string(x = "x2", y = "y2", xend = "x3", yend = "y3"),
-      size = size * width_axes,
+      size = .5 * size * width_axes,
       color = paste("gray", fade, sep = "")) +
 
     # tick label
@@ -154,41 +151,41 @@ plot_facets <- function(
                    label = tick_label_label),
       angle = (coord$axis_tick$phi - pi / 48 - pi / 2) * 180 / pi,
       family = font,
-      size = 2 * sqrt(size) * size_tick_label) +
+      size = 4 * size * size_tick_label) +
 
     # test circle
     ggforce::geom_circle(
       data = coord$c_circs[1, ],
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
-      size = size * width_axes,
+      size = .5 * size * width_axes,
       color = paste("gray", fade, sep = "")) +
 
     # facet circles
     ggforce::geom_circle(
       data = coord$c_circs[-1, ],
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
-      size = size * width_circles,
-      color = colour) +
+      size = .5 * size * width_circles,
+      color = color) +
 
     # facet labels
     ggplot2::geom_text(
       ggplot2::aes_string(x = "x", y = "y", label = "facet_labels"),
       family = font,
-      size = 8 * sqrt(size) * size_facet_labels) +
+      size = 6 * size * size_facet_labels) +
 
     # inner axis segments
     ggplot2::geom_segment(
       data = coord$c_axes,
       ggplot2::aes_string(x = "x0", y = "y0", xend = "x1", yend = "y1"),
-      size = (sqrt(size) + size) * width_axes,
-      color = colour) +
+      size = 2 * size * width_axes,
+      color = color) +
 
     # title
     ggplot2::geom_text(
       data = coord$title,
       ggplot2::aes_string(x = "x", y = "y", label = "label"),
       family = font,
-      size = 8 * sqrt(size) * size_test_label,
+      size = 8 * size * size_test_label,
       fontface = "bold")
 
 
@@ -201,7 +198,7 @@ plot_facets <- function(
         data = cors,
         ggplot2::aes_string(x = "x", y = "y", label = "label"),
         family = font,
-        size = 4 * sqrt(size) * size_cor_labels)
+        size = 4 * size * size_cor_labels)
   }
 
 
