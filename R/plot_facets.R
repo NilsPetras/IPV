@@ -67,7 +67,7 @@ plot_facets <- function(
   fileheight = 10,
   dpi = 500,
   color = "black",
-  fade = 90,
+  fade = 85,
   font = "sans",
   cor_labels = TRUE,
   size_cor_labels = 1,
