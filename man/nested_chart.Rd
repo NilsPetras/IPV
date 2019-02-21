@@ -9,15 +9,14 @@ nested_chart(data, xarrows = NULL, subradius = 0,
   show_xarrows = FALSE, font = "sans", rotate_radians = 0,
   rotate_degrees = 0, subrotate_radians = 0, subrotate_degrees = 0,
   filewidth = 10, fileheight = 10, dpi = 500,
-  colour_tests = "black", colour_facets = "black", fade = 85,
+  color_tests = "black", color_facets = "black", fade = 85,
   correlations = TRUE, cor_spacing = 0, tick = 0,
   rotate_title_radians = 0, rotate_title_degrees = 0,
   cor_labels_tests = TRUE, cor_labels_facets = TRUE, size_title = 1,
   size_test_labels = 1, size_facet_labels = 1, width_axes = 1,
   width_axes_inner = 1, width_circles = 1, width_circles_inner = 1,
   width_tick = 1, width_tick_inner = 1, size_tick_label = 1,
-  size_cor_labels = 1, size_cor_labels_inner = 1,
-  size_center_dot = 1, size_center_dot_inner = 1, width_xarrows = 1,
+  size_cor_labels = 1, size_cor_labels_inner = 1, width_xarrows = 1,
   size_xarrow_heads = 1, size_xarrow_labels = 1)
 }
 \arguments{
@@ -65,9 +64,9 @@ degrees to rotate the nested facet charts counter-clockwise by.}
 
 \item{dpi}{integer; resolution in dots per inch; defaults to 500.}
 
-\item{colour_tests}{character; name of the global accent colour.}
+\item{color_tests}{character; name of the global accent color.}
 
-\item{colour_facets}{character; name of the nested accent colour.}
+\item{color_facets}{character; name of the nested accent color.}
 
 \item{fade}{integer; brightness of the gray tones between 0 (black) and 100
 (white) in steps of 1; defaults to 85.}
@@ -131,12 +130,6 @@ tests (relative to default).}
 
 \item{size_cor_labels_inner}{integer; font size of the latent correlations
 between facets (relative to default).}
-
-\item{size_center_dot}{integer; size of the center dot marking the global
-origin (relative to default).}
-
-\item{size_center_dot_inner}{integer; size of the center dots marking the
-nested origins (relative to default).}
 
 \item{width_xarrows}{integer; width of the extra arrow lines (relative to
 default).}

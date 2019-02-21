@@ -31,3 +31,4 @@ Maintainer: Nils Petras <nils.petras@uni-konstanz.de>
 RoxygenNote: 6.1.1
 URL: https://github.com/NilsPetras/IPV
 BugReports: https://github.com/NilsPetras/IPV/issues
+Encoding: UTF-8

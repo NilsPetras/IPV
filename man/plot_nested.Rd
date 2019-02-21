@@ -6,14 +6,13 @@
 \usage{
 plot_nested(coord, size = 1, filename = "myipv.pdf", filewidth = 10,
   fileheight = 10, dpi = 500, cor_labels_tests = TRUE,
-  cor_labels_facets = TRUE, colour_tests = "black",
-  colour_facets = "black", fade = 85, font = "sans",
+  cor_labels_facets = TRUE, color_tests = "black",
+  color_facets = "black", fade = 85, font = "sans",
   show_xarrows = FALSE, size_title = 1, size_test_labels = 1,
   size_facet_labels = 1, width_axes = 1, width_axes_inner = 1,
   width_circles = 1, width_circles_inner = 1, width_tick = 1,
   width_tick_inner = 1, size_tick_label = 1, size_cor_labels = 1,
-  size_cor_labels_inner = 1, size_center_dot = 1,
-  size_center_dot_inner = 1, width_xarrows = 1,
+  size_cor_labels_inner = 1, width_xarrows = 1,
   size_xarrow_heads = 1, size_xarrow_labels = 1)
 }
 \arguments{
@@ -37,9 +36,9 @@ between tests as text.}
 \item{cor_labels_facets}{logical; if \code{TRUE}, draws latent correlations
 between facets as text.}
 
-\item{colour_tests}{character; name of the global accent colour.}
+\item{color_tests}{character; name of the global accent color.}
 
-\item{colour_facets}{character; name of the nested accent colour.}
+\item{color_facets}{character; name of the nested accent color.}
 
 \item{fade}{integer; brightness of the gray tones between 0 (black) and 100
 (white) in steps of 1; defaults to 85.}
@@ -85,12 +84,6 @@ tests (relative to default).}
 
 \item{size_cor_labels_inner}{integer; font size of the latent correlations
 between facets (relative to default).}
-
-\item{size_center_dot}{integer; size of the center dot marking the global
-origin (relative to default).}
-
-\item{size_center_dot_inner}{integer; size of the center dots marking the
-nested origins (relative to default).}
 
 \item{width_xarrows}{integer; width of the extra arrow lines (relative to
 default).}
