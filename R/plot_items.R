@@ -143,9 +143,9 @@ plot_items <- function (
       size = 1.5 * width_items,
       color = color) +
 
-    # title
+    # test label
     ggplot2::geom_text(
-      data = coord$title,
+      data = coord$test_label,
       ggplot2::aes_string(x = "x", y = "y", label = "label"),
       family = font,
       size = 8 * size * size_test_label,

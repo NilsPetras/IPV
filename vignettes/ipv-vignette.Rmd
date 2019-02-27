@@ -40,12 +40,10 @@ sc_nested <- nested_chart(self_confidence,
                           xarrows = sc_arrows,
                           rotate_radians = 4 / 3 * pi,
                           subrotate_radians = c(pi / 2, pi / 2, 0),
-                          filename = "none",
+                          file_name = "none",
                           size = 1.5,
-                          colour_tests = "red",
-                          colour_facets = "darkorange",
-                          size_center_dot = .75,
-                          size_center_dot_inner = .75,
+                          color_tests = "red",
+                          color_facets = "darkorange",
                           show_xarrows = TRUE)
 sc_nested
 
@@ -100,9 +98,9 @@ But you can also display center distances for single items in an item chart:
 ```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", echo=FALSE}
 
 SMTQ_items <- item_chart(SMTQ,
-                         filename = "none",
-                         colour = "darkblue",
-                         colour2 = "darkblue")
+                         file_name = "none",
+                         color = "darkblue",
+                         color2 = "darkblue")
 SMTQ_items
 
 ```
@@ -152,7 +150,7 @@ Consider issuing desired input features on [github](https://github.com/NilsPetra
 Functions are named according to the chart concept. For example, creating a facet chart works like this:
 
 ```{r,fig.width=10, fig.height=10, dpi=300, out.height="342px", out.width="342px",fig.align='center'}
-SMTQ_facets <- facet_chart(SMTQ, subradius = .6, filename = "none")
+SMTQ_facets <- facet_chart(SMTQ, file_name = "none")
 SMTQ_facets
 ```
 

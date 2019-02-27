@@ -65,7 +65,9 @@ coord_nested <- function (
   subrotate <- subrotate_radians + subrotate_degrees * pi / 180
 
   # default subradius
-  subradius <- min(unlist(lapply(data$tests, def_subradius)))
+  if (subradius == 0) {
+    subradius <- min(unlist(lapply(data$tests, def_subradius)))
+    }
 
   # listwise calculation for single factors ------------------------------------
 

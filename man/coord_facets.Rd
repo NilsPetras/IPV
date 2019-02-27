@@ -5,8 +5,8 @@
 \title{Coord Facets}
 \usage{
 coord_facets(data, subradius = 0, tick = 0, rotate_radians = 0,
-  rotate_degrees = 0, rotate_title_radians = 0,
-  rotate_title_degrees = 0)
+  rotate_degrees = 0, rotate_test_label_radians = 0,
+  rotate_test_label_degrees = 0)
 }
 \arguments{
 \item{data}{data in the appropriate format given by the input functions.}
@@ -23,10 +23,10 @@ counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
 \item{rotate_degrees}{integer; angle in degrees to rotate the chart
 counter-clockwise by.}
 
-\item{rotate_title_radians}{integer; radian angle to rotate the test label
+\item{rotate_test_label_radians}{integer; radian angle to rotate the test label
 counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
 
-\item{rotate_title_degrees}{integer; angle in degrees to rotate the global
+\item{rotate_test_label_degrees}{integer; angle in degrees to rotate the global
 label counter-clockwise by.}
 }
 \value{

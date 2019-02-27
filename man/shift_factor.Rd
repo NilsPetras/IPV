@@ -18,7 +18,7 @@ List containing a limited selection of coordinates.
 }
 \description{
 Moves coordinates given by \code{\link{coord_facets}} to position nested
-facet graphics in \code{\link{coord_nested}}.
+facet charts in \code{\link{coord_nested}}.
 }
 \details{
 Helper function of \code{\link{coord_nested}}.

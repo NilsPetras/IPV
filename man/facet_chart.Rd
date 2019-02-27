@@ -4,13 +4,14 @@
 \alias{facet_chart}
 \title{Facet Chart}
 \usage{
-facet_chart(data, subradius = 0, filename = "myipv.pdf", size = 1,
+facet_chart(data, subradius = 0, file_name = "myipv.pdf", size = 1,
   font = "sans", rotate_radians = 0, rotate_degrees = 0,
-  filewidth = 10, fileheight = 10, dpi = 500, color = "black",
-  fade = 85, tick = 0, cor_labels = TRUE, rotate_title_radians = 0,
-  rotate_title_degrees = 0, size_cor_labels = 1, size_test_label = 1,
-  size_facet_labels = 1, width_axes = 1, width_circles = 1,
-  width_tick = 1, size_tick_label = 1)
+  file_width = 10, file_height = 10, dpi = 500, color = "black",
+  fade = 85, tick = 0, cor_labels = TRUE,
+  rotate_test_label_radians = 0, rotate_test_label_degrees = 0,
+  size_cor_labels = 1, size_test_label = 1, size_facet_labels = 1,
+  width_axes = 1, width_circles = 1, width_tick = 1,
+  size_tick_label = 1)
 }
 \arguments{
 \item{data}{data in the appropriate format, given by the input functions.}
@@ -18,11 +19,11 @@ facet_chart(data, subradius = 0, filename = "myipv.pdf", size = 1,
 \item{subradius}{integer; same unit as center distances; radius of the facet
 circles; defaults to 0, in which case an appropriate value is estimated.}
 
-\item{filename}{character; name of the file to save. Supported formats are:
+\item{file_name}{character; name of the file to save. Supported formats are:
 "pdf" (highest quality and smallest file size), "png", "jpeg". Use "none"
 to suppress file output; defaults to "myipv.pdf".}
 
-\item{size}{integer; simultaneously scales the size of most chart objects.}
+\item{size}{integer; changes the size of most chart objects simultaneously.}
 
 \item{font}{character; text font, use extrafonts to access additional fonts;
 defaults to "sans", which is "Helvetica".}
@@ -33,14 +34,14 @@ counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
 \item{rotate_degrees}{integer; angle in degrees to rotate the chart
 counter-clockwise by.}
 
-\item{filewidth}{integer; width of the graphic in inches; defaults to 10.}
+\item{file_width}{integer; file width in inches; defaults to 10.}
 
-\item{fileheight}{integer; height of the graphic in inches; defaults to 10.}
+\item{file_height}{integer; file height in inches; defaults to 10.}
 
 \item{dpi}{integer; resolution in dots per inch for "png" and "jpeg" files;
 defaults to 500.}
 
-\item{color}{character; name of the accent color; defaults to "black".}
+\item{color}{accent color; defaults to "black".}
 
 \item{fade}{integer; brightness of the gray tones between 0 = "black" and 100
 = "white" in steps of 1; defaults to 85.}
@@ -51,10 +52,10 @@ appropriate value is estimated.}
 \item{cor_labels}{logical; if \code{TRUE}, shows latent correlations between
 facets; defaults to \code{TRUE}.}
 
-\item{rotate_title_radians}{integer; radian angle to rotate the test label
+\item{rotate_test_label_radians}{integer; radian angle to rotate the test label
 counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
 
-\item{rotate_title_degrees}{integer; angle in degrees to rotate the global
+\item{rotate_test_label_degrees}{integer; angle in degrees to rotate the global
 label counter-clockwise by.}
 
 \item{size_cor_labels}{integer; correlation font size relative to default.}
@@ -72,8 +73,8 @@ label counter-clockwise by.}
 \item{size_tick_label}{integer; axis tick font size relative to default.}
 }
 \value{
-Object of the class "ggplot" and optionally the same object saved as
-  a file.
+Object of the class "ggplot" and, by default, the same object saved
+  as a file.
 }
 \description{
 Creates a facet chart, showing the facets of a test.

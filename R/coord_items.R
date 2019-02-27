@@ -7,9 +7,9 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
-#' @param rotate_title_radians integer; radian angle to rotate the global label
+#' @param rotate_test_label_radians integer; radian angle to rotate the test label
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
-#' @param rotate_title_degrees integer; angle in degrees to rotate the global
+#' @param rotate_test_label_degrees integer; angle in degrees to rotate the test
 #'   label counter-clockwise by.
 #' @param width_items integer; item bar width relative to default.
 #' @param length_items integer; item bar length relative to default.
@@ -27,8 +27,8 @@ coord_items <- function (
   data,
   rotate_radians = 0,
   rotate_degrees = 0,
-  rotate_title_radians = 0,
-  rotate_title_degrees = 0,
+  rotate_test_label_radians = 0,
+  rotate_test_label_degrees = 0,
   width_items = 1,
   length_items = 1,
   length_ratio_items = 1.5,
@@ -43,8 +43,8 @@ coord_items <- function (
   # total rotation value in radians
   rotate <- rotate_radians + rotate_degrees * pi / 180
 
-  # total title rotation value in radians
-  rotate_title <- rotate_title_radians + rotate_title_degrees * pi / 180
+  # total test label rotation value in radians
+  rotate_test_label <- rotate_test_label_radians + rotate_test_label_degrees * pi / 180
 
   # maximum center distance (determining the chart size)
   maxcd <- max(data$cds$cd)
@@ -174,17 +174,17 @@ coord_items <- function (
   axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
 
 
-  ## title --------------------------
+  ## test label ---------------------
 
   # coordinates of factor name
   # the factor label automatically shows between the first two facets
   # the factor label shows at half the maximum center distance from the origin
-  title <- data.frame(phi = mean(p_axes$phi[1] + pi / cplx) + rotate_title,
+  test_label <- data.frame(phi = mean(p_axes$phi[1] + pi / cplx) + rotate_test_label,
                       rho = .5 * maxcd,
                       label = data$cds$factor[1],
                       x = NA, y = NA)
-  title$x <- round(cos(title$phi) * title$rho, digits = 7)
-  title$y <- round(sin(title$phi) * title$rho, digits = 7)
+  test_label$x <- round(cos(test_label$phi) * test_label$rho, digits = 7)
+  test_label$y <- round(sin(test_label$phi) * test_label$rho, digits = 7)
 
 
   # return ---------------------------------------------------------------------
@@ -195,7 +195,7 @@ coord_items <- function (
                 items     = items,
                 grid      = grid,
                 axis_tick = axis_tick,
-                title     = title)
+                test_label     = test_label)
 
   return(coord)
 }

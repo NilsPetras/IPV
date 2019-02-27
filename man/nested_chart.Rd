@@ -5,14 +5,15 @@
 \title{Nested Chart}
 \usage{
 nested_chart(data, xarrows = NULL, subradius = 0,
-  filename = "myipv.pdf", size = 1, relative_scaling = 0,
+  file_name = "myipv.pdf", size = 1, relative_scaling = 0,
   show_xarrows = FALSE, font = "sans", rotate_radians = 0,
   rotate_degrees = 0, subrotate_radians = 0, subrotate_degrees = 0,
-  filewidth = 10, fileheight = 10, dpi = 500,
+  file_width = 10, file_height = 10, dpi = 500,
   color_tests = "black", color_facets = "black", fade = 85,
   correlations = TRUE, cor_spacing = 0, tick = 0,
-  rotate_title_radians = 0, rotate_title_degrees = 0,
-  cor_labels_tests = TRUE, cor_labels_facets = TRUE, size_title = 1,
+  rotate_construct_label_radians = 0,
+  rotate_construct_label_degrees = 0, cor_labels_tests = TRUE,
+  cor_labels_facets = TRUE, size_construct_label = 1,
   size_test_labels = 1, size_facet_labels = 1, width_axes = 1,
   width_axes_inner = 1, width_circles = 1, width_circles_inner = 1,
   width_tick = 1, width_tick_inner = 1, size_tick_label = 1,
@@ -26,24 +27,24 @@ containing formatted data.}
 \item{xarrows}{data frame containing information about additional correlation
 arrows between facets of different tests; see examples.}
 
-\item{subradius}{integer; same unit as center distances; radius of the
-circles representing facets; use to avoid circle overlap and optimize
-appearance; if 0 (default) a value is chosen automatically.}
+\item{subradius}{integer; same unit as center distances; radius of the facet
+circles; defaults to 0, in which case an appropriate value is estimated.}
 
-\item{filename}{character; name of the file to save. Supported formats are:
-"pdf" (best quality with lowest file size), "png", "jpeg". Use "none" to
+\item{file_name}{character; name of the file to save. Supported formats are:
+"pdf" (highest quality and smallest file size), "png", "jpeg". Use "none" to
 suppress file output; defaults to "myipv.pdf".}
 
-\item{size}{integer; smartly scaled size of chart objects.}
+\item{size}{integer; changes the size of most chart objects simultaneously.}
 
-\item{relative_scaling}{integer; relative size of the global chart compared to
-the nested facet charts; if 0 (default), a value is chosen automatically.}
+\item{relative_scaling}{integer; relative size of the global chart scale
+compared to the nested facet chart scales; defaults to 0, in which case an
+appropriate value is estimated.}
 
-\item{show_xarrows}{logical; if \code{TRUE}, draws correlation arrows between
-facets of different tests.}
+\item{show_xarrows}{logical; if \code{TRUE}, shows correlation arrows between
+facets of different tests, according to xarrows.}
 
-\item{font}{character; text font; defaults to 'sans' (use extrafonts to
-install additional fonts).}
+\item{font}{character; text font, use extrafonts to access additional fonts;
+defaults to "sans", which is "Helvetica".}
 
 \item{rotate_radians}{integer; radian angle to rotate the chart
 counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
@@ -58,113 +59,107 @@ rotate the nested facet charts counter-clockwise by; use fractions of pi
 \item{subrotate_degrees}{integer; angle in degrees or vector of angles in
 degrees to rotate the nested facet charts counter-clockwise by.}
 
-\item{filewidth}{integer; width of the graphic in inches; defaults to 10.}
+\item{file_width}{integer; file width in inches; defaults to 10.}
 
-\item{fileheight}{integer; height of the graphic in inches; defaults to 10.}
+\item{file_height}{integer; file height in inches; defaults to 10.}
 
-\item{dpi}{integer; resolution in dots per inch; defaults to 500.}
+\item{dpi}{integer; resolution in dots per inch for "png" and "jpeg" files;
+defaults to 500.}
 
-\item{color_tests}{character; name of the global accent color.}
+\item{color_tests}{global accent color; defaults to "black".}
 
-\item{color_facets}{character; name of the nested accent color.}
+\item{color_facets}{nested accent color; defaults to "black".}
 
 \item{fade}{integer; brightness of the gray tones between 0 (black) and 100
 (white) in steps of 1; defaults to 85.}
 
-\item{correlations}{logical; if \code{TRUE}, generates coordinates for latent
-correlations between tests and sets up a ring to draw them in. If
+\item{correlations}{logical; if \code{TRUE}, generates the coordinates for the
+ correlations between tests. Sets up a ring to draw them in. If
 \code{FALSE}, the ring and the correlations are omitted, simplifying the
 chart significantly.}
 
-\item{cor_spacing}{integer; if \code{correlations = TRUE}: width of the ring
-the latent correlations between tests are drawn in; if 0 (default) a value
-is chosen automatically.}
+\item{cor_spacing}{integer; if \code{correlations = TRUE}: width of the ring,
+the correlations between tests are drawn in; defaults to 0, in which
+case an appropriate value is estimated.}
 
-\item{tick}{numeric; axis tick position; if 0 (default) a value is chosen
-automatically.}
+\item{tick}{numeric; axis tick position; defaults to 0, in which case an
+appropriate value is estimated.}
 
-\item{rotate_title_radians}{integer; radian angle to rotate the global label
-counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
+\item{rotate_construct_label_radians}{integer; radian angle to rotate the
+construct label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90
+degrees).}
 
-\item{rotate_title_degrees}{integer; angle in degrees to rotate the global
-label counter-clockwise by.}
+\item{rotate_construct_label_degrees}{integer; angle in degrees to rotate the
+construct label counter-clockwise by.}
 
-\item{cor_labels_tests}{logical; if \code{TRUE}, draws latent correlations
+\item{cor_labels_tests}{logical; if \code{TRUE}, shows the correlations
 between tests as text.}
 
-\item{cor_labels_facets}{logical; if \code{TRUE}, draws latent correlations
-between facets as text.}
+\item{cor_labels_facets}{logical; if \code{TRUE}, shows the
+correlations between facets as text.}
 
-\item{size_title}{integer; font size of the global label (relative to
-default).}
+\item{size_construct_label}{integer; construct label font size relative to
+default.}
 
-\item{size_test_labels}{integer; font size of the test labels (relative to
-default).}
+\item{size_test_labels}{integer; test label font size relative to default.}
 
-\item{size_facet_labels}{integer; font size of the facet labels (relative to
-default).}
+\item{size_facet_labels}{integer; facet label font size relative to default.}
 
-\item{width_axes}{integer; width of the global radial axis lines indicating
-center distances (relative to default).}
+\item{width_axes}{integer; global radial axis width relative to default.}
 
-\item{width_axes_inner}{integer; width of the nested radial axis lines
-indicating center distances (relative to default).}
+\item{width_axes_inner}{integer; nested radial axis width relative to default.}
 
-\item{width_circles}{integer; width of the global circle outlines (relative
-to default).}
+\item{width_circles}{integer; global circle outline width relative to
+default.}
 
-\item{width_circles_inner}{integer; width of the nested circle outlines
-(relative to default).}
+\item{width_circles_inner}{integer; nested circle outline width relative to default.}
 
-\item{width_tick}{integer; width of the global dotted axis tick line
-(relative to default).}
+\item{width_tick}{integer; global axis tick line width relative
+to default.}
 
-\item{width_tick_inner}{integer; width of the nested dotted axis tick line
-(relative to default).}
+\item{width_tick_inner}{integer; nested axis tick line width relative to default.}
 
-\item{size_tick_label}{integer; font size of the axis tick label (relative to
-default).}
+\item{size_tick_label}{integer; axis tick label font size relative to
+default.}
 
-\item{size_cor_labels}{integer; font size of the latent correlations between
-tests (relative to default).}
+\item{size_cor_labels}{integer; font size of the correlations between
+tests relative to default.}
 
-\item{size_cor_labels_inner}{integer; font size of the latent correlations
-between facets (relative to default).}
+\item{size_cor_labels_inner}{integer; font size of the correlations
+between facets relative to default.}
 
-\item{width_xarrows}{integer; width of the extra arrow lines (relative to
-default).}
+\item{width_xarrows}{integer; extra arrow line width relative to default.}
 
-\item{size_xarrow_heads}{integer; length of the extra arrow heads (relative
-to default).}
+\item{size_xarrow_heads}{integer; extra arrow head length relative to default.}
 
-\item{size_xarrow_labels}{integer; font size of the latent correlations
-indicated by extra arrows (relative to default).}
+\item{size_xarrow_labels}{integer; font size of the correlations indicated by
+extra arrows relative to default.}
 }
 \value{
-Object of the class "ggplot" and optionally the same object saved as
-  a file.
+Object of the class "ggplot" and, by default, the same object saved as
+ a file.
 }
 \description{
-Creates a nested chart, showing several tests and their facets in a global
-chart.
+Creates a nested chart, showing several tests and their facets.
 }
 \details{
-If you set \code{subrotate} to a single value, all nested facet charts will
-  be rotated by the same amount. If you use a vector of values, the nested
-  facet charts will be rotated one by one by the values from that vector.
+If you set \code{subrotate} to a single value, all nested facet
+ charts will be rotated by the same amount. If you use a vector of values,
+ the nested facet charts will be rotated one by one by the values from that
+ vector.
 
-  Increase \code{relative_scaling} to avoid circle overlap. Decrease it to
-  make small chart objects more visible.
+ Increase \code{relative_scaling} to avoid circle overlap. Decrease it to
+ make small chart objects more visible.
 
-  \code{correlations} and \code{cor_spacing} add larger circles around the
-  nested facet charts, but do not change these facet charts.
+ \code{correlations} and \code{cor_spacing} add larger circles around the
+ nested facet charts, but do not change these facet charts.
 
-  When changing the size of objects, consider the \code{size} parameter first
-  and make specific adjustments with the other \code{size_} and \code{width_}
-  parameters after.
+ When changing the size of objects, consider the \code{size} parameter first
+ and make specific adjustments with the other \code{size_} and \code{width_}
+ parameters after.
 
-  The nested chart treats tests like facets of a global factor. It uses facet
-  charts for tests similar to how facet charts use circles for facets.
+ The nested chart treats tests like facets of a global factor. It uses facet
+ charts for tests similar to how facet charts use circles for facets.
 }
 \examples{
 # as simple as that

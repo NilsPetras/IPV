@@ -27,15 +27,15 @@
 #'   lines between 0 = "black" and 100 = "white" in steps of 1; defaults to 65.
 #' @param dodge integer; horizontal outward dodge of facet labels relative to
 #'   default.
-#' @param rotate_title_radians integer; radian angle to rotate the global label
-#'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
-#' @param rotate_title_degrees integer; angle in degrees to rotate the global
+#' @param rotate_test_label_radians integer; radian angle to rotate the test
+#'   label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
+#' @param rotate_test_label_degrees integer; angle in degrees to rotate the test
 #'   label counter-clockwise by.
 #' @param width_items integer; item bar width relative to default.
 #' @param length_items integer; item bar length relative to default.
 #' @param length_ratio_items integer; relative item bar length; defaults to 1.5.
-#' @param size_test_label integer; test font size relative to default.
-#' @param size_facet_labels integer; facet font size relative to default.
+#' @param size_test_label integer; test label font size relative to default.
+#' @param size_facet_labels integer; facet label font size relative to default.
 #' @param width_axes integer; radial axis width relative to default.
 #' @param size_arrow_heads integer; arrow head size relative to default.
 #' @param width_grid integer; grid line width relative to default.
@@ -76,8 +76,8 @@ item_chart <- function(
   fade_grid_major = 15,
   fade_grid_minor = 65,
   dodge = 1,
-  rotate_title_radians = 0,
-  rotate_title_degrees = 0,
+  rotate_test_label_radians = 0,
+  rotate_test_label_degrees = 0,
   width_items = 1,
   length_items = 1,
   length_ratio_items = 1.5,
@@ -96,8 +96,8 @@ item_chart <- function(
     width_items = width_items,
     length_items = length_items,
     length_ratio_items = length_ratio_items,
-    rotate_title_radians =rotate_title_radians,
-    rotate_title_degrees = rotate_title_degrees)
+    rotate_test_label_radians =rotate_test_label_radians,
+    rotate_test_label_degrees = rotate_test_label_degrees)
 
   myipv <- plot_items(
     coord = coord,
