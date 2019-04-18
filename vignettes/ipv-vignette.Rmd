@@ -105,7 +105,7 @@ SMTQ_items
 
 ```
 
-<span style="color:darkblue">Blue bars</span> represent items. Center distances are displayed on radial axes (arrows). They are the distance from the origin to the inner edge of the bars. The items are arranged by facets on the radial axes. Read center distance values from the grid of concentric circles, where steps of 0.5 are highlighted.
+<span style="color:darkblue">Blue bars</span> represent items. Center distances are displayed on radial axes (arrows). They are the distance from the origin to the inner edge of the bars (not the center of the bars!). The items are arranged by facets on the radial axes. Read center distance values from the grid of concentric circles, where steps of 0.5 are highlighted.
 
 # Workflow
 
@@ -160,7 +160,7 @@ As you can see, almost all function parameters have a default value, so you can 
 
 The vast majority of parameters are size parameters for single elements of the chart, all named size_xyz or width_xyz. Those are pretty straightforward: linear scaling sizes defaulting to 1. Some other parameters are self-explanatory. These important parameters are more complex:
 
-- **size** scales all elements of the chart. This is the most important cosmetic parameter. Not all elements are scaled linearly to produce harmonious results across a variety of sizes (let's call it "smart" scaling).
+- **size** scales (almost) all elements of the chart. This is the most important cosmetic parameter.
 - **colour**, **colour2**, **colour_tests**,**colour_facets** [full set of colours including gray](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). Colours are used to add visual contrast to important parts of the chart, I recommend using colours whenever possible.
 - **subradius** sets the radius of facet circles. Use this parameter to avoid overlapping or too small circles.
 - **relative_scaling** of the global and the test level in nested charts. For a clear chart, you need to hit the sweet spot between allowing big fonts and emphasizing relative positions.

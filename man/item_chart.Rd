@@ -95,6 +95,10 @@ When changing the size of objects, consider the \code{size}
   To better display overlapping item values, change the width of the item
   bars, or set the accent colors to different values, or change the ratio of
   item lengths.
+
+  Pdf files will be vector based and can be scaled arbitrarily. For other
+  formats use \code{file_width}, \code{file_height}, and \code{dpi} to avoid
+  later rescaling and loss of quality.
 }
 \examples{
 # as simple as that

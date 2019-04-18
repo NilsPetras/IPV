@@ -37,16 +37,10 @@ coord_items <- function (
 
   # helper variables -----------------------------------------------------------
 
-  # number of facets (=subfactors)
-  cplx <- length(colnames(data$cors))
-
-  # total rotation value in radians
+  cplx <- length(levels(data$cds$subfactor))
   rotate <- rotate_radians + rotate_degrees * pi / 180
-
-  # total test label rotation value in radians
-  rotate_test_label <- rotate_test_label_radians + rotate_test_label_degrees * pi / 180
-
-  # maximum center distance (determining the chart size)
+  rotate_test_label <- rotate_test_label_radians +
+    rotate_test_label_degrees * pi / 180
   maxcd <- max(data$cds$cd)
 
 
@@ -54,9 +48,6 @@ coord_items <- function (
 
   ## axes ---------------------------
 
-  # polar coordinates of axis line ends and axis labels
-  # axis ends at 120 % of the maximum center distance
-  # axis labels at 110 % of the axis ends
   p_axes <- data.frame(phi = rep(NA, cplx),
                        rho = NA,
                        rholabel = NA)
@@ -67,11 +58,11 @@ coord_items <- function (
     p_axes$phi[p_axes$phi > 2 * pi] - 2 * pi
   p_axes$rholabel <- p_axes$rho * 1.1
 
-  # cartesian coordinates
+  # reminder:
   # x = cos(phi) * rho
   # y = sin(phi) * rho
   c_axes <- p_axes
-  # rounded values to decrease display length in console
+  # rounded values decrease display length in console
   c_axes[ ,1] <- round(cos(p_axes$phi) * p_axes$rho, digits = 7)
   c_axes[ ,2] <- round(sin(p_axes$phi) * p_axes$rho, digits = 7)
   c_axes[ ,3] <- round(cos(p_axes$phi) * p_axes$rholabel, digits = 7) +
@@ -82,12 +73,8 @@ coord_items <- function (
 
   ## items --------------------------
 
-  # coordinates of item bars
-  # the length of item bars alternates between long and short to better
-  # distinguish similar items
-  # the length of item bars is relative to the overall size of the chart
-  # center distances = from the origin to the inner edge of the item bar
-  # n = number of items
+  # alternate length for distinguishability, visual size kept consistant across
+  # different data, offset needed so that inner edges indicate center distances
   n <- length(data$cds$item)
   items <- data.frame(
     rho = rep(NA, n), phi = NA,
@@ -102,9 +89,7 @@ coord_items <- function (
   items$x <- round(cos(items$phi) * items$rho, digits = 7)
   items$y <- round(sin(items$phi) * items$rho, digits = 7)
 
-  # items are split by facets so each facet gets its own sequence of item
-  # lengths (alternating, beginning with long, short, long, ...)
-  # the anonymous function uses placeholder values to limit its environment
+  # items are split by facets so each facet starts with a long item bar
   items$length <-  unlist(lapply(split(items, data$cds$subfactor),
                                  function (x) {
     x$length <- 1
@@ -123,12 +108,14 @@ coord_items <- function (
 
   ## grid ---------------------------
 
-  # coordinates of grid lines
-  # m = magnitude, d = digits, u = unit
+  # For the grid to scale dynamically with the data, magnitude and digits
+  # are treated separately.
+  # m = order of magnitude, d = digits, u = unit (10^?)
   m <- floor(log10(maxcd))
   d <- maxcd / 10 ^ m
   u <- 10 ^ (m - 1)
 
+  # Three cases, to ensure a similar number of grid lines for all data
   if (floor(d) < 3) {
     grid <- data.frame(x = rep(0, floor(10 * d)),
                        y = 0,
@@ -158,9 +145,6 @@ coord_items <- function (
     grid$alpha[seq(2, length(grid$alpha), 2)] <- 1
   }
 
-  # axis tick label
-  # the first major grid line is marked
-  # the axis tick label automatically shows within the first quadrant
   axis_tick <- data.frame(
     rho = grid[grid$alpha == 1, "r"] + u / 2,
     label = as.character(grid[grid$alpha == 1, "r"]),
@@ -176,9 +160,6 @@ coord_items <- function (
 
   ## test label ---------------------
 
-  # coordinates of factor name
-  # the factor label automatically shows between the first two facets
-  # the factor label shows at half the maximum center distance from the origin
   test_label <- data.frame(phi = mean(p_axes$phi[1] + pi / cplx) + rotate_test_label,
                       rho = .5 * maxcd,
                       label = data$cds$factor[1],
@@ -189,7 +170,6 @@ coord_items <- function (
 
   # return ---------------------------------------------------------------------
 
-  # list of all dataframes containing the coordinates of the chart objects
   coord <- list(p_axes    = p_axes,
                 c_axes    = c_axes,
                 items     = items,

@@ -63,19 +63,14 @@ input_manual_simple <- function(
   correlation_matrix) {
 
 
-  # helper variables -----------------------------------------------------------
-
-  # number of facets
   cplx <- length(facet_names)
   if (length(items_per_facet) == 1) {
     items_per_facet <- rep(items_per_facet, cplx)
   }
-
-  # total number of items
   nitems <- sum(items_per_facet)
 
 
-  # checks ---------------------------------------------------------------------
+  # running a ton of checks to avoid identifiable typos and other mistakes
 
   # missing or superfluous values
   if (any(c(length(item_names) != nitems,
@@ -115,8 +110,6 @@ input_manual_simple <- function(
   if (any(items_per_facet == 1)) warning ("Single item subfactor")
 
 
-  # initializing object --------------------------------------------------------
-
   mydata <- list(
     fls = data.frame(factor = as.factor(rep(test_name, nitems)),
                      subfactor = NA,
@@ -125,10 +118,6 @@ input_manual_simple <- function(
                      subfactor_loading = correlated_loadings),
     cors = correlation_matrix)
 
-
-  # factor loadings data frame--------------------------------------------------
-
-  # subfactor names
   subfactor <- NULL
   for (i in 1:cplx) {
     subfactor <- c(subfactor, rep(facet_names[i], items_per_facet[i]))
@@ -141,17 +130,11 @@ input_manual_simple <- function(
                             length(x$item)
   ) stop ("Item name reoccuring within subfactor"))
 
-
-  # correlation matrix ---------------------------------------------------------
-
   colnames(mydata$cors) <- facet_names
   rownames(mydata$cors) <- facet_names
   if (any(diag(mydata$cors)!=1)) warning (
     "Main diagonal in correlation matrix set to 1")
   diag(mydata$cors) <- 1
-
-
-  # return ---------------------------------------------------------------------
 
   return(mydata)
 }

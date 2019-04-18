@@ -33,26 +33,19 @@ coord_facets <- function (
 
   # helper variables -----------------------------------------------------------
 
-  # number of facets (=subfactors)
   cplx <- length(colnames(data$cors))
-
-  # total rotation value in radians from rotation parameters
   rotate <- rotate_radians + rotate_degrees * pi / 180
-
-  # total test label rotation value in radians
-  rotate_test_label <- rotate_test_label_radians + rotate_test_label_degrees * pi / 180
-
-  # mean center distances
+  rotate_test_label <- rotate_test_label_radians +
+    rotate_test_label_degrees * pi / 180
   mcd <- data$cds$mean_cd
 
-  # default axis tick
+  # default axis tick and subradius need to scale based on the data, to avoid
+  # messy results
   if (tick == 0){
     tick <- signif(max(.15 * max(mcd), .3 * min(mcd)), 1)
     sc <- rep(c(1, 2, 5), 5) * 10 ^ rep(-3:1, each = 3)
     tick <- sc[which.min(abs(tick - sc))]
   }
-
-  # default subradius
   if (subradius == 0) {
     subradius <- max(mean(mcd), .25 * max(mcd)) *
     (5 / (3 + cplx)) *
@@ -63,10 +56,8 @@ coord_facets <- function (
 
   ## circles ------------------------
 
-  # polar coordinates of circles
-  # the main circle is the first in the data frame and centered
-  # on the origin (0,0)
-  # the main circle's radius is set so it encloses the furthest circle
+  # polar (p_) for easier calculations, carthesian (c_) for application
+  # note: the surrounding circle is the first in the data frame
   p_circs <- data.frame(phi = rep(NA, cplx + 1),
                         rho = 0,
                         radius = NA)
@@ -77,16 +68,15 @@ coord_facets <- function (
   mean_cds <- tapply(data$cds$cd, data$cds$subfactor, mean)
   p_circs[colnames(data$cors), "rho"] <- mean_cds[colnames(data$cors)] + subradius
   rm(mean_cds)
-  # facet circles are spread evenly in a circle
   p_circs$phi <- c(0, 2 * pi / cplx * c(1:cplx)) + rotate
   p_circs$phi[p_circs$phi > 2 * pi] <-
     p_circs$phi[p_circs$phi > 2 * pi] - 2 * pi
 
-  # cartesian coordinates
+  # note: polar to carthesian works like this:
   # x = cos(phi) * rho
   # y = sin(phi) * rho
   c_circs <- p_circs
-  # rounded values to decrease display length in console
+  # rounded values to decrease display length
   c_circs[ ,1] <- round(cos(p_circs$phi) * p_circs$rho, digits = 7)
   c_circs[ ,2] <- round(sin(p_circs$phi) * p_circs$rho, digits = 7)
   names(c_circs) <- c("x","y","radius")
@@ -95,12 +85,6 @@ coord_facets <- function (
 
   ## axes ---------------------------
 
-  # polar coordinates of radial axes
-  # axes are split into two segments by the facet circles:
-  # one from the origin (rho0) to the inner edge of the facet circles (rho1),
-  # the center distance
-  # one from the outer edge of the facet circles (rho2) to the edge of
-  # the main circle (rho3)
   p_axes <- data.frame(rho0 = rep(0, cplx),
                        rho1 = NA,
                        rho2 = NA,
@@ -112,7 +96,6 @@ coord_facets <- function (
   p_axes$rho2 <- p_axes$rho1 + 2 * subradius
   p_axes$rho3 <- rep(max(p_circs$radius))
 
-  # cartesian coordinates
   c_axes <- data.frame(x0 = rep(NA, cplx), y0 = NA,
                        x1 = NA, y1 = NA,
                        x2 = NA, y2 = NA,
@@ -127,11 +110,6 @@ coord_facets <- function (
   c_axes$y2 <- round(sin(p_axes$phi) * p_axes$rho2, digits = 7)
   c_axes$y3 <- round(sin(p_axes$phi) * p_axes$rho3, digits = 7)
 
-  # coordinates of axis tick label
-  # sets the tick to a rounded half minimum mean center distance and can be
-  # overwritten manually
-  # the axis tick label is displayed between the rightmost axis and the next one
-  # counter-clockwise
   axis_tick <- data.frame(rho = tick, phi = NA, x = NA, y = NA)
   axis_tick$phi <- min(p_circs$phi) + pi / cplx
   axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
@@ -140,11 +118,8 @@ coord_facets <- function (
 
   ## test label ---------------------
 
-  # coordinates of the test label
-  # the factor label automatically shows next to the lowest mean center distance
-  # (clockwise)
-  # the factor label shows at 2/3 of the distance from the origin to the edge of
-  # the main circle
+  # default test label guesses where free space is
+  # (next to lowest center distance)
   test_label <- data.frame(x = NA,
                       y = NA,
                       label = row.names(p_circs)[1],
@@ -160,9 +135,6 @@ coord_facets <- function (
 
   ## correlations -------------------
 
-  # coordinates of latent facet correlation labels
-  # each correlation label appears twice: once in each facet's circle
-  # n = 2 * number of correlations
   n <- cplx * (cplx - 1)
   cors <- data.frame(x = rep(NA, n),
                      y = NA,
@@ -172,8 +144,6 @@ coord_facets <- function (
                      xnew = NA,
                      ynew = NA)
 
-  # all pairs of subfactors are covered twice, once in every order,
-  # excluding self-pairing
   a <- row.names(data$cors)
   a <- c(a, a[1])
   b <- NULL
@@ -185,7 +155,6 @@ coord_facets <- function (
   cors$V1 <- b
   cors$V2 <- unlist(lapply(row.names(data$cors), FUN = rep, times = cplx - 1))
 
-  # correlation values
   for (k in 1:n) {
     cors$label[k] <- data$cors[cors$V1[k], cors$V2[k]]
   }
@@ -193,12 +162,10 @@ coord_facets <- function (
   # exclude leading 0's for aesthetic reasons
   cors$label[cors$label != 1 && cors$label != 0] <- substr(cors$label, 2, 4)
 
-
-  # label coordinates
   cors$x <- c_circs[cors$V2, "x"]
   cors$y <- c_circs[cors$V2, "y"]
 
-  # scattered as list in the general direction of the partner variable
+  # scatter labels for readability, position indicates partner variable
   scatter <- rep(seq(from = (-pi + 2 * pi / cplx) / 2,
                      to   = (pi  - 2 * pi / cplx) / 2,
                      by   = (pi  - 2 * pi / cplx) / (cplx - 2)),
@@ -214,7 +181,6 @@ coord_facets <- function (
 
   # return ---------------------------------------------------------------------
 
-  # list of all dataframes containing the coordinates of the chart objects
   coord <- list(p_circs    = p_circs,
                 c_circs    = c_circs,
                 p_axes     = p_axes,

@@ -108,9 +108,7 @@ input_manual_process <- function(data) {
 #'   single factor.
 input_manual_process_factor <- function(data) {
 
-  # calculating and checking center distances ----------------------------------
 
-  # calculating the center distances
   cds <- data.frame(
     factor = data$fls$factor,
     subfactor = data$fls$subfactor,
@@ -118,19 +116,15 @@ input_manual_process_factor <- function(data) {
     cd = data$fls$subfactor_loading ^ 2 / data$fls$factor_loading ^ 2 - 1,
     mean_cd = NA)
 
-  # checking for negative center distances
+  # negative center distances are adjusted to zero for chart clarity
   bad <- min(cds$cd)
   bad <- bad < 0
   if (bad) warning ("At least one negative center distance adjusted to 0")
   cds$cd[cds$cd < 0] <- 0
 
-  # calculating mean center distances of facets
   mean_cds <- lapply(split(cds, cds$subfactor),
                      function (x) x$mean_cd <- mean(x$cd))
   cds$mean_cd <- as.numeric(mean_cds[cds$subfactor])
-
-
-  # return ---------------------------------------------------------------------
 
   mydata <- list(cds = cds,
                  cors = data$cors)

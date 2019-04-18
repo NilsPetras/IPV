@@ -52,11 +52,11 @@ appropriate value is estimated.}
 \item{cor_labels}{logical; if \code{TRUE}, shows latent correlations between
 facets; defaults to \code{TRUE}.}
 
-\item{rotate_test_label_radians}{integer; radian angle to rotate the test label
-counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
+\item{rotate_test_label_radians}{integer; radian angle to rotate the test
+label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
 
-\item{rotate_test_label_degrees}{integer; angle in degrees to rotate the global
-label counter-clockwise by.}
+\item{rotate_test_label_degrees}{integer; angle in degrees to rotate the
+global label counter-clockwise by.}
 
 \item{size_cor_labels}{integer; correlation font size relative to default.}
 
@@ -78,6 +78,11 @@ Object of the class "ggplot" and, by default, the same object saved
 }
 \description{
 Creates a facet chart, showing the facets of a test.
+}
+\details{
+Pdf files will be vector based and can be scaled arbitrarily. For
+  other formats use \code{file_width}, \code{file_height}, and \code{dpi} to
+  avoid later rescaling and loss of quality.
 }
 \examples{
 # as simple as that:

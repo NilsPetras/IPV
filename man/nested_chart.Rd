@@ -74,13 +74,13 @@ defaults to 500.}
 (white) in steps of 1; defaults to 85.}
 
 \item{correlations}{logical; if \code{TRUE}, generates the coordinates for the
- correlations between tests. Sets up a ring to draw them in. If
-\code{FALSE}, the ring and the correlations are omitted, simplifying the
-chart significantly.}
+correlations between tests. Sets up a ring to draw them in. If \code{FALSE},
+the ring and the correlations are omitted, simplifying the chart
+significantly.}
 
 \item{cor_spacing}{integer; if \code{correlations = TRUE}: width of the ring,
-the correlations between tests are drawn in; defaults to 0, in which
-case an appropriate value is estimated.}
+the correlations between tests are drawn in; defaults to 0, in which case an
+appropriate value is estimated.}
 
 \item{tick}{numeric; axis tick position; defaults to 0, in which case an
 appropriate value is estimated.}
@@ -95,8 +95,8 @@ construct label counter-clockwise by.}
 \item{cor_labels_tests}{logical; if \code{TRUE}, shows the correlations
 between tests as text.}
 
-\item{cor_labels_facets}{logical; if \code{TRUE}, shows the
-correlations between facets as text.}
+\item{cor_labels_facets}{logical; if \code{TRUE}, shows the correlations
+between facets as text.}
 
 \item{size_construct_label}{integer; construct label font size relative to
 default.}
@@ -109,24 +109,23 @@ default.}
 
 \item{width_axes_inner}{integer; nested radial axis width relative to default.}
 
-\item{width_circles}{integer; global circle outline width relative to
+\item{width_circles}{integer; global circle outline width relative to default.}
+
+\item{width_circles_inner}{integer; nested circle outline width relative to
 default.}
 
-\item{width_circles_inner}{integer; nested circle outline width relative to default.}
+\item{width_tick}{integer; global axis tick line width relative to default.}
 
-\item{width_tick}{integer; global axis tick line width relative
-to default.}
-
-\item{width_tick_inner}{integer; nested axis tick line width relative to default.}
-
-\item{size_tick_label}{integer; axis tick label font size relative to
+\item{width_tick_inner}{integer; nested axis tick line width relative to
 default.}
 
-\item{size_cor_labels}{integer; font size of the correlations between
-tests relative to default.}
+\item{size_tick_label}{integer; axis tick label font size relative to default.}
 
-\item{size_cor_labels_inner}{integer; font size of the correlations
-between facets relative to default.}
+\item{size_cor_labels}{integer; font size of the correlations between tests
+relative to default.}
+
+\item{size_cor_labels_inner}{integer; font size of the correlations between
+facets relative to default.}
 
 \item{width_xarrows}{integer; extra arrow line width relative to default.}
 
@@ -143,10 +142,12 @@ Object of the class "ggplot" and, by default, the same object saved as
 Creates a nested chart, showing several tests and their facets.
 }
 \details{
-If you set \code{subrotate} to a single value, all nested facet
- charts will be rotated by the same amount. If you use a vector of values,
- the nested facet charts will be rotated one by one by the values from that
- vector.
+To get tidy results, it is often required to use \code{rotate_} and
+ \code{subrotate_} for better alignment.
+
+ If you set \code{subrotate_} to a single value, all nested facet charts will
+ be rotated by the same amount. If you use a vector of values, the nested
+ facet charts will be rotated one by one by the values from that vector.
 
  Increase \code{relative_scaling} to avoid circle overlap. Decrease it to
  make small chart objects more visible.
@@ -158,14 +159,16 @@ If you set \code{subrotate} to a single value, all nested facet
  and make specific adjustments with the other \code{size_} and \code{width_}
  parameters after.
 
- The nested chart treats tests like facets of a global factor. It uses facet
- charts for tests similar to how facet charts use circles for facets.
+ Pdf files will be vector based and can be scaled arbitrarily. For other
+ formats use \code{file_width}, \code{file_height}, and \code{dpi} to avoid
+ later rescaling and loss of quality.
 }
 \examples{
 # as simple as that
 nested_chart(self_confidence, subradius = .6)
 
-# adding xarrows
+# adding xarrows, in this example for all cases where the correlation between
+# facets exceeds the correlation between their respective tests.
 sc_arrows <- data.frame(test1 = rep(NA, 3),
                         facet1 = NA,
                         test2 = NA,

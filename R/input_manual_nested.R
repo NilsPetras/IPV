@@ -92,16 +92,10 @@ input_manual_nested <- function(
   correlation_matrix) {
 
 
-  # helper variables -----------------------------------------------------------
-
-  # number of tests
   cplx <- length(test_names)
   if (length(items_per_test) == 1) {
     items_per_test <- rep(items_per_test, cplx)
   }
-
-
-  # initializing object --------------------------------------------------------
 
   mydata <- list(
     global = input_manual_simple(
@@ -114,18 +108,13 @@ input_manual_nested <- function(
       correlation_matrix = correlation_matrix),
     tests = as.list(rep(NA, cplx)))
 
-
-  # additions and corrections --------------------------------------------------
-
     names(mydata$tests) <- test_names
 
-  # item name correction
+  # avoid problems with similar naming patterns by adding the subfactor to the
+  # item names
   mydata$global$fls$item <- as.character(paste(mydata$global$fls$subfactor,
                                             sep = ".",
                                             mydata$global$fls$item))
-
-
-  # return ---------------------------------------------------------------------
 
   return(mydata)
 }
