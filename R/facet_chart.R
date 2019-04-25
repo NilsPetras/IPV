@@ -2,7 +2,8 @@
 #'
 #' Creates a facet chart, showing the facets of a test.
 #'
-#' @param data data in the appropriate format, given by the input functions.
+#' @param data SEM estimates in the appropriate format, given by the input
+#'   functions.
 #' @param subradius integer; same unit as center distances; radius of the facet
 #'   circles; defaults to 0, in which case an appropriate value is estimated.
 #' @param file_name character; name of the file to save. Supported formats are:
@@ -175,8 +176,8 @@ plot_facets <- function(
   # prepared here
   facet_labels <- row.names(coord$c_circs)
 
-  # default tick scales dynamically with the data, to avoid messy results
   tick <- signif(sqrt((coord$axis_tick$x ^ 2) + (coord$axis_tick$y ^ 2)), 1)
+  message(paste("Axis tick set to ", tick," based on the data.", sep = ""))
   tick_label_label <- as.character(formatC(tick, format = "fg"))
   tick_label_x <- 1.3 * coord$axis_tick$x
   tick_label_y <- 1.3 * coord$axis_tick$y

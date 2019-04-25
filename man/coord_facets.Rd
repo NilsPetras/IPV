@@ -9,7 +9,8 @@ coord_facets(data, subradius = 0, tick = 0, rotate_radians = 0,
   rotate_test_label_degrees = 0)
 }
 \arguments{
-\item{data}{data in the appropriate format given by the input functions.}
+\item{data}{SEM estimates in the appropriate format, given by the input
+functions.}
 
 \item{subradius}{integer; same unit as center distances; radius of the facet
 circles; defaults to 0, in which case an appropriate value is estimated.}

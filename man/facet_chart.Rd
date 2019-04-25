@@ -14,7 +14,8 @@ facet_chart(data, subradius = 0, file_name = "myipv.pdf", size = 1,
   size_tick_label = 1)
 }
 \arguments{
-\item{data}{data in the appropriate format, given by the input functions.}
+\item{data}{SEM estimates in the appropriate format, given by the input
+functions.}
 
 \item{subradius}{integer; same unit as center distances; radius of the facet
 circles; defaults to 0, in which case an appropriate value is estimated.}

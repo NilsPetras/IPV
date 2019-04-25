@@ -15,7 +15,8 @@ item_chart(data, file_name = "myipv.pdf", size = 1, font = "sans",
   width_grid = 1)
 }
 \arguments{
-\item{data}{data in the appropriate format, given by the input functions.}
+\item{data}{SEM estimates in the appropriate format, given by the input
+functions.}
 
 \item{file_name}{character; name of the file to save. Supported formats are:
 "pdf" (highest quality and smallest file size), "png", "jpeg". Use "none"

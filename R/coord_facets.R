@@ -2,7 +2,8 @@
 #'
 #' Generates the coordinates for a facet chart.
 #'
-#' @param data data in the appropriate format given by the input functions.
+#' @param data SEM estimates in the appropriate format, given by the input
+#'   functions.
 #' @param subradius integer; same unit as center distances; radius of the facet
 #'   circles; defaults to 0, in which case an appropriate value is estimated.
 #' @param tick numeric; axis tick position; defaults to 0, in which case an
@@ -50,6 +51,10 @@ coord_facets <- function (
     subradius <- max(mean(mcd), .25 * max(mcd)) *
     (5 / (3 + cplx)) *
     (.25 + .25 * (min(max(mean(mcd), .25 * max(mcd)) / stats::sd(mcd), 3)))
+    message(paste("Subradius set to ",
+                  signif(subradius, digits = 3),
+                  " based on the data.",
+                  sep = ""))
   }
 
   # chart objects --------------------------------------------------------------

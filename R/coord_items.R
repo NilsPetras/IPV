@@ -2,13 +2,14 @@
 #'
 #' Generates the coordinates for an item chart.
 #'
-#' @param data data in the appropriate format, given by the input functions.
+#' @param data SEM estimates in the appropriate format, given by the input
+#'   functions.
 #' @param rotate_radians integer; radian angle to rotate the chart
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
-#' @param rotate_test_label_radians integer; radian angle to rotate the test label
-#'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
+#' @param rotate_test_label_radians integer; radian angle to rotate the test
+#'   label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_test_label_degrees integer; angle in degrees to rotate the test
 #'   label counter-clockwise by.
 #' @param width_items integer; item bar width relative to default.

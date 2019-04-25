@@ -2,17 +2,19 @@
 #'
 #'Generates manual data input for a nested model with several tests.
 #'
-#'@param title character; the name of the overall construct.
+#'@param construct_name character; the name of the overall construct.
 #'@param test_names character; the names of the tests in correct order.
 #'@param items_per_test integer; number of items per test in correct order
 #'  (determined by test_names), if all tests have the same number of items a
 #'  single number can be used, e.g. 10 instead of c(10, 10, 10).
 #'@param item_names character or integer; the names of the items in correct
 #'  order (determined by test_names).
-#'@param general_loadings integer; vector of the items' loadings on the general
-#'  factor (overall construct) in correct order (determined by item_names).
-#'@param correlated_loadings integer; vector of the items' loadings on their
-#'  correlated factor (test) in correct order (determined by item_names).
+#'@param construct_loadings integer; vector of the factor loadings from the
+#'  single factor model of the construct in correct order (determined by
+#'  item_names).
+#'@param test_loadings integer; vector of the factor loadings on the test
+#'  factors from the group factor model in correct order (determined by
+#'  item_names).
 #'@param correlation_matrix matrix containing the latent correlations between
 #'  tests, pay attention to the order of rows and columns, which is determined
 #'  by test_names.
@@ -20,7 +22,7 @@
 #'@details Pay attention to the order of tests and items, it has to be coherent
 #'  throughout the whole data. test_names and items_per_test determine which
 #'  test is listed first and how many items are listed for that test.
-#'  item_names, general_loadings and correlated_loadings have to match that
+#'  item_names, construct_loadings and test_loadings have to match that
 #'  order. The correlation matrix uses the order in test_names for rows and
 #'  columns.
 #'
@@ -41,7 +43,7 @@
 #'# these data can also be seen in self_confidence, the example data of
 #'# this package
 #' mydata <- input_manual_nested(
-#'title = "Self-Confidence",
+#'construct_name = "Self-Confidence",
 #'test_names = c("DSSEI", "SMTQ", "RSES"),
 #'items_per_test = c(20, 14, 10),
 #'item_names = c(
@@ -54,7 +56,7 @@
 #'  7,  2,  4,  9, # SMTQ
 #'  1,  3,  4,  7, 10, # RSES
 #'  2,  5,  6,  8,  9), # RSES
-#'general_loadings = c(
+#'construct_loadings = c(
 #'  .5189, .6055, .618,  .4074, .4442,
 #'  .5203, .2479, .529,  .554,  .5144,
 #'  .3958, .5671, .5559, .4591, .4927,
@@ -64,7 +66,7 @@
 #'  .2076, .3375, .5509, .3495,
 #'  .5482, .4627, .4185, .4185, .5319,
 #'  .4548, .4773, .4604, .4657, .4986),
-#'correlated_loadings = c(
+#'test_loadings = c(
 #'  .5694, .6794, .6615, .4142, .4584, # DSSEI
 #'  .5554, .2165, .5675, .5649, .4752, # DSSEI
 #'  .443 , .6517, .6421, .545 , .5266, # DSSEI
@@ -83,12 +85,12 @@
 #'
 #'@export
 input_manual_nested <- function(
-  title,
+  construct_name,
   test_names,
   items_per_test,
   item_names,
-  general_loadings,
-  correlated_loadings,
+  construct_loadings,
+  test_loadings,
   correlation_matrix) {
 
 
@@ -97,14 +99,16 @@ input_manual_nested <- function(
     items_per_test <- rep(items_per_test, cplx)
   }
 
+  # here the construct + tests are treated as a test + facets, therefore the
+  # mismatch of parameter names
   mydata <- list(
     global = input_manual_simple(
-      test_name = title,
+      test_name = construct_name,
       facet_names = test_names,
       items_per_facet = items_per_test,
       item_names = item_names,
-      general_loadings = general_loadings,
-      correlated_loadings = correlated_loadings,
+      test_loadings = construct_loadings,
+      facet_loadings = test_loadings,
       correlation_matrix = correlation_matrix),
     tests = as.list(rep(NA, cplx)))
 

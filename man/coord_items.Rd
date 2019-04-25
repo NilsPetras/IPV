@@ -10,7 +10,8 @@ coord_items(data, rotate_radians = 0, rotate_degrees = 0,
   dodge = 1)
 }
 \arguments{
-\item{data}{data in the appropriate format, given by the input functions.}
+\item{data}{SEM estimates in the appropriate format, given by the input
+functions.}
 
 \item{rotate_radians}{integer; radian angle to rotate the chart
 counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
@@ -18,8 +19,8 @@ counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
 \item{rotate_degrees}{integer; angle in degrees to rotate the chart
 counter-clockwise by.}
 
-\item{rotate_test_label_radians}{integer; radian angle to rotate the test label
-counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
+\item{rotate_test_label_radians}{integer; radian angle to rotate the test
+label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
 
 \item{rotate_test_label_degrees}{integer; angle in degrees to rotate the test
 label counter-clockwise by.}

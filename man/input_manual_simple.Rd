@@ -5,7 +5,7 @@
 \title{Input Manual Simple}
 \usage{
 input_manual_simple(test_name, facet_names, items_per_facet, item_names,
-  general_loadings, correlated_loadings, correlation_matrix)
+  test_loadings, facet_loadings, correlation_matrix)
 }
 \arguments{
 \item{test_name}{character; the name of the test.}
@@ -19,11 +19,13 @@ single number can be used, e.g. 5 instead of c(5, 5, 5, 5).}
 \item{item_names}{character or integer; the names of the items in correct
 order (determined by facet_names).}
 
-\item{general_loadings}{integer; vector of the items' loadings on the general
-factor (test) in correct order (determined by item_names).}
+\item{test_loadings}{integer; vector of the factor loadings from the single
+factor model of the test or a group factor model of multiple tests in
+correct order (determined by item_names).}
 
-\item{correlated_loadings}{integer; vector of the items' loadings on their
-correlated factor (facet) in correct order (determined by item_names).}
+\item{facet_loadings}{integer; vector of the factor loadings on the facet
+factors from the group factor model in correct order (determined by
+item_names).}
 
 \item{correlation_matrix}{matrix containing the latent correlations between
 facets, pay attention to the order of rows and columns, which is determined
@@ -40,9 +42,8 @@ Generates manual data input for a simple model with one test.
 Pay attention to the order of facets and items, it has to be coherent
  throughout the whole data. facet_names and items_per_facet determine which
  facet is listed first and how many items there are listed for that facet.
- item_names, general_loadings and correlated_loadings have to match that
- order. The correlation matrix uses the order in facet_names for rows and
- columns.
+ item_names, test_loadings and facet_loadings have to match that order.
+ The correlation matrix uses the order in facet_names for rows and columns.
 
  Visually inspect the returned object before continuing with
  \code{\link{input_manual_process}}!
@@ -56,9 +57,9 @@ facet_names = c("Ns", "Ps"),
 items_per_facet = 5,
 item_names = c(2, 5, 6, 8, 9,
               1, 3, 4, 7, 10),
-general_loadings = c(.5806, .5907, .6179, .5899, .6559,
+test_loadings = c(.5806, .5907, .6179, .5899, .6559,
                     .6005, .4932, .4476, .5033, .6431),
-correlated_loadings = c(.6484, .6011, .6988, .6426, .6914,
+facet_loadings = c(.6484, .6011, .6988, .6426, .6914,
                        .6422, .5835, .536, .5836, .6791),
 correlation_matrix = matrix(data = c(1, .69,
                                     .69, 1),
