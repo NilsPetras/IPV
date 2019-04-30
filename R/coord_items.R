@@ -99,7 +99,7 @@ coord_items <- function (
 
   items$length[items$length == 1] <- 1.2 * length_items * maxcd
   items$length[items$length == 2] <-
-    1.2 * length_items * length_ratio_items * maxcd
+    1.2 * length_items * length_ratio_items * maxcd * 1.0001
 
   items$x1 <- items$x - items$y / items$rho * .03 * items$length
   items$y1 <- items$y + items$x / items$rho * .03 * items$length

@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
     toc: true
-    toc_depth: 3
+    toc_depth: 4
 vignette: >
   %\VignetteIndexEntry{Item Pool Visualization}
   %\VignetteEngine{knitr::rmarkdown}
@@ -13,169 +13,361 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
-library(IPV)
+devtools::load_all()
+#library(IPV)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
-# IPV {#ipv}
+## About this package {#about}
 
-Item Pool Visualization (IPV) is an original way to to display factor structures. IPV enables you to inspect and select an item pool based on its content. It can be used to assess and display the content validity of established tests in a specific context. At its core is the concept of center distance, a measure to compare factor loadings of different factor models. The original work on IPV is found in
+The IPV package is a tool to create IPV charts. The original work on IPV, including the chart concepts, can be found in:
+[*Dantlgraber, M., Stieger, S., & Reips, U.-D., 2018, Introducing Item Pool Visualization (IPV). GSDS Working Paper*](https://www.gsds.uni-konstanz.de/typo3temp/secure_downloads/64291/0/c11fa59f405bed86279fa8eb67d5d80b72685027/WP2018-08_DantlgraberStiegerReips.pdf)  
+My philosophy is that chart creation should be possible on the full spectrum between quick & dirty and highly customized. So feel free to raise an [issue on github](https://github.com/NilsPetras/IPV/issues) if something frustrates you, or you miss a customization option. Do the same if you encounter a bug (so I can fix it) or do not understand the vignette (so I can change it).
 
-*Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
+### Quick & dirty chart creation {#quick}
+Let us imagine for a second, that estimated SEM parameters are already present in the correct format in an object called "DSSEI":
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- item_chart(data = DSSEI, file_name = "christmas")
+mychart
+```
 
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", echo=FALSE}
-sc_arrows <- data.frame(test1 = rep(NA, 3),
-                        facet1 = rep(NA, 3),
-                        test2 = rep(NA, 3),
-                        facet2 = rep(NA, 3),
-                        value = rep(NA, 3))
+As you can see, getting a first result is meant to be trivial. All three IPV chart types can be created by specifying `data = ` only. (Here, `file_name = ` is specified with no file extension to suppress the file output.)  
+Although I have put considerable effort in setting sensible defaults (or generating them dynamically, based on the data), it is always possible to optimize the charts. For example, I prefer my charts to have a higher [data ink ratio](https://infovis-wiki.net/wiki/Data-Ink_Ratio) and like to use [color](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) to guide attention. The many graphical parameters enable e.g. to create a black and white print optimized version or a version optimized for small display.
+
+## Workflow
+Assuming you have some interesting raw data, empirical, simulated, or manufactured mischievously, these are the necessary steps to produce IPV charts:  
+0. SEM estimation  
+1. Input  
+2. Chart creation  
+Tip: Call `?IPV` for an overview of the functions of the package.
+
+### 0. SEM estimation
+The IPV package does **not** do the SEM estimation for you. But that means you get to use your favorite statistical software (e.g. the R packages [lavaan](http://lavaan.ugent.be/) or [sem](https://socialsciences.mcmaster.ca/jfox/Misc/sem/SEM-paper.pdf)). The [abovementionned paper](https://www.gsds.uni-konstanz.de/typo3temp/secure_downloads/64291/0/c11fa59f405bed86279fa8eb67d5d80b72685027/WP2018-08_DantlgraberStiegerReips.pdf) shows how to specify the SEM models. For the example used here and in the paper, you might want to take a look at figures 6-8, showing the three SEMs used. As the authors point out, the models can only be estimated as SEMs, not by means of factor analysis or in any other way.   
+As *nested* I will describe all cases, where the overall item pool is subdivided more than once. For example, an item pool comprising multiple tests can be divided into the tests and subdivided into the tests' facets (as seen in figure 6-8 of the paper). In this case, *nested charts* can be used to compare all three models. In nested cases, I will distinguish a *global* level, where tests are compared with each other, and a nested level, that is concerned with the internal structure of tests. Every case that is not nested, i.e. only consists of a single test, I will call *simple*.
+
+### 1. Input
+To use the chart functions, the SEM estimation results need to be formatted in a specific way. This is an example for the data format within the IPV package:
+```{r}
+self_confidence$tests$RSES
+```
+Note, that `factor` refers to an item pool, that was divided into subpools (`subfactor`s). In this case, `factor` refers to the Rosenberg Self-Esteem Scale, a test with two facets: Positive Self-Esteem (Ps), and Negative Self-Esteem (Ns), which was reversed here. As seen below, the same data structure applies on the global level, with `factor` refering to the overall self-confidence item pool, comprising the three tests (`subfactor`s) RSES, SMTQ, and DSSEI.  
+```{r}
+self_confidence$global
+```
+`cd` is short for center distance  
+\begin{equation}
+  cd_i = \frac{\lambda^2_{is}}{\lambda^2_{ig}} -1
+\end{equation}  
+while `mean_cd` is the mean center distance of the items of a facet or test. Furthermore, the matrix of latent correlations between `subfactor`s is given as a second item of the list. To see how the data is combined for nested cases, load the package and call the example object `self_confidence`.  
+To spare you the task of creating this data structure by hand, I implemented two automated input pathways. You can either use excel files or the manual input function. In both cases, center distances are calculated automatically and the data is automatically checked for (obvious) errors. Negative center distances are always set to zero before mean center distances are calculated. Regardless of the input mode, you will need to provide:  
+
+* the names of all latent variables and items  
+* the factor loadings of the SEMs  
+* the latent correlations between the factors within the SEMs.
+
+#### Using manual input functions
+These functions allow you to reduce the manual work to a minimum. They are especially useful, when your SEM estimates are already in your R environment (e.g. because you read them from a .csv file). The functions `input_manual_nested()` and `input_manual_simple()` allow you to feed in factor loadings, item names, etc. variable by variable. The correct format is then generated automatically. Run `input_manual_process()` on the result, to automatically calculate center distances.  
+This is an example, where all values have been put in individually for demonstration:
+
+```{r}
+mydata <- input_manual_simple(
+test_name = "RSES",
+facet_names = c("Ns", "Ps"),
+items_per_facet = 5,
+item_names = c(2, 5, 6, 8, 9,
+               1, 3, 4, 7, 10),
+test_loadings = c(.5806, .5907, .6179, .5899, .6559,
+                  .6005, .4932, .4476, .5033, .6431),
+facet_loadings = c(.6484, .6011, .6988, .6426, .6914,
+                   .6422, .5835, .536, .5836, .6791),
+correlation_matrix = matrix(data = c(1, .69,
+                                     .69, 1),
+                            nrow = 2,
+                            ncol = 2))
+mydata
+input_manual_process(mydata)
+```
+For nested cases, use the function `input_manual_nested()`, and add the individual tests using `input_manual_simple()`. Then you can run `input_manual_processs()` as in the simple case. You can find the (lengthy) example [below](#nested).  
+If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning or message is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
+
+#### Using Excel files
+Excel files have the advantage, that you can just copy and paste your SEM estimates into the spreadsheets and the input function of the IPV package (`input_excel()`) does the rest. The files need to be structured as in the example, that you can find here:
+```{r}
+system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
+system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE)
+system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE)
+system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE)
+```
+
+As you can see, there is a file for each test, and a global file. You might want to use a copy as your template, so you can just fill in your values. Open a file to see how it works.  
+
+On sheet 1 you need to provide the factor loadings from your SEM estimation results, on sheet 2 you need to provide the named and complete latent correlation matrix. On sheet 1, "factor" contains a single factor name and "factor_loading" the factor loadings of items on that factor (not squared). "subfactor" contains the names of grouped factors and "subfactor_loading" the factor loadings of items on these factors (not squared). "item" contains the item names. Therefore, each row contains the full information on the respective item.  
+Read these excel sheets using input_excel. In the example:
+```{r}
+global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
+tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+           system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
+           system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
+mydata <- input_excel(global = global, tests = tests)
+```
+
+The data will be prepared automatically, including the calculation of center distances. If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning or message is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
+
+### 2. Chart creation
+As briefly outlined above, creating any chart from the formatted data is trivial. There are a few general things to consider, after which I will go into some detail on the three chart types.  
+
+Generally, best results can be achieved using .pdf files, since they are vector based. .pdf files can be zoomed and scaled indefinitely without loss of quality. Pixelated formats (.png and .jpeg are supported) will lead to lower quality results and are not scalable. The parameters `file_width = ` and `file_length = ` determine, how large the .pdf file will be, measured in inches (1 in = 2.54 cm). The size of .png or .jpeg files in pixels is determined by multiplying the size in inches with the dots per inch parameter value (`dpi = `). To inspect your results within RStudio, always use the zoom popout of the Plots window, otherwise charts are heavily distorted.  
+
+Most graphical parameters are size parameters for single elements of the chart, all named `size_... = `,  `width_... = `, or `length_... = `. Those are pretty straightforward: linear scaling parameters defaulting to 1. That means, .5 will half the size and 2 will double it. For all chart types, there is also a global `size = ` parameter, scaling all elements of the chart at once. Use this parameter first, before you fine tune single elements.
+
+For all chart types, it is possible to rotate the whole chart, using `rotate_radians = ` or `rotate_degrees = `. Also, the font can be changed, using the `font = ` parameter. I recommend using the package [extrafont](https://cran.r-project.org/web/packages/extrafont/README.html) for access to more fonts.
+
+As you will see, repeatedly trying changes and inspecting the results is necessary to generate the best possible chart. Nevertheless, the final result will be a single, relatively simple function call. I strongly recommend saving your analysis and chart creation functions in a script, so you can always reproduce the results or make changes. If you use [rmarkdown](https://rmarkdown.rstudio.com/) or [sweave](https://rpubs.com/YaRrr/SweaveIntro) to create manuscripts or reports directly from R, changes can easily be made in the scripts and adopted downstream with a single click. Therefore, do not rely on your saved graphics files. 
+
+In the following, I will go into detail on the individual chart types. Using the example, I will show the impotant customization options provided in the chart functions:
+
+#### Item charts
+[Above](#quick), we already saw a first example of an item chart. However, I stated, that I would like to improve the data ink ratio and use color for visual guidance. To reduce the visibility of structural elements, the `fade_... = ` parameters can be used (0 = "black", 100 = "white").
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- item_chart(data = DSSEI, file_name = "cucumber",
+                      color = "darkblue", color2 = "darkblue",
+                      fade_axes = 70, fade_grid_major = 50, fade_grid_minor = 92)
+mychart
+```
+To further accentuate the data, let us change some sizes.
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- item_chart(data = DSSEI, file_name = "handcuffs",
+                      color = "darkblue", color2 = "darkblue",
+                      fade_axes = 70, fade_grid_major = 50, fade_grid_minor = 92,
+                      size = 1.3, width_items = 1.5, length_items = 1.5, width_grid = .6, size_tick_label = .6)
+mychart
+```
+As you might have noticed, some bars, representing items, are overlapping. This problem is already attenuated, by cropping every other item bar a bit. An alternative is to use different colors or making the item bars slimmer:
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- item_chart(data = DSSEI, file_name = "gnome",
+                      color = "darkblue", color2 = "darkred",
+                      fade_axes = 70, fade_grid_major = 50, fade_grid_minor = 92,
+                      size = 1.3, length_items = 2.5, width_grid = .6, size_tick_label = .6,
+                      length_ratio_items = 1, width_items = .9)
+mychart
+```
+A special feature for item charts is the `dodge = ` parameter, that allows long facet labels to dodge the rest of the chart horizontally:
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", fig.show='hold'}
+x <- DSSEI
+colnames(x$cors)[4] <- "Oachkatzlschwoaf"
+rownames(x$cors)[4] <- "Oachkatzlschwoaf"
+levels(x$cds$subfactor) <- c("Ab", "Pb", "Ph", "Oachkatzlschwoaf")
+x$cds$subfactor[16:20] <- "Oachkatzlschwoaf"
+mychart1 <- item_chart(data = x, file_name = "squirrel")
+mychart2 <- item_chart(data = x, file_name = "squirrel", dodge = 7)
+mychart1
+mychart2
+```
+This works simultaneously for all labels. Labels at the top and bottom do not move, labels on the right and left move the most.
+
+#### Facet charts
+Facet charts, as created by `facet_chart()`, can be optimized similarly to item charts, using `fade = ` and `color = `. Furthermore, there are some specific considerations.
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- facet_chart(data = DSSEI, file_name = "hachoo")
+mychart
+```
+As you can see in the output, two parameter values (`subradius = ` , and `tick = ` ) have been generated automatically. These need to fit the data. 
+
+The `subradius = ` parameter is important to optimize the appearance. The radius of the facet circles has no meaning. It should be chosen large enough to make the facet labels and correlations readable. But it should also be small enough to make the center distances (thick lines) dominate the first impression and to avoid overlapping facet circles.
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- facet_chart(data = DSSEI, file_name = "ants",
+                      subradius = .1)
+mychart
+```
+In this example, the radius of the facet circles is too small, to display the facet names and correlations in a reasonable size. In the example below, it is too large, so center distances do not shape the overall impression anymore, and the facet circles even overlap.
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- facet_chart(data = DSSEI, file_name = "giants",
+                      subradius = 1.5)
+mychart
+```
+
+For a simplistic version of the chart, the correlations can be omitted:
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- facet_chart(data = DSSEI, file_name = "organ",
+                      cor_labels = FALSE)
+mychart
+```
+
+In this case, it might be more visually pleasing, to rotate the test label to the top left, and add some color:
+
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- facet_chart(data = DSSEI, file_name = "south",
+                      rotate_test_label_radians = pi, color = "firebrick4")
+mychart
+```
+
+#### Nested charts
+Nested charts are the most complex IPV charts. In addition to the abovementionned topics, there are four important considerations: the `relative_scaling = ` of the global and the nested level, the addition of `xarrows = ` to display correlation arrows between facets of different tests, the ability to `subrotate_... = ` each test individually, and the `cor_spacing = ` to display correlations between the tests. Due to the complexity one should not rely on default values too much:
+
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- nested_chart(data = self_confidence, file_name = "labyrinth")
+mychart
+```
+The `relative_scaling = ` should be large enough to have the center distances on the global level shape the overall impression. But a large value for the `relative_scaling = ` makes the nested facet charts of each test small, which should be readable. Note, that the axis scaling within the nested facet charts is different to the global axis scaling by exactly the factor of `relative_scaling = ` , as can be seen from the axis tick marks (small dotted circles). In this particular case, the `relative_scaling = ` seems sound to me, but the facet circles could be larger, including the font sizes within:
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- nested_chart(data = self_confidence, file_name = "aha",
+                        subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5)
+mychart
+```
+(As you might note, the dynamic default for `relative_scaling = ` adapted to the changes, because the test circles became larger, due to the changes to `subradius = ` .)
+
+The addition of correlation arrows between facets of different tests is indicated by the IPV authors as sensible, when the correlation between these facets exceed the correlation between the respective tests. In the current example, this would result in three extra arrows, that can be added as follows:
+
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+sc_arrows <- data.frame(test1 = rep(NA, 3), facet1 = NA,
+                       test2 = NA, facet2 = NA,
+                       value = NA)
 sc_arrows[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
 sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
 sc_arrows[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
-sc_nested <- nested_chart(self_confidence,
-                          subradius = .6,
-                          xarrows = sc_arrows,
-                          rotate_radians = 4 / 3 * pi,
-                          subrotate_radians = c(pi / 2, pi / 2, 0),
-                          file_name = "none",
-                          size = 1.5,
-                          color_tests = "red",
-                          color_facets = "darkorange",
-                          show_xarrows = TRUE)
-sc_nested
-
-```
-Example of a nested chart, showing self-confidence measured by three different tests, each with multiple facets. All example data in this vignette from: *Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision). Introducing Item Pool Visualization (IPV)*
-
-## Interpreting Charts
-
-There are three chart types in IPV: **nested charts**, **facet charts**, and **item charts**. Nested charts display <span style="color:red">multiple tests</span> and <span style="color:darkorange">their facets</span>. Facet charts are the interior of the <span style="color:red">big circles</span> in the nested chart above, displaying one test and its facets. Item charts display the items of a test arranged by facets. For examples of [*a facet chart*](#fac) and [*an item chart*](#cd) see below.
-
-In IPV, circles represent item pools. Smaller circles represent subpools. For example, each red circle encompasses several orange circles. The subpools represented by orange circles within a red circle add up to the item pool represented by that red circle. From each item pool, a factor is extracted, so each factor represents a set of items. The gray surrounding circle represents all items of the entire item pool. In the example above, the self-confidence of 2272 german speaking participants has been measured using three different tests: the *Domain Specific Self-Esteem Inventory (DSSEI)*, the *Sports Mental Toughness Questionnaire (SMTQ)*, and the *Rosenberg Self-Esteem Scale (RSES)*. So the surrounding gray circle is labeled *Self-Confidence*. In nested charts, there are two splits of the item pool. In the example, the overall item pool is split into <span style="color:red">three subpools</span>, which are split into <span style="color:darkorange">nine subpools</span>. Think of the interior of a circle as a further explanation of what that circle stands for. For example, within the DSSEI circle, its four facets are shown as a facet chart.
-
-When splitting an item pool, there are more specified factors. The more factors are used, the more item variance can be explained. The items are better represented by more specific factors. For example, each test represents its items better, than the general *Self-Confidence* factor. The distance of the smaller circles (e.g. *DSSEI*) from the center of the larger circle (*Self-Confidence*) indicates exactly how much more variance is explained. The further away the inner edge of a circle is from the center of its surrounding circle, the more explanatory power it adds. So the *DSSEI* factor represents its 20 items only a little bit better than the general *Self-Confidence* factor. The gain is much more significant for the 10 *RSES* items, indicated by a larger distance of the *RSES* circle from the center. The concept of [*center distance*](#cd) is described in more detail below. In general, the further apart the circles are, the more important is the distinction of subpools.
-
-Numbers within circles indicate latent correlations between factors. Optionally, arrows are drawn for selected latent correlations between facets of different tests. In this example, those exceeding the latent correlations between the tests are indicated.
-
-## Models
-
-IPV distinguishes between **simple models** and **nested models**.
-
-**Simple models** consist of a single test and have two levels:
-
-- **test level**: one factor representing the items of a test
-- **facet level**: several correlated factors each representing the items of a facet of the test
-
-**Nested models** combine multiple tests and have three levels:
-
-- **global level**: one factor representing items combined from multiple tests
-- **test level**: several correlated factors, each representing the items of a test
-- **facet level**: several correlated factors each representing the items of a facet of a test
-
-*Structure equation models (SEMs)* enable us to derive factors from an item pool. To estimate these SEMs, the factor structure of the tests has to be known in advance. In other words, which item belongs to which item pool has to be known in advance. Therefore, IPV is completely confirmatory. Factor loadings on each level are calculated only for the one factor the item is associated to.
-
-- **global level**: one factor is estimated from all items combined (a *general factor model*). In the example above, this factor is *Self-Confidence*, estimated from 44 items.
-- **test level**: for each test, one factor is estimated from the items of that test (a *correlated factor model*). In the example above, these three factors are *DSSEI* (estimated from the 20 *DSSEI* items), *SMTQ* (estimated from the 14 *SMTQ* items), and *RSES* (estimated from the 10 *RSES* items).
-- **facet level**: for each facet, one factor is estimated from the items of that facet (a *correlated factor model*). In the example above, these nine factors are *Ab* (5 items), *Pb* (5 items), *Ph* (5 items), *So* (5 items), *Cf* (6 items), *Cs* (4 items), *Ct* (4 items), *Ns* (5 items), *Ps* (5 items).
-
-It can be expected, that from the global to the facet level, factor loadings of items increase. The reason is, that the test level is more specific than the global level, and the facet level is more specific than the test level. The increase in factor loadings between the test and the facet level can be interpreted as the extend to which the facet of a test (e.g. *Ns*) is representing its items better than the overall test (e.g. *RSES*). The increase in factor loadings between the global and the test level can be interpreted as the extend to which the test (e.g. *RSES*) is representing its items better than the overall concept (e.g. *Self-Confidence*). The increase in factor loadings is measured as center distance.
-
-## Center Distance {#cd}
-
-An item pool can be represented by a general factor or multiple correlated factors for multiple subpools. **The center distance ($cd$) is the relative increase of the squared factor loading of an item on the correlated factor ($\lambda^2_c$) compared to the general factor ($\lambda^2_g$).** The center distance of a factor is the mean center distance of its items.
-
-\begin{equation}
-  cd = \frac{\lambda^2_c}{\lambda^2_g} -1
-\end{equation}
-
-For example, a center distance of 0.5 indicates that the correlated factor, estimated from a subpool, explains 50% more of the item variance compared to the general factor, estimated from the whole item pool. It could be, that the overall test score of a self-esteem test explains 20% of the variance of that item (squared factor loading = 0.2), while its facet explains 30% of the variance of that item (squared factor loading = 0.3), resulting in a relative increase of 50%. In IPVs, center distances are displayed on radial axes as the distance to the center of the chart. In the [*example at the top*](#ipv), the center distances are displayed as the distance from the edge of the circles to the center. The center distances are marked by a thick radial line ending at the edge of the circle (red or orange). Axis scales are indicated by gray dotted circles, so values of center distances can be read from the chart. 
-
-But you can also display center distances for single items in an item chart:
-
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", echo=FALSE}
-
-SMTQ_items <- item_chart(SMTQ,
-                         file_name = "none",
-                         color = "darkblue",
-                         color2 = "darkblue")
-SMTQ_items
-
-```
-
-<span style="color:darkblue">Blue bars</span> represent items. Center distances are displayed on radial axes (arrows). They are the distance from the origin to the inner edge of the bars (not the center of the bars!). The items are arranged by facets on the radial axes. Read center distance values from the grid of concentric circles, where steps of 0.5 are highlighted.
-
-# Workflow
-
-Before starting, calculate the structure equation models (SEMs) using your preferred statistical software. This package starts with the factor loadings and latent correlations of these models. To enable feeding in your SEM data, you can use the input functions. Then choose the chart type and use the proper chart function. Refine the appearance of your chart by reiteratively changing parameter values and inspecting the result.
-
-When using the graphics display within RStudio, always use the zoom popout from the Plots widget, otherwise charts are heavily distorted.
-
-Call ?IPV for an overview of the functions of the package.
-
-## Data Preparation
-
-Currently there are two ways to prepare your data: manual input in R or excel sheets.
-
-When using **manual data input**, first use the functions input_manual nested and/or input_manual_simple to fill in the factor loadings and latent correlations. Check for correctness and proceed with the second step, preprocessing the data using the input_manual_process function. At any step you can change false values or add missing values by hand. This way you do not need to set up lists and data frames yourself. Neither do you need to calculate any center distances. If any factor loading is below 0.1 or any center distance below 0, it is set to that value and a warning is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
-
-When using data **input from excel**, you need to set up the cells matching the example files:
-```{r, eval=FALSE}
-system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV")
-
-# system.file(..., package = "IPV", ...) reads files that are installed with the IPV package to serve as examples
-```
-The easiest way is to use one of the files as a template by copying it and replacing the values.
-
-On sheet 1 you need to provide the factor loadings from your SEM, on sheet 2 you need to provide the named and complete latent correlation matrix.
-
-On sheet 1, "factor" contains the general factor name, "factor_loading" the factor loadings of items on that factor (not squared). "subfactor" contains the correlated factor names, "subfactor_loading" the factor loadings of items on these factors (not squared). "item" contains the item names. Each row contains full information on the respective item.
-
-Then read these excel sheets using input_excel. This way, you do not need to calculate any center distances. If any factor loading is below 0.1 or any center distance below 0, it is set to that value and a warning is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
-
-After the preprocessing, the data should look like this:
-
-```{r, echo=FALSE}
-SMTQ
-```
-
-The first part consists of the center distances (cds), where for each item, the test name, the facet name, the item name, the center distance, and the mean center distance of its facet is given. The second part is the latent correlation matrix of the facets. Nested models combine multiple of these data segments, including one on the global scale.
-
-Consider issuing desired input features on [github](https://github.com/NilsPetras/IPV/issues), e.g. using output from your prefered statistics software.
-
-## Chart Creation {#fac}
-
-Functions are named according to the chart concept. For example, creating a facet chart works like this:
-
-```{r,fig.width=10, fig.height=10, dpi=300, out.height="342px", out.width="342px",fig.align='center'}
-SMTQ_facets <- facet_chart(SMTQ, file_name = "none")
-SMTQ_facets
-```
-
-As you can see, almost all function parameters have a default value, so you can start fast and frugal. The chart is saved to "myipv.pdf" in your working directory by default. Supported file formats are pdf, png, and jpeg. filename = "none" will suppress the file output.
-
-## Design Choices
-
-The vast majority of parameters are size parameters for single elements of the chart, all named size_xyz or width_xyz. Those are pretty straightforward: linear scaling sizes defaulting to 1. Some other parameters are self-explanatory. These important parameters are more complex:
-
-- **size** scales (almost) all elements of the chart. This is the most important cosmetic parameter.
-- **colour**, **colour2**, **colour_tests**,**colour_facets** [full set of colours including gray](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). Colours are used to add visual contrast to important parts of the chart, I recommend using colours whenever possible.
-- **subradius** sets the radius of facet circles. Use this parameter to avoid overlapping or too small circles.
-- **relative_scaling** of the global and the test level in nested charts. For a clear chart, you need to hit the sweet spot between allowing big fonts and emphasizing relative positions.
-- **rotate_degrees**, **rotate_radians** rotate the whole chart by the given value. A full circle is equivalent to 360 degrees or 2*pi radians.
-- **fade** is the degree to which gray background features of the chart are faded. Choose a value so that they are still visible, but do not distract the eye from the foreground.
-- **xarrows** adds custom correlation arrows to nested charts. Provide information about latent correlations between facets of different factors to the xarrow parameter (see below). Set *show_xarrows* = TRUE in plot_nested. Straighten out your chart with the subrotate parameters.
-
-```{r, echo=FALSE}
-sc_arrows <- data.frame(test1 = rep(NA, 3),
-                        facet1 = NA,
-                        test2 = NA,
-                        facet2 = NA,
-                        value = NA)
-sc_arrows[1,] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
-sc_arrows[2,] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
-sc_arrows[3,] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
 sc_arrows
+
+mychart <- nested_chart(data = self_confidence, file_name = "needle",
+                        subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5,
+                        xarrows = sc_arrows, show_xarrows = TRUE)
+mychart
+```
+The data frame that indicates the names of the facets to connect and the correlation values (here called `sc_arrows` ) needs to be set up with the column names as in the example.
+
+Now the arrows create a lot of overlap and make the chart look messy. This problem can be solved by rotating each of the nested facet charts, so the facets connected by arrows are oriented towards the center. Also the construct label should be moved out of harms way.
+
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- nested_chart(data = self_confidence, file_name = "wobble",
+                        subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5,
+                        xarrows = sc_arrows, show_xarrows = TRUE,
+                        subrotate_degrees = c(180, 270, 90), rotate_construct_label_degrees = -20)
+mychart
+```
+
+The `cor_spacing = ` refers to the ring around the nested facet charts for each test, in which the correlations between the tests are displayed. It should be large enough for the correlation labels, but not too large. If the correlations are omitted, this ring is also omitted:
+
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- nested_chart(data = self_confidence, file_name = "bad",
+                        subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5,
+                        xarrows = sc_arrows, show_xarrows = TRUE,
+                        subrotate_degrees = c(180, 270, 90), rotate_construct_label_degrees = -20,
+                        cor_labels_tests = FALSE)
+mychart
+```
+To get a somewhat decent result, let us change some `size_... = ` parameters and add some color. Color can be chosen for the global and the nested level independently. Furthermore, it might be better to increase the line thickness, so the impression of connected colored elements clarifies.
+
+```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+mychart <- nested_chart(data = self_confidence, file_name = "tadaa",
+                        subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5,
+                        xarrows = sc_arrows, show_xarrows = TRUE,
+                        subrotate_degrees = c(180, 270, 90), rotate_construct_label_degrees = -20,
+                        color_global = "darkorchid", color_nested = "darkblue",
+                        size_construct_label = 1.3, size_test_labels = 1.2,
+                        width_circles_inner = 1.5, width_circles = 1.5, width_axes_inner = 1.5, width_axes = 1.5)
+mychart
+```
+
+
+### Appendix
+#### manual input in nested cases - example {#nested}
+```{r}
+mydata <- input_manual_nested(
+  construct_name = "Self-Confidence",
+  test_names = c("DSSEI", "SMTQ", "RSES"),
+  items_per_test = c(20, 14, 10),
+  item_names = c(
+     1,  5,  9, 13, 17, # DSSEI
+     3,  7, 11, 15, 19, # DSSEI
+    16,  4, 12,  8, 20, # DSSEI
+     2,  6, 10, 14, 18, # DSSEI
+    11, 13, 14,  1,  5,  6, # SMTQ
+     3, 10, 12,  8, # SMTQ
+     7,  2,  4,  9, # SMTQ
+     1,  3,  4,  7, 10, # RSES
+     2,  5,  6,  8,  9), # RSES
+  construct_loadings = c(
+    .5189, .6055, .618 , .4074, .4442,
+    .5203, .2479, .529 , .554 , .5144,
+    .3958, .5671, .5559, .4591, .4927,
+    .3713, .5941, .4903, .5998, .6616,
+    .4182, .2504, .4094, .3977, .5177, .4603,
+    .3271, .261 , .3614, .4226,
+    .2076, .3375, .5509, .3495,
+    .5482, .4627, .4185, .4185, .5319,
+    .4548, .4773, .4604, .4657, .4986),
+  test_loadings = c(
+    .5694, .6794, .6615, .4142, .4584, # DSSEI
+    .5554, .2165, .5675, .5649, .4752, # DSSEI
+    .443 , .6517, .6421, .545 , .5266, # DSSEI
+    .302 , .6067, .5178, .5878, .6572, # DSSEI
+    .4486, .3282, .4738, .4567, .5986, .5416, # SMTQ
+    .3602, .2955, .3648, .4814, # SMTQ
+    .2593, .4053, .61  , .4121, # SMTQ
+    .6005, .4932, .4476, .5033, .6431, # RSES
+    .5806, .5907, .6179, .5899, .6559), # RSES
+  correlation_matrix = matrix(data = c(  1, .73, .62,
+                                         .73,   1, .75,
+                                         .62, .75,   1),
+                              nrow = 3,
+                              ncol = 3))
+# tests have to be added individually
+mydata$tests$RSES <- input_manual_simple(
+  test_name = "RSES",
+  facet_names = c("Ns", "Ps"),
+  items_per_facet = c(5, 5),
+  item_names = c(2, 5, 6, 8,  9,
+                 1, 3, 4, 7, 10),
+  test_loadings = c(.5806, .5907, .6179, .5899, .6559,
+                    .6005, .4932, .4476, .5033, .6431),
+  facet_loadings = c(.6484, .6011, .6988, .6426, .6914,
+                     .6422, .5835, .536, .5836, .6791),
+  correlation_matrix = matrix(data = c(1, .69,
+                                       .69, 1),
+                              nrow = 2,
+                              ncol = 2))
+mydata$tests$DSSEI <- input_manual_simple(
+  test_name = "DSSEI",
+  facet_names = c("Ab", "Pb", "Ph", "So"),
+  items_per_facet = 5,
+  item_names = c(2, 6, 10, 14, 18,
+                  16, 4, 12, 8, 20,
+                  3, 7, 11, 15, 19,
+                  1, 5, 9, 13, 17),
+  test_loadings = c(.302 , .6067, .5178, .5878, .6572,
+                    .443 , .6517, .6421, .545 , .5266,
+                    .5554, .2165, .5675, .5649, .4752,
+                    .5694, .6794, .6615, .4142, .4584),
+  facet_loadings = c(.3347, .6537, .6078, .684 , .735 ,
+                     .6861, .8746, .7982, .7521, .6794,
+                     .7947, .3737, .819 , .7099, .5785,
+                     .7293, .8284, .7892, .3101, .4384),
+  correlation_matrix = matrix(data = c(1, .49, .66,	.76,
+                                       .49,	1, .37, .54,
+                                       .66,	.37, 1,	.53,
+                                       .76,	.54, .53,	1),
+                              nrow = 4,
+                              ncol = 4))
+mydata$tests$SMTQ <- input_manual_simple(
+  test_name = "SMTQ",
+  facet_names = c("Cf", "Cs", "Ct"),
+  items_per_facet = c(6, 4, 4),
+  item_names = c(11, 13, 14, 1, 5, 6,
+                 3, 10, 12, 8,
+                 7, 2, 4, 9),
+  test_loadings = c(.4486, .3282, .4738, .4567, .5986, .5416,
+                    .3602, .2955, .3648, .4814,
+                    .2593, .4053, .61  , .4121),
+  facet_loadings = c(.4995, .3843, .5399, .4562, .6174, .6265,
+                     .4601, .3766, .4744, .5255,
+                     .3546, .5038, .7429, .4342),
+  correlation_matrix = matrix(data = c(1,	.71, .62,
+                                       .71,	1, .59,
+                                       .62,	.59,	1),
+                              nrow = 3,
+                              ncol = 3))
+# process as in a simple case
+my_processed_data <- input_manual_process(mydata)
 ```

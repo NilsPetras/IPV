@@ -119,7 +119,7 @@ input_manual_process_factor <- function(data) {
   # negative center distances are adjusted to zero for chart clarity
   bad <- min(cds$cd)
   bad <- bad < 0
-  if (bad) warning ("At least one negative center distance adjusted to 0")
+  if (bad) message ("Negative center distance adjusted to 0")
   cds$cd[cds$cd < 0] <- 0
 
   mean_cds <- lapply(split(cds, cds$subfactor),

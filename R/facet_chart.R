@@ -274,7 +274,8 @@ plot_facets <- function(
       ggplot2::aes_string(x = "x", y = "y", label = "label"),
       family = font,
       size = 8 * size * size_test_label,
-      fontface = "bold")
+      fontface = "bold",
+      color = color)
 
 
   ## optional layers ----------------

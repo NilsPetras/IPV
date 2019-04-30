@@ -2,8 +2,8 @@
 #'
 #'Creates a nested chart, showing several tests and their facets.
 #'
-#' @param data SEM estimates in the appropriate format, given by the input
-#'   functions.
+#'@param data SEM estimates in the appropriate format, given by the input
+#'  functions.
 #'@param xarrows data frame containing information about additional correlation
 #'  arrows between facets of different tests; see examples.
 #'@param subradius integer; same unit as center distances; radius of the facet
@@ -32,14 +32,10 @@
 #'@param file_height integer; file height in inches; defaults to 10.
 #'@param dpi integer; resolution in dots per inch for "png" and "jpeg" files;
 #'  defaults to 500.
-#'@param color_tests global accent color; defaults to "black".
-#'@param color_facets nested accent color; defaults to "black".
+#'@param color_global global accent color; defaults to "black".
+#'@param color_nested nested accent color; defaults to "black".
 #'@param fade integer; brightness of the gray tones between 0 (black) and 100
 #'  (white) in steps of 1; defaults to 85.
-#'@param correlations logical; if \code{TRUE}, generates the coordinates for the
-#'  correlations between tests. Sets up a ring to draw them in. If \code{FALSE},
-#'  the ring and the correlations are omitted, simplifying the chart
-#'  significantly.
 #'@param cor_spacing integer; if \code{correlations = TRUE}: width of the ring,
 #'  the correlations between tests are drawn in; defaults to 0, in which case an
 #'  appropriate value is estimated.
@@ -143,10 +139,9 @@ nested_chart <- function(
   file_width = 10,
   file_height = 10,
   dpi = 500,
-  color_tests = "black",
-  color_facets = "black",
+  color_global = "black",
+  color_nested = "black",
   fade = 85,
-  correlations = TRUE,
   cor_spacing = 0,
   tick = 0,
   rotate_construct_label_radians = 0,
@@ -180,7 +175,7 @@ nested_chart <- function(
     rotate_construct_label_radians =rotate_construct_label_radians,
     rotate_construct_label_degrees = rotate_construct_label_degrees,
     prepare_item_charts = FALSE,
-    correlations = correlations,
+    correlations = cor_labels_tests,
     cor_spacing = cor_spacing,
     relative_scaling =  relative_scaling,
     xarrows = xarrows)
@@ -194,8 +189,8 @@ nested_chart <- function(
     dpi = dpi,
     cor_labels_tests = cor_labels_tests,
     cor_labels_facets = cor_labels_facets,
-    color_tests = color_tests,
-    color_facets = color_facets,
+    color_global = color_global,
+    color_nested = color_nested,
     fade = fade,
     font = font,
     show_xarrows = show_xarrows,
@@ -355,7 +350,7 @@ coord_nested <- function (
     polcircs <- polcircs[1, "radius"]
   }
   circsize <- unlist(lapply(factorcoords, getcircsize))
-  if (cor_spacing == 0) {
+  if (cor_spacing == 0 & correlations == TRUE) {
     cor_spacing <- .15 * max(circsize)
     message(paste("Correlation spacing set to ",
                   signif(cor_spacing, digits = 3),
@@ -770,8 +765,8 @@ coord_nested <- function (
 #'  between tests as text.
 #'@param cor_labels_facets logical; if \code{TRUE}, shows the correlations
 #'  between facets as text.
-#'@param color_tests global accent color; defaults to "black".
-#'@param color_facets nested accent color; defaults to "black".
+#'@param color_global global accent color; defaults to "black".
+#'@param color_nested nested accent color; defaults to "black".
 #'@param fade integer; brightness of the gray tones between 0 (black) and 100
 #'  (white) in steps of 1; defaults to 85.
 #'@param show_xarrows logical; if \code{TRUE}, shows correlation arrows between
@@ -815,8 +810,8 @@ plot_nested <- function (
   dpi = 500,
   cor_labels_tests = TRUE,
   cor_labels_facets = TRUE,
-  color_tests = "black",
-  color_facets = "black",
+  color_global = "black",
+  color_nested = "black",
   fade = 85,
   font = "sans",
   show_xarrows = FALSE,
@@ -937,7 +932,7 @@ plot_nested <- function (
       data = coord$g$c_circs[-1, ],
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
       size = .5 * size * width_circles,
-      color = color_tests) +
+      color = color_global) +
 
     # nested tick
     ggforce::geom_circle(
@@ -951,14 +946,14 @@ plot_nested <- function (
       data = coord$g$c_axes,
       ggplot2::aes_string(x = "x0", y = "y0", xend = "x1", yend = "y1"),
       size = 2 * size * width_axes,
-      color = color_tests) +
+      color = color_global) +
 
     # facet circles
     ggforce::geom_circle(
       data = coord$g$nested$circles,
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
       size = .25 * size * width_circles_inner,
-      color = color_facets) +
+      color = color_nested) +
 
     # facet labels
     ggplot2::geom_text(
@@ -972,7 +967,7 @@ plot_nested <- function (
       data = coord$g$nested$axes,
       ggplot2::aes_string(x = "x0", y = "y0", xend = "x1", yend = "y1"),
       size = 1 * size * width_axes_inner,
-      color = color_facets) +
+      color = color_nested) +
 
     # construct label
     ggplot2::geom_text(
@@ -980,7 +975,8 @@ plot_nested <- function (
       ggplot2::aes_string(x = "x", y = "y", label = "label"),
       family = font,
       size = 6 * size * size_construct_label,
-      fontface = "bold") +
+      fontface = "bold",
+      color = color_global) +
 
     # test labels
     ggplot2::geom_text(
@@ -988,7 +984,8 @@ plot_nested <- function (
       ggplot2::aes_string(x = "x", y = "y", label = "label"),
       family = font,
       size = 4 * size * size_test_labels,
-      fontface = "bold")
+      fontface = "bold",
+      color = color_nested)
 
 
   ## optional layers ----------------
