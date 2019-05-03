@@ -17,6 +17,7 @@ A set of center distances and latent correlations for items and facets of the
 Domain Specific Self-Esteem Inventory (DSSEI), Sports Mental Toughness
 Questionnaire (SMTQ), and Rosenberg Self-Esteem Scale (RSES) completed by 2272
 german speaking participants using the german versions of the questionnaires.
+SEM estimation performed for all tests as one item pool.
 }
 \section{Items}{
 

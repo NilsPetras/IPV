@@ -15,7 +15,8 @@ SMTQ
 \description{
 A set of center distances and latent correlations for items and facets of the
 SMTQ, completed by 2272 german speaking participants using the german version
-of the questionnaire.
+of the questionnaire. SEM estimation performed together with DSSEI and RSES
+(same as in "self_confidence").
 }
 \section{Items}{
 

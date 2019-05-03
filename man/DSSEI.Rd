@@ -15,7 +15,8 @@ DSSEI
 \description{
 A set of center distances and latent correlations for items and facets of the
 DSSEI, completed by 2272 german speaking participants using the german
-version of the questionnaire.
+version of the questionnaire. SEM estimation performed on the DSSEI data
+alone (differing from the estimation in "self_confidence").
 }
 \section{Items}{
 
@@ -34,8 +35,8 @@ version of the questionnaire.
 
   __ Task-Related Abilities (Ab) __
 
-  2.  I feel as if I lack the necessary skills to really succeed at the work I
-  do. (R)
+  2.  I feel as if I lack the necessary skills to really succeed at the work
+  I do. (R)
 
   6.  I am able to do things as well as most other people.
 
@@ -59,7 +60,8 @@ version of the questionnaire.
 
   __ Public Presentation (Pb) __
 
-  4.  When I speak in a large group discussion, I usually feel sure of myself.
+  4.  When I speak in a large group discussion, I usually feel sure of
+  myself.
 
   8.  I enjoy being in front of large audiences.
 
