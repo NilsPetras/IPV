@@ -5,9 +5,9 @@
 \title{Coord Items}
 \usage{
 coord_items(data, rotate_radians = 0, rotate_degrees = 0,
-  rotate_test_label_radians = 0, rotate_test_label_degrees = 0,
-  width_items = 1, length_items = 1, length_ratio_items = 1.5,
-  dodge = 1)
+  dist_test_label = 0.5, rotate_test_label_radians = 0,
+  rotate_test_label_degrees = 0, width_items = 1, length_items = 1,
+  length_ratio_items = 1.5, dodge = 1)
 }
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input
@@ -18,6 +18,10 @@ counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
 
 \item{rotate_degrees}{integer; angle in degrees to rotate the chart
 counter-clockwise by.}
+
+\item{dist_test_label}{integer; position of the test label relative to the
+surrounding circle; defaults to .5, in which case the test label is
+displayed halfway from the center to the surrounding circle.}
 
 \item{rotate_test_label_radians}{integer; radian angle to rotate the test
 label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}

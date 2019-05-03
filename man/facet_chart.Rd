@@ -7,7 +7,7 @@
 facet_chart(data, subradius = 0, file_name = "myipv.pdf", size = 1,
   font = "sans", rotate_radians = 0, rotate_degrees = 0,
   file_width = 10, file_height = 10, dpi = 500, color = "black",
-  fade = 85, tick = 0, cor_labels = TRUE,
+  fade = 85, tick = 0, cor_labels = TRUE, dist_test_label = 2/3,
   rotate_test_label_radians = 0, rotate_test_label_degrees = 0,
   size_cor_labels = 1, size_test_label = 1, size_facet_labels = 1,
   width_axes = 1, width_circles = 1, width_tick = 1,
@@ -52,6 +52,10 @@ appropriate value is estimated.}
 
 \item{cor_labels}{logical; if \code{TRUE}, shows latent correlations between
 facets; defaults to \code{TRUE}.}
+
+\item{dist_test_label}{integer; position of the test label relative to the
+surrounding circle; defaults to 2/3, in which case the test label is
+displayed 2/3 of the way from the center to the surrounding circle.}
 
 \item{rotate_test_label_radians}{integer; radian angle to rotate the test
 label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}

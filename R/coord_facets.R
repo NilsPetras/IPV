@@ -12,10 +12,13 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
-#' @param rotate_test_label_radians integer; radian angle to rotate the test label
-#'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
-#' @param rotate_test_label_degrees integer; angle in degrees to rotate the global
-#'   label counter-clockwise by.
+#' @param dist_test_label integer; position of the test label relative to the
+#'   surrounding circle; defaults to 2/3, in which case the test label is
+#'   displayed 2/3 of the way from the center to the surrounding circle.
+#' @param rotate_test_label_radians integer; radian angle to rotate the test
+#'   label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
+#' @param rotate_test_label_degrees integer; angle in degrees to rotate the
+#'   global label counter-clockwise by.
 #'
 #' @details Use \code{\link{facet_chart}} to create facet charts.
 #'
@@ -28,6 +31,7 @@ coord_facets <- function (
   tick = 0,
   rotate_radians = 0,
   rotate_degrees = 0,
+  dist_test_label = 2 / 3,
   rotate_test_label_radians = 0,
   rotate_test_label_degrees = 0) {
 
@@ -51,7 +55,7 @@ coord_facets <- function (
     subradius <- max(mean(mcd), .25 * max(mcd)) *
     (5 / (3 + cplx)) *
     (.25 + .25 * (min(max(mean(mcd), .25 * max(mcd)) / stats::sd(mcd), 3)))
-    message(paste("Subradius set to ",
+    message(paste("Facet circle radius set to ",
                   signif(subradius, digits = 3),
                   " based on the data.",
                   sep = ""))
@@ -133,7 +137,7 @@ coord_facets <- function (
   cs <- p_circs[-1, ]
   test_label$phi <- cs[which.min(cs$rho), "phi"] - pi / cplx + rotate_test_label
   rm(cs)
-  test_label$rho <- 2 / 3 * max(p_circs$radius)
+  test_label$rho <- dist_test_label * max(p_circs$radius)
   test_label$x <- round(cos(test_label$phi) * test_label$rho, digits = 7)
   test_label$y <- round(sin(test_label$phi) * test_label$rho, digits = 7)
 

@@ -26,8 +26,8 @@
 #'@param subrotate_radians integer; radian angle or vector of radian angles to
 #'  rotate the nested facet charts counter-clockwise by; use fractions of pi
 #'  (e.g. pi/2 = 90 degrees).
-#'@param subrotate_degrees integer; angle in degrees or vector of angles in
-#'  degrees to rotate the nested facet charts counter-clockwise by.
+#'@param subrotate_degrees integer; angle or vector of angles in degrees to
+#'  rotate the nested facet charts counter-clockwise by.
 #'@param file_width integer; file width in inches; defaults to 10.
 #'@param file_height integer; file height in inches; defaults to 10.
 #'@param dpi integer; resolution in dots per inch for "png" and "jpeg" files;
@@ -41,11 +41,23 @@
 #'  appropriate value is estimated.
 #'@param tick numeric; axis tick position; defaults to 0, in which case an
 #'  appropriate value is estimated.
+#'@param dist_construct_label integer; position of the construct label relative
+#'  to the surrounding circle; defaults to 10, in which case an appropriate
+#'  value is estimated; a value of .5 would position the label halfway between
+#'  the center and the surrounding circle.
 #'@param rotate_construct_label_radians integer; radian angle to rotate the
 #'  construct label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90
 #'  degrees).
 #'@param rotate_construct_label_degrees integer; angle in degrees to rotate the
 #'  construct label counter-clockwise by.
+#'@param dist_test_labels integer; position of the test labels relative to the
+#'  surrounding circle; defaults to 2/3, in which case the test labels are
+#'  displayed 2/3 of the way from the centers to the surrounding circles.
+#'@param rotate_test_labels_radians integer; radian angle or vector of radian
+#'  angles to rotate the test labels counter-clockwise by; use fractions of pi
+#'  (e.g. pi/2 = 90 degrees).
+#'@param rotate_test_labels_degrees integer; angle or vector of angle in degrees
+#'  to rotate the test labels counter-clockwise by.
 #'@param cor_labels_tests logical; if \code{TRUE}, shows the correlations
 #'  between tests as text.
 #'@param cor_labels_facets logical; if \code{TRUE}, shows the correlations
@@ -144,8 +156,12 @@ nested_chart <- function(
   fade = 85,
   cor_spacing = 0,
   tick = 0,
+  dist_construct_label = 10,
   rotate_construct_label_radians = 0,
   rotate_construct_label_degrees = 0,
+  dist_test_labels = 2/ 3,
+  rotate_test_labels_radians = 0,
+  rotate_test_labels_degrees = 0,
   cor_labels_tests = TRUE,
   cor_labels_facets = TRUE,
   size_construct_label = 1,
@@ -172,8 +188,12 @@ nested_chart <- function(
     rotate_degrees = rotate_degrees,
     subrotate_radians = subrotate_radians,
     subrotate_degrees = subrotate_degrees,
-    rotate_construct_label_radians =rotate_construct_label_radians,
+    dist_construct_label = dist_construct_label,
+    rotate_construct_label_radians = rotate_construct_label_radians,
     rotate_construct_label_degrees = rotate_construct_label_degrees,
+    dist_test_labels = dist_test_labels,
+    rotate_test_labels_radians = rotate_test_labels_radians,
+    rotate_test_labels_degrees = rotate_test_labels_degrees,
     prepare_item_charts = FALSE,
     correlations = cor_labels_tests,
     cor_spacing = cor_spacing,
@@ -220,8 +240,8 @@ nested_chart <- function(
 #'
 #'Generates the coordinates for a nested chart and all other charts.
 #'
-#' @param data SEM estimates in the appropriate format, given by the input
-#'   functions.
+#'@param data SEM estimates in the appropriate format, given by the input
+#'  functions.
 #'@param subradius integer; same unit as center distances; radius of the facet
 #'  circles; defaults to 0, in which case an appropriate value is estimated.
 #'@param tick numeric; axis tick position; defaults to 0, in which case an
@@ -235,11 +255,23 @@ nested_chart <- function(
 #'  (e.g. pi/2 = 90 degrees).
 #'@param subrotate_degrees integer; angle in degrees or vector of angles in
 #'  degrees to rotate the nested facet charts counter-clockwise by.
+#'@param dist_construct_label integer; position of the construct label relative
+#'  to the surrounding circle; defaults to 10, in which case an appropriate
+#'  value is estimated; a value of .5 would position the label halfway between
+#'  the center and the surrounding circle.
 #'@param rotate_construct_label_radians integer; radian angle to rotate the
 #'  construct label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90
 #'  degrees).
 #'@param rotate_construct_label_degrees integer; angle in degrees to rotate the
 #'  construct label counter-clockwise by.
+#'@param dist_test_labels integer; position of the test labels relative to the
+#'  surrounding circle; defaults to 2/3, in which case the test labels are
+#'  displayed 2/3 of the way from the centers to the surrounding circles.
+#'@param rotate_test_labels_radians integer; radian angle or vector of radian
+#'  angles to rotate the test labels counter-clockwise by; use fractions of pi
+#'  (e.g. pi/2 = 90 degrees).
+#'@param rotate_test_labels_degrees integer; angle or vector of angle in degrees
+#'  to rotate the test labels counter-clockwise by.
 #'@param prepare_item_charts logical; if \code{TRUE}, generates the item chart
 #'  coordinates for all factors by calling \code{\link{coord_items}}.
 #'@param correlations logical; if \code{TRUE}, generates the coordinates for the
@@ -268,8 +300,12 @@ coord_nested <- function (
   rotate_degrees = 0,
   subrotate_radians = 0,
   subrotate_degrees = 0,
+  dist_construct_label = 10,
   rotate_construct_label_radians = 0,
   rotate_construct_label_degrees = 0,
+  dist_test_labels = 2 / 3,
+  rotate_test_labels_radians = 0,
+  rotate_test_labels_degrees = 0,
   prepare_item_charts = FALSE,
   correlations = TRUE,
   cor_spacing = 0,
@@ -279,7 +315,20 @@ coord_nested <- function (
 
   # helper variables -----------------------------------------------------------
 
+  cplx <- length(colnames(data$g$cors))
+  # a vector of subrotation values can be given,
+  # to allign the nested facet charts
   subrotate <- subrotate_radians + subrotate_degrees * pi / 180
+  if (length(subrotate) == 1) subrotate <- rep(subrotate, cplx)
+  if (length(dist_test_labels) == 1) {
+    dist_test_labels <- rep(dist_test_labels, cplx)
+  }
+  rotate_test_labels <- rotate_test_labels_radians +
+    rotate_test_labels_degrees * pi / 180
+  if (length(rotate_test_labels) == 1) {
+    rotate_test_labels <- rep(rotate_test_labels, cplx)
+  }
+
   # default subradius needs to scale with the data to avoid messy results
   def_subradius <- function (data) {
     cplx <- length(colnames(data$cors))
@@ -290,43 +339,25 @@ coord_nested <- function (
   }
   if (subradius == 0) {
     subradius <- min(unlist(lapply(data$tests, def_subradius)))
-    message(paste("Subradius set to ",
+    message(paste("Facet circle radius set to ",
                   signif(subradius, digits = 3),
                   " based on the data.",
                   sep = ""))
   }
 
-  # listwise calculation for single tests --------------------------------------
+  # nested facet charts --------------------------------------------------------
 
-  if (length(subrotate) == 1) {
-    factorcoords <- lapply(data$tests,
-                           coord_facets,
-                           subradius = subradius,
-                           rotate_radians = subrotate)
-    names(factorcoords) <- names(data$tests)
+  factorcoords <- list()
+  for (i in 1:length(data$tests)) {
+    factorcoords[[i]] <- coord_facets(data$tests[[i]],
+                                      subradius = subradius,
+                                      rotate_radians = subrotate[i],
+                                      rotate_test_label_radians = rotate_test_labels[i],
+                                      dist_test_label = dist_test_labels[i])
   }
-
+  names(factorcoords) <- names(data$tests)
   # # this could be used for bulk processing of item charts in a future build
-  # if (length(subrotate) == 1 & prepare_item_charts == TRUE) {
-  #   itemcoords <- lapply(data$tests,
-  #                        coord_items,
-  #                        rotate_radians = subrotate)
-  #   names(itemcoords) <- names(data$tests)
-  # }
-
-  # a vector of subrotation values can be given,
-  # to allign the nested facet charts
-  if (length(subrotate) == length(data$tests)) {
-    factorcoords <- list()
-    for (i in 1:length(data$tests)) {
-      factorcoords[[i]] <- coord_facets(data$tests[[i]],
-                                        subradius = subradius,
-                                        rotate_radians = subrotate[i])
-    }
-    names(factorcoords) <- names(data$tests)
-  }
-  # # this could be used for bulk processing of item charts in a future build
-  # if (length(subrotate) == length(data$tests) & prepare_item_charts == TRUE) {
+  # if (prepare_item_charts == TRUE) {
   #   itemcoords <- list()
   #   for (i in 1:length(data$tests)) {
   #     itemcoords[[i]] <- coord_items(data$tests[[i]],
@@ -342,7 +373,6 @@ coord_nested <- function (
   rotate <- rotate_radians + rotate_degrees * pi / 180
   rotate_construct_label <- rotate_construct_label_radians +
     rotate_construct_label_degrees * pi / 180
-  cplx <- length(colnames(data$g$cors))
 
   # test circle size needed to allign objects
   getcircsize <- function (x) {
@@ -352,7 +382,7 @@ coord_nested <- function (
   circsize <- unlist(lapply(factorcoords, getcircsize))
   if (cor_spacing == 0 & correlations == TRUE) {
     cor_spacing <- .15 * max(circsize)
-    message(paste("Correlation spacing set to ",
+    message(paste("cor_spacing set to ",
                   signif(cor_spacing, digits = 3),
                   " based on the data.",
                   sep = ""))
@@ -391,6 +421,16 @@ coord_nested <- function (
     sc <- rep(c(1, 2, 5), 5) * 10 ^ rep(-3:1, each = 3)
     tick <- sc[which.min(abs(tick - sc))]
     message(paste("Axis tick set to ", tick," based on the data.", sep = ""))
+  }
+
+  # default distance of the construct label from the center needs to scale with
+  # the number of tests, to account for the reduction in space
+  if (dist_construct_label == 10) {
+    dist_construct_label <- (1 - 2 / (1 + cplx))
+    message(paste("dist_construct_label set to ",
+                  signif(dist_construct_label, digits = 3),
+                  " based on the data.",
+                  sep = ""))
   }
 
 
@@ -491,7 +531,7 @@ coord_nested <- function (
     rho=NA)
   construct_label$phi <- p_circs[which.min(p_circs$radius), "phi"] +
     pi / cplx + rotate_construct_label
-  construct_label$rho <- (1 - 2 / (1 + cplx)) * max(p_circs$radius)
+  construct_label$rho <- dist_construct_label * max(p_circs$radius)
   construct_label$x <- round(cos(construct_label$phi) * construct_label$rho, digits = 7)
   construct_label$y <- round(sin(construct_label$phi) * construct_label$rho, digits = 7)
 

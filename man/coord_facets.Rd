@@ -5,8 +5,8 @@
 \title{Coord Facets}
 \usage{
 coord_facets(data, subradius = 0, tick = 0, rotate_radians = 0,
-  rotate_degrees = 0, rotate_test_label_radians = 0,
-  rotate_test_label_degrees = 0)
+  rotate_degrees = 0, dist_test_label = 2/3,
+  rotate_test_label_radians = 0, rotate_test_label_degrees = 0)
 }
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input
@@ -24,11 +24,15 @@ counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
 \item{rotate_degrees}{integer; angle in degrees to rotate the chart
 counter-clockwise by.}
 
-\item{rotate_test_label_radians}{integer; radian angle to rotate the test label
-counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
+\item{dist_test_label}{integer; position of the test label relative to the
+surrounding circle; defaults to 2/3, in which case the test label is
+displayed 2/3 of the way from the center to the surrounding circle.}
 
-\item{rotate_test_label_degrees}{integer; angle in degrees to rotate the global
-label counter-clockwise by.}
+\item{rotate_test_label_radians}{integer; radian angle to rotate the test
+label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
+
+\item{rotate_test_label_degrees}{integer; angle in degrees to rotate the
+global label counter-clockwise by.}
 }
 \value{
 List containing coordinates of chart objects.

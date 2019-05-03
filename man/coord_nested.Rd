@@ -6,10 +6,11 @@
 \usage{
 coord_nested(data, subradius = 0, tick = 0, rotate_radians = 0,
   rotate_degrees = 0, subrotate_radians = 0, subrotate_degrees = 0,
-  rotate_construct_label_radians = 0,
-  rotate_construct_label_degrees = 0, prepare_item_charts = FALSE,
-  correlations = TRUE, cor_spacing = 0, relative_scaling = 0,
-  xarrows = NULL)
+  dist_construct_label = 10, rotate_construct_label_radians = 0,
+  rotate_construct_label_degrees = 0, dist_test_labels = 2/3,
+  rotate_test_labels_radians = 0, rotate_test_labels_degrees = 0,
+  prepare_item_charts = FALSE, correlations = TRUE, cor_spacing = 0,
+  relative_scaling = 0, xarrows = NULL)
 }
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input
@@ -34,12 +35,28 @@ rotate the nested facet charts counter-clockwise by; use fractions of pi
 \item{subrotate_degrees}{integer; angle in degrees or vector of angles in
 degrees to rotate the nested facet charts counter-clockwise by.}
 
+\item{dist_construct_label}{integer; position of the construct label relative
+to the surrounding circle; defaults to 10, in which case an appropriate
+value is estimated; a value of .5 would position the label halfway between
+the center and the surrounding circle.}
+
 \item{rotate_construct_label_radians}{integer; radian angle to rotate the
 construct label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90
 degrees).}
 
 \item{rotate_construct_label_degrees}{integer; angle in degrees to rotate the
 construct label counter-clockwise by.}
+
+\item{dist_test_labels}{integer; position of the test labels relative to the
+surrounding circle; defaults to 2/3, in which case the test labels are
+displayed 2/3 of the way from the centers to the surrounding circles.}
+
+\item{rotate_test_labels_radians}{integer; radian angle or vector of radian
+angles to rotate the test labels counter-clockwise by; use fractions of pi
+(e.g. pi/2 = 90 degrees).}
+
+\item{rotate_test_labels_degrees}{integer; angle or vector of angle in degrees
+to rotate the test labels counter-clockwise by.}
 
 \item{prepare_item_charts}{logical; if \code{TRUE}, generates the item chart
 coordinates for all factors by calling \code{\link{coord_items}}.}

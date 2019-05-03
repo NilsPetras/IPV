@@ -8,6 +8,9 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
+#' @param dist_test_label integer; position of the test label relative to the
+#'   surrounding circle; defaults to .5, in which case the test label is
+#'   displayed halfway from the center to the surrounding circle.
 #' @param rotate_test_label_radians integer; radian angle to rotate the test
 #'   label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_test_label_degrees integer; angle in degrees to rotate the test
@@ -28,6 +31,7 @@ coord_items <- function (
   data,
   rotate_radians = 0,
   rotate_degrees = 0,
+  dist_test_label = .5,
   rotate_test_label_radians = 0,
   rotate_test_label_degrees = 0,
   width_items = 1,
@@ -162,7 +166,7 @@ coord_items <- function (
   ## test label ---------------------
 
   test_label <- data.frame(phi = mean(p_axes$phi[1] + pi / cplx) + rotate_test_label,
-                      rho = .5 * maxcd,
+                      rho = dist_test_label * maxcd,
                       label = data$cds$factor[1],
                       x = NA, y = NA)
   test_label$x <- round(cos(test_label$phi) * test_label$rho, digits = 7)

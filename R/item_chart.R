@@ -28,6 +28,9 @@
 #'   lines between 0 = "black" and 100 = "white" in steps of 1; defaults to 65.
 #' @param dodge integer; horizontal outward dodge of facet labels relative to
 #'   default.
+#' @param dist_test_label integer; position of the test label relative to the
+#'   surrounding circle; defaults to .5, in which case the test label is
+#'   displayed halfway from the center to the surrounding circle.
 #' @param rotate_test_label_radians integer; radian angle to rotate the test
 #'   label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_test_label_degrees integer; angle in degrees to rotate the test
@@ -81,6 +84,7 @@ item_chart <- function(
   fade_grid_major = 15,
   fade_grid_minor = 65,
   dodge = 1,
+  dist_test_label = .5,
   rotate_test_label_radians = 0,
   rotate_test_label_degrees = 0,
   width_items = 1,
@@ -101,6 +105,7 @@ item_chart <- function(
     width_items = width_items,
     length_items = length_items,
     length_ratio_items = length_ratio_items,
+    dist_test_label = dist_test_label,
     rotate_test_label_radians =rotate_test_label_radians,
     rotate_test_label_degrees = rotate_test_label_degrees)
 

@@ -7,7 +7,7 @@
 plot_nested(coord, size = 1, file_name = "myipv.pdf",
   file_width = 10, file_height = 10, dpi = 500,
   cor_labels_tests = TRUE, cor_labels_facets = TRUE,
-  color_tests = "black", color_facets = "black", fade = 85,
+  color_global = "black", color_nested = "black", fade = 85,
   font = "sans", show_xarrows = FALSE, size_construct_label = 1,
   size_test_labels = 1, size_facet_labels = 1, width_axes = 1,
   width_axes_inner = 1, width_circles = 1, width_circles_inner = 1,
@@ -37,9 +37,9 @@ between tests as text.}
 \item{cor_labels_facets}{logical; if \code{TRUE}, shows the correlations
 between facets as text.}
 
-\item{color_tests}{global accent color; defaults to "black".}
+\item{color_global}{global accent color; defaults to "black".}
 
-\item{color_facets}{nested accent color; defaults to "black".}
+\item{color_nested}{nested accent color; defaults to "black".}
 
 \item{fade}{integer; brightness of the gray tones between 0 (black) and 100
 (white) in steps of 1; defaults to 85.}

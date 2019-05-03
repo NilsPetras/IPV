@@ -27,6 +27,9 @@
 #'   appropriate value is estimated.
 #' @param cor_labels logical; if \code{TRUE}, shows latent correlations between
 #'   facets; defaults to \code{TRUE}.
+#' @param dist_test_label integer; position of the test label relative to the
+#'   surrounding circle; defaults to 2/3, in which case the test label is
+#'   displayed 2/3 of the way from the center to the surrounding circle.
 #' @param rotate_test_label_radians integer; radian angle to rotate the test
 #'   label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_test_label_degrees integer; angle in degrees to rotate the
@@ -68,6 +71,7 @@ facet_chart <- function(
   fade = 85,
   tick = 0,
   cor_labels = TRUE,
+  dist_test_label = 2 / 3,
   rotate_test_label_radians = 0,
   rotate_test_label_degrees = 0,
   size_cor_labels = 1,
@@ -84,6 +88,7 @@ facet_chart <- function(
     tick = tick,
     rotate_radians = rotate_radians,
     rotate_degrees = rotate_degrees,
+    dist_test_label = dist_test_label,
     rotate_test_label_radians =rotate_test_label_radians,
     rotate_test_label_degrees = rotate_test_label_degrees)
 

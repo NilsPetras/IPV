@@ -9,15 +9,17 @@ nested_chart(data, xarrows = NULL, subradius = 0,
   show_xarrows = FALSE, font = "sans", rotate_radians = 0,
   rotate_degrees = 0, subrotate_radians = 0, subrotate_degrees = 0,
   file_width = 10, file_height = 10, dpi = 500,
-  color_tests = "black", color_facets = "black", fade = 85,
-  correlations = TRUE, cor_spacing = 0, tick = 0,
+  color_global = "black", color_nested = "black", fade = 85,
+  cor_spacing = 0, tick = 0, dist_construct_label = 10,
   rotate_construct_label_radians = 0,
-  rotate_construct_label_degrees = 0, cor_labels_tests = TRUE,
-  cor_labels_facets = TRUE, size_construct_label = 1,
-  size_test_labels = 1, size_facet_labels = 1, width_axes = 1,
-  width_axes_inner = 1, width_circles = 1, width_circles_inner = 1,
-  width_tick = 1, width_tick_inner = 1, size_tick_label = 1,
-  size_cor_labels = 1, size_cor_labels_inner = 1, width_xarrows = 1,
+  rotate_construct_label_degrees = 0, dist_test_labels = 2/3,
+  rotate_test_labels_radians = 0, rotate_test_labels_degrees = 0,
+  cor_labels_tests = TRUE, cor_labels_facets = TRUE,
+  size_construct_label = 1, size_test_labels = 1,
+  size_facet_labels = 1, width_axes = 1, width_axes_inner = 1,
+  width_circles = 1, width_circles_inner = 1, width_tick = 1,
+  width_tick_inner = 1, size_tick_label = 1, size_cor_labels = 1,
+  size_cor_labels_inner = 1, width_xarrows = 1,
   size_xarrow_heads = 1, size_xarrow_labels = 1)
 }
 \arguments{
@@ -56,8 +58,8 @@ counter-clockwise by.}
 rotate the nested facet charts counter-clockwise by; use fractions of pi
 (e.g. pi/2 = 90 degrees).}
 
-\item{subrotate_degrees}{integer; angle in degrees or vector of angles in
-degrees to rotate the nested facet charts counter-clockwise by.}
+\item{subrotate_degrees}{integer; angle or vector of angles in degrees to
+rotate the nested facet charts counter-clockwise by.}
 
 \item{file_width}{integer; file width in inches; defaults to 10.}
 
@@ -66,17 +68,12 @@ degrees to rotate the nested facet charts counter-clockwise by.}
 \item{dpi}{integer; resolution in dots per inch for "png" and "jpeg" files;
 defaults to 500.}
 
-\item{color_tests}{global accent color; defaults to "black".}
+\item{color_global}{global accent color; defaults to "black".}
 
-\item{color_facets}{nested accent color; defaults to "black".}
+\item{color_nested}{nested accent color; defaults to "black".}
 
 \item{fade}{integer; brightness of the gray tones between 0 (black) and 100
 (white) in steps of 1; defaults to 85.}
-
-\item{correlations}{logical; if \code{TRUE}, generates the coordinates for the
-correlations between tests. Sets up a ring to draw them in. If \code{FALSE},
-the ring and the correlations are omitted, simplifying the chart
-significantly.}
 
 \item{cor_spacing}{integer; if \code{correlations = TRUE}: width of the ring,
 the correlations between tests are drawn in; defaults to 0, in which case an
@@ -85,12 +82,28 @@ appropriate value is estimated.}
 \item{tick}{numeric; axis tick position; defaults to 0, in which case an
 appropriate value is estimated.}
 
+\item{dist_construct_label}{integer; position of the construct label relative
+to the surrounding circle; defaults to 10, in which case an appropriate
+value is estimated; a value of .5 would position the label halfway between
+the center and the surrounding circle.}
+
 \item{rotate_construct_label_radians}{integer; radian angle to rotate the
 construct label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90
 degrees).}
 
 \item{rotate_construct_label_degrees}{integer; angle in degrees to rotate the
 construct label counter-clockwise by.}
+
+\item{dist_test_labels}{integer; position of the test labels relative to the
+surrounding circle; defaults to 2/3, in which case the test labels are
+displayed 2/3 of the way from the centers to the surrounding circles.}
+
+\item{rotate_test_labels_radians}{integer; radian angle or vector of radian
+angles to rotate the test labels counter-clockwise by; use fractions of pi
+(e.g. pi/2 = 90 degrees).}
+
+\item{rotate_test_labels_degrees}{integer; angle or vector of angle in degrees
+to rotate the test labels counter-clockwise by.}
 
 \item{cor_labels_tests}{logical; if \code{TRUE}, shows the correlations
 between tests as text.}
