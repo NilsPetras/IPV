@@ -4,8 +4,15 @@
 \alias{input_manual_nested}
 \title{Input Manual Nested}
 \usage{
-input_manual_nested(construct_name, test_names, items_per_test, item_names,
-  construct_loadings, test_loadings, correlation_matrix)
+input_manual_nested(
+  construct_name,
+  test_names,
+  items_per_test,
+  item_names,
+  construct_loadings,
+  test_loadings,
+  correlation_matrix
+)
 }
 \arguments{
 \item{construct_name}{character; the name of the overall construct.}

@@ -3,7 +3,6 @@
 \docType{package}
 \name{IPV}
 \alias{IPV}
-\alias{IPV-package}
 \title{IPV: A package to create Item Pool Visualizations}
 \description{
 The IPV package provides two sets of functions: input functions, and chart

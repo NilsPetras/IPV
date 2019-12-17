@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 ## About this package {#about}
 
 The IPV package is a tool to create IPV charts. The original work on IPV, including the chart concepts, can be found in:
-[*Dantlgraber, M., Stieger, S., & Reips, U.-D., 2018, Introducing Item Pool Visualization (IPV). GSDS Working Paper*](https://www.gsds.uni-konstanz.de/typo3temp/secure_downloads/64291/0/c11fa59f405bed86279fa8eb67d5d80b72685027/WP2018-08_DantlgraberStiegerReips.pdf)  
+[*Dantlgraber, M., Stieger, S., & Reips, U. D. (2019). Introducing Item Pool Visualization: A method for investigation of concepts in self-reports and psychometric tests. Methodological Innovations, 12(3), 2059799119884283.*](https://doi.org/10.1177/2059799119884283). Please cite this paper when using the package.
 My philosophy is that chart creation should be possible on the full spectrum between quick & dirty and highly customized. So feel free to raise an [issue on github](https://github.com/NilsPetras/IPV/issues) if something frustrates you, or you miss a customization option. Do the same if you encounter a bug (so I can fix it) or do not understand the vignette (so I can change it).
 
 ### Quick & dirty chart creation {#quick}
@@ -34,17 +34,17 @@ mychart
 ```
 
 As you can see, getting a first result is meant to be trivial. All three IPV chart types can be created by specifying `data = ` only. (Here, `file_name = ` is specified with no file extension to suppress the file output.)  
-Although I have put considerable effort in setting sensible defaults (or generating them dynamically, based on the data), it is always possible to optimize the charts. For example, I prefer my charts to have a higher [data ink ratio](https://infovis-wiki.net/wiki/Data-Ink_Ratio) and like to use [color](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) to guide attention. The many graphical parameters enable e.g. to create a black and white print optimized version or a version optimized for small display.
+Although I have put considerable effort in setting sensible defaults (or generating them dynamically, based on the data), it is always possible to optimize the charts. For example, I prefer my charts to have a higher [data ink ratio](https://infovis-wiki.net/wiki/Data-Ink_Ratio) and like to use [color](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) to guide attention. The many graphical parameters aslo enable you to create a black and white print optimized version or a version optimized for small display.
 
 ## Workflow
-Assuming you have some interesting raw data, empirical, simulated, or manufactured mischievously, these are the necessary steps to produce IPV charts:  
+Assuming you have some interesting raw data, empirical, simulated, or faked, these are the necessary steps to produce IPV charts:  
 0. SEM estimation  
 1. Input  
 2. Chart creation  
 Tip: Call `?IPV` for an overview of the functions of the package.
 
 ### 0. SEM estimation
-The IPV package does **not** do the SEM estimation for you. But that means you get to use your favorite statistical software (e.g. the R packages [lavaan](http://lavaan.ugent.be/) or [sem](https://socialsciences.mcmaster.ca/jfox/Misc/sem/SEM-paper.pdf)). The [abovementionned paper](https://www.gsds.uni-konstanz.de/typo3temp/secure_downloads/64291/0/c11fa59f405bed86279fa8eb67d5d80b72685027/WP2018-08_DantlgraberStiegerReips.pdf) shows how to specify the SEM models. For the example used here and in the paper, you might want to take a look at figures 6-8, showing the three SEMs used. As the authors point out, the models can only be estimated as SEMs, not by means of factor analysis or in any other way.   
+The IPV package does **not** do the SEM estimation for you. But that means you get to use your favorite statistical software (e.g. the R packages [lavaan](http://lavaan.ugent.be/) or [sem](https://socialsciences.mcmaster.ca/jfox/Misc/sem/SEM-paper.pdf)). The [abovementionned paper](https://doi.org/10.1177/2059799119884283) shows how to specify the SEM models. For the example, used here and in the paper, you might want to take a look at figures 6-8, which shows the three SEMs used. As the authors point out, the models can only be estimated as SEMs, not by means of factor analysis or in any other way.   
 As *nested* I will describe all cases, where the overall item pool is subdivided more than once. For example, an item pool comprising multiple tests can be divided into the tests and subdivided into the tests' facets (as seen in figure 6-8 of the paper). In this case, *nested charts* can be used to compare all three models. In nested cases, I will distinguish a *global* level, where tests are compared with each other, and a nested level, that is concerned with the internal structure of tests. Every case that is not nested, i.e. only consists of a single test, I will call *simple*.
 
 ### 1. Input
@@ -90,10 +90,10 @@ mydata
 input_manual_process(mydata)
 ```
 For nested cases, use the function `input_manual_nested()`, and add the individual tests using `input_manual_simple()`. Then you can run `input_manual_processs()` as in the simple case. You can find the (lengthy) example [below](#nested).  
-If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning or message is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
+If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning (or message) is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
 
 #### Using Excel files
-Excel files have the advantage, that you can just copy and paste your SEM estimates into the spreadsheets and the input function of the IPV package (`input_excel()`) does the rest. The files need to be structured as in the example, that you can find here:
+Excel files have the advantage that you can simply copy and paste your SEM estimates into the spreadsheets and the input function of the IPV package (`input_excel()`) does the rest. The files need to be structured as in the example, that you can find here:
 ```{r}
 system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
 system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE)
@@ -318,7 +318,7 @@ mydata <- input_manual_nested(
                               nrow = 3,
                               ncol = 3))
 
-# then tests have to be added individually
+# then add tests individually
 # test 1
 mydata$tests$RSES <- input_manual_simple(
   test_name = "RSES",
@@ -377,7 +377,7 @@ mydata$tests$SMTQ <- input_manual_simple(
                               nrow = 3,
                               ncol = 3))
 
-# finally process as in a simple case
+# finally process (as in a simple case)
 my_processed_data <- input_manual_process(mydata)
 my_processed_data
 ```

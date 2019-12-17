@@ -22,13 +22,13 @@
 #'@details Pay attention to the order of tests and items, it has to be coherent
 #'  throughout the whole data. test_names and items_per_test determine which
 #'  test is listed first and how many items are listed for that test.
-#'  item_names, construct_loadings and test_loadings have to match that
-#'  order. The correlation matrix uses the order in test_names for rows and
-#'  columns.
+#'  item_names, construct_loadings and test_loadings have to match that order.
+#'  The correlation matrix uses the order in test_names for rows and columns.
 #'
 #'  This function only lists the name of the tests in output$tests. For each of
 #'  those tests, the data on the facets needs to be added using
-#'  \code{\link{input_manual_simple}}.
+#'  \code{\link{input_manual_simple}}. Every test for which you do not provide
+#'  this data will be treated as having no facets.
 #'
 #'  Visually inspect the returned object before continuing with
 #'  \code{\link{input_manual_process}}!

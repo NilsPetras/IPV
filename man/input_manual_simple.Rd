@@ -4,8 +4,15 @@
 \alias{input_manual_simple}
 \title{Input Manual Simple}
 \usage{
-input_manual_simple(test_name, facet_names, items_per_facet, item_names,
-  test_loadings, facet_loadings, correlation_matrix)
+input_manual_simple(
+  test_name,
+  facet_names,
+  items_per_facet,
+  item_names,
+  test_loadings,
+  facet_loadings,
+  correlation_matrix
+)
 }
 \arguments{
 \item{test_name}{character; the name of the test.}

@@ -62,8 +62,10 @@
 #'   Covariance structure analysis of latent variable models of self-conception.
 #'   Journal of Consulting and Clinical Psychology, 59(1), 67.)
 #'
-#' @source Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision).
-#'   Introducing Item Pool Visualization (IPV)
+#' @source Dantlgraber, M., Stieger, S., & Reips, U. D. (2019). Introducing Item
+#'   Pool Visualization: A method for investigation of concepts in self-reports
+#'   and psychometric tests. Methodological Innovations, 12(3),
+#'   2059799119884283.
 #'
 "DSSEI"
 
@@ -115,8 +117,9 @@
 #'
 #'  \code{\link{DSSEI}}
 #'
-#'@source Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision).
-#'  Introducing Item Pool Visualization (IPV)
+#'@source Dantlgraber, M., Stieger, S., & Reips, U. D. (2019). Introducing Item
+#'  Pool Visualization: A method for investigation of concepts in self-reports
+#'  and psychometric tests. Methodological Innovations, 12(3), 2059799119884283.
 #'
 "self_confidence"
 
@@ -169,7 +172,9 @@
 #'   validation of the Sports Mental Toughness Questionnaire (SMTQ). European
 #'   Journal of Psychological Assessment, 25(3), 186-193.)
 #'
-#' @source Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision).
-#'   Introducing Item Pool Visualization (IPV)
+#' @source Dantlgraber, M., Stieger, S., & Reips, U. D. (2019). Introducing Item
+#'   Pool Visualization: A method for investigation of concepts in self-reports
+#'   and psychometric tests. Methodological Innovations, 12(3),
+#'   2059799119884283.
 #'
 "SMTQ"
