@@ -81,7 +81,9 @@ input_excel <- function(global = NULL, tests){
                                    global_input$cds$item,
                                    sep = ".")
 
-    tests_input[which(is.na(tests))] <- NA
+    if (any(is.na(tests))) {
+      tests_input[which(is.na(tests))] <- NA
+    }
 
     for (i in which(!is.na(tests))) {
       names(tests_input)[i] <- levels(tests_input[[c(i, 1)]]$factor)
@@ -89,9 +91,11 @@ input_excel <- function(global = NULL, tests){
 
     missing_tests <- setdiff(
       levels(global_input$cds$subfactor),
-      na.omit(names(tests_input))
+      stats::na.omit(names(tests_input))
     )
-    names(tests_input)[[which(is.na(tests))]] <- missing_tests
+    if (any(is.na(tests))) {
+      names(tests_input)[[which(is.na(tests))]] <- missing_tests
+    }
 
     mydata <- list(global = global_input, tests = tests_input)
   }

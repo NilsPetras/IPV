@@ -31,6 +31,9 @@ Note that the excel files need a very specific structure. Use the
   The \code{global} argument defaults to NULL. This allows to only use the
   \code{tests} argument, resulting in a simple model with one test and its
   facets.
+
+  If you specify an element in \code{tests} as \code{NA}, this test will be
+  treated as having no facets.
 }
 \examples{
 # read data for a simple model by ignoring the "global" parameter of input_excel

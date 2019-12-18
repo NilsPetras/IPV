@@ -134,6 +134,15 @@
 #'              subradius = .6,
 #'              subrotate_radians = c(0, pi / 2, 0))
 #'
+#' # test without facets
+#'
+#' global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
+#' tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+#'            system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
+#'            NA)
+#' x <- input_excel(global = global, tests = tests)
+#' nested_chart(x)
+#'
 #'@export
 nested_chart <- function(
   data,
@@ -338,7 +347,7 @@ coord_nested <- function (
       (.25 + .25 * (min(max(mean(mcd), .25 * max(mcd)) / stats::sd(mcd), 3)))
   }
   if (subradius == 0) {
-    subradius <- min(unlist(lapply(data$tests, def_subradius)))
+    subradius <- min(unlist(lapply(data$tests[!is.na(data$tests)], def_subradius)))
     message(paste("Facet circle radius set to ",
                   signif(subradius, digits = 3),
                   " based on the data.",
@@ -354,8 +363,15 @@ coord_nested <- function (
                                       rotate_radians = subrotate[i],
                                       rotate_test_label_radians = rotate_test_labels[i],
                                       dist_test_label = dist_test_labels[i])
+    if (is.na(factorcoords[[i]][["p_axes"]][1,"rho0"])) {
+      x <- names(data$tests)[i]
+      row.names(factorcoords[[i]][["p_circs"]]) <- x
+      row.names(factorcoords[[i]][["c_circs"]]) <- x
+      factorcoords[[i]][["test_label"]]["label"] <- x
+    }
   }
   names(factorcoords) <- names(data$tests)
+
   # # this could be used for bulk processing of item charts in a future build
   # if (prepare_item_charts == TRUE) {
   #   itemcoords <- list()
@@ -563,7 +579,7 @@ coord_nested <- function (
   }
   cors$label <- as.character(cors$label)
   # exclude leading 0's for aesthetic reasons
-  cors$label[cors$label != 1 && cors$label != 0] <- substr(cors$label, 2, 4)
+  cors$label[cors$label != 1 & cors$label != 0] <- substr(cors$label, 2, 4)
 
   cors$x <- c_circs[cors$V2, "x"]
   cors$y <- c_circs[cors$V2, "y"]
@@ -657,6 +673,7 @@ coord_nested <- function (
   # correlations
   for (i in 1:cplx) nested$cors[[nam[i]]] <- subcircles[[c(i,4)]]
   nested$cors <- do.call("rbind", nested$cors)
+
 
 
   # extra arrows ---------------------------------------------------------------
@@ -881,6 +898,15 @@ plot_nested <- function (
     cors_inner <- coord$g$nested$cors
   } else cors_inner <- NULL
 
+  # delete empty elements
+  facetless <- row.names(coord$g$nested$axes)[is.na(coord$g$nested$axes$x0)]
+  has_facets <- setdiff(names(coord$factor), facetless)
+  coord$global$nested$cors <-
+    coord$g$n$cors[which(!row.names(coord$g$n$cors) == facetless), ]
+  coord$global$nested$axes <-
+    coord$g$n$axes[which(!row.names(coord$g$n$axes) == facetless), ]
+  cors_inner <- cors_inner[which(!row.names(cors_inner) == facetless), ]
+
   # some calculations are not possible within aes_string(), so aesthetics are
   # prepared here
   tick <- coord$g$axis_tick$tick
@@ -963,7 +989,7 @@ plot_nested <- function (
 
     # nested center dots
     ggplot2::geom_point(
-      data = coord$g$c_circs,
+      data = coord$g$c_circs[has_facets, ],
       ggplot2::aes_string(x = "x", y = "y"),
       size = 1.5 * size * width_axes_inner) +
 
@@ -976,7 +1002,7 @@ plot_nested <- function (
 
     # nested tick
     ggforce::geom_circle(
-      data = coord$g$c_circs[-1, ],
+      data = coord$g$c_circs[has_facets, ],
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "tick"),
       size = .5 * min(size, .5) * width_tick_inner,
       linetype = "dotted") +

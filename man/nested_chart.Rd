@@ -228,6 +228,15 @@ nested_chart(self_confidence,
              subradius = .6,
              subrotate_radians = c(0, pi / 2, 0))
 
+# test without facets
+
+global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
+tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+           system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
+           NA)
+x <- input_excel(global = global, tests = tests)
+nested_chart(x)
+
 }
 \seealso{
 \code{\link{item_chart}} \code{\link{facet_chart}}
