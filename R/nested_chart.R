@@ -899,7 +899,7 @@ plot_nested <- function (
   } else cors_inner <- NULL
 
   # delete empty elements
-  facetless <- row.names(coord$g$nested$axes)[is.na(coord$g$nested$axes$x0)]
+  facetless <- c("pLaCeHoLdEr", row.names(coord$g$nested$axes)[is.na(coord$g$nested$axes$x0)])
   has_facets <- setdiff(names(coord$factor), facetless)
   coord$global$nested$cors <-
     coord$g$n$cors[which(!row.names(coord$g$n$cors) == facetless), ]

@@ -115,6 +115,20 @@ mydata <- input_excel(global = global, tests = tests)
 
 The data will be prepared automatically, including the calculation of center distances. If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning or message is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
 
+### Facetless tests
+In nested charts, tests do not need to have facets. If you use input by excel, use `NA` instead of providing a file name.
+
+```{r, eval=FALSE}
+global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
+tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+           system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
+           NA)
+mydata <- input_excel(global = global, tests = tests)
+```
+
+If you use manual input, do not provide data on facetless tests with `input_manual_simple()`. Any further treatment of facetless tests is handled automatically.
+
+
 ### 2. Chart creation
 As briefly outlined above, creating any chart from the formatted data is trivial. There are a few general things to consider, after which I will go into some detail on the three chart types.  
 
@@ -272,7 +286,6 @@ mychart <- nested_chart(data = self_confidence, file_name = "tadaa",
                         width_circles_inner = 1.5, width_circles = 1.5, width_axes_inner = 1.5, width_axes = 1.5)
 mychart
 ```
-
 
 ### Appendix
 #### manual input in nested cases - example {#nested}
