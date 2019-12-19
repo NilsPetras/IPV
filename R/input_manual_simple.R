@@ -28,7 +28,7 @@
 #'  Visually inspect the returned object before continuing with
 #'  \code{\link{input_manual_process}}!
 #'
-#'@return list containing "raw" data, that needs to be preprocessed using
+#'@return list containing "raw" data, that needs to be pre-processed using
 #'  \code{\link{input_manual_process}}.
 #'
 #'@seealso \code{\link{input_manual_nested}} \code{\link{input_manual_process}}

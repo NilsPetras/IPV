@@ -6,14 +6,20 @@ output: html_document
 ---
 
 ## Test environments
-* local Windows 10, R 3.6.2 and devel
-* ubuntu 16.04 (on travis-ci), R 3.6.2 and devel
-* local OS , R 3.6.2 and devel
+* local Windows 10, release (R 3.6.2) and devel
+* Ubuntu Linux 16.04 (on travis-ci), release (R 3.6.2) and devel
+* Fedora Linux (on r-hub), devel
 
 ## R CMD check results
-There were no ERRORs, WARNINGs, or NOTEs.
+There were no ERRORs, WARNINGs.
 
-This is the first submission of the IPV package.
+There was 1 NOTE:
+
+* checking CRAN incoming feasibility ... NOTE
+  Maintainer: 'Nils Petras <nils.petras@mailbox.org>'
+  New submission
+
+  This is the first submission of the IPV package.
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.

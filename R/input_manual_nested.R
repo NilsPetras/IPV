@@ -35,7 +35,7 @@
 #'
 #'@return list containing "raw" data. The data on the facets of the tests needs
 #'  to be added using \code{\link{input_manual_simple}}. Afterwards, the whole
-#'  data needs to be preprocessed using \code{\link{input_manual_process}}.
+#'  data needs to be pre-processed using \code{\link{input_manual_process}}.
 #'
 #'@seealso \code{\link{input_manual_simple}} \code{\link{input_manual_process}}
 #'

@@ -11,8 +11,6 @@ Authors@R: c(
 Description: Generate plots based on the Item Pool Visualization concept for
     latent constructs. Item Pool Visualizations are used to display the
     conceptual structure of a set of items (self-report or psychometric).
-    Dantlgraber, Stieger, & Reips (2019)
-    <https://doi.org/10.1177/2059799119884283>.
 Depends: R (>= 3.0.0)
 Imports:
     ggforce,
@@ -24,7 +22,7 @@ Suggests:
     extrafont,
     readxl
 VignetteBuilder: knitr    
-Date: 2018-03-30
+Date: 2019-12-19
 License: GPL-2
 LazyData: true
 Maintainer: Nils Petras <nils.petras@mailbox.org>

@@ -45,7 +45,7 @@ Assuming you have some interesting raw data, empirical, simulated, or faked, the
 Tip: Call `?IPV` for an overview of the functions of the package.
 
 ### 0. SEM estimation
-The IPV package does **not** do the SEM estimation for you. But that means you get to use your favorite statistical software (e.g. the R packages [lavaan](http://lavaan.ugent.be/) or [sem](https://socialsciences.mcmaster.ca/jfox/Misc/sem/SEM-paper.pdf)). The [abovementionned paper](https://doi.org/10.1177/2059799119884283) shows how to specify the SEM models. For the example, used here and in the paper, you might want to take a look at figures 6-8, which shows the three SEMs used. As the authors point out, the models can only be estimated as SEMs, not by means of factor analysis or in any other way.   
+The IPV package does **not** do the SEM estimation for you. But that means you get to use your favorite statistical software (e.g. the R packages [lavaan](http://lavaan.ugent.be/) or [sem](https://socialsciences.mcmaster.ca/jfox/Misc/sem/SEM-paper.pdf)). [This paper](https://doi.org/10.1177/2059799119884283) shows how to specify the SEM models. For the example, used here and in the paper, you might want to take a look at figures 6-8, which shows the three SEMs used. As the authors point out, the models can only be estimated as SEMs, not by means of factor analysis or in any other way.   
 As *nested* I will describe all cases, where the overall item pool is subdivided more than once. For example, an item pool comprising multiple tests can be divided into the tests and subdivided into the tests' facets (as seen in figure 6-8 of the paper). In this case, *nested charts* can be used to compare all three models. In nested cases, I will distinguish a *global* level, where tests are compared with each other, and a nested level, that is concerned with the internal structure of tests. Every case that is not nested, i.e. only consists of a single test, I will call *simple*.
 
 ### 1. Input
@@ -53,7 +53,7 @@ To use the chart functions, the SEM estimation results need to be formatted in a
 ```{r}
 self_confidence$tests$RSES
 ```
-Note, that `factor` refers to an item pool, that was divided into subpools (`subfactor`s). In this case, `factor` refers to the Rosenberg Self-Esteem Scale, a test with two facets: Positive Self-Esteem (Ps), and Negative Self-Esteem (Ns), which was reversed here. As seen below, the same data structure applies on the global level, with `factor` refering to the overall self-confidence item pool, comprising the three tests (`subfactor`s) RSES, SMTQ, and DSSEI.  
+Note, that `factor` refers to an item pool, that was divided into subpools (`subfactor`s). In this case, `factor` refers to the Rosenberg Self-Esteem Scale, a test with two facets: Positive Self-Esteem (Ps), and Negative Self-Esteem (Ns), which was reversed here. As seen below, the same data structure applies on the global level, with `factor` referring to the overall self-confidence item pool, comprising the three tests (`subfactor`s) RSES, SMTQ, and DSSEI.  
 ```{r}
 self_confidence$global
 ```
@@ -133,7 +133,7 @@ If you use manual input, do not provide data on facetless tests with `input_manu
 ### 2. Chart creation
 As briefly outlined above, creating any chart from the formatted data is trivial. There are a few general things to consider, after which I will go into some detail on the three chart types.  
 
-Generally, **best results can be achieved using .pdf files**, since they are vector based. .pdf files can be zoomed and scaled indefinitely without loss of quality. Pixelated formats (.png and .jpeg are supported) will lead to lower quality results and are not scalable (as can be seen in this vignette). The parameters `file_width = ` and `file_length = ` determine, how large the .pdf file will be, measured in inches (1 in = 2.54 cm). The size of .png or .jpeg files in pixels is determined by multiplying the size in inches with the dots per inch parameter value (`dpi = `). In this vignette the dpi is 72, resulting in heavily pixelated graphics and small file sizes. To inspect your results within RStudio, always use the zoom popout of the Plots window, otherwise charts may be heavily distorted. Furthermore, I strongly recommend inspecting the graphics file itself.
+Generally, **best results can be achieved using .pdf files**, since they are vector based. .pdf files can be zoomed and scaled indefinitely without loss of quality. Pixelated formats (.png and .jpeg are supported) will lead to lower quality results and are not scaleable (as can be seen in this vignette). The parameters `file_width = ` and `file_length = ` determine, how large the .pdf file will be, measured in inches (1 in = 2.54 cm). The size of .png or .jpeg files in pixels is determined by multiplying the size in inches with the dots per inch parameter value (`dpi = `). In this vignette the dpi is 72, resulting in heavily pixelated graphics and small file sizes. To inspect your results within RStudio, always use the zoom pop-out of the Plots window, otherwise charts may be heavily distorted. Furthermore, I strongly recommend inspecting the graphics file itself.
 
 Most graphical parameters are size parameters for single elements of the chart, all named `size_... = `,  `width_... = `, or `length_... = `. Those are pretty straightforward: linear scaling parameters defaulting to 1. That means, .5 will half the size and 2 will double it. For all chart types, there is also a global `size = ` parameter, scaling all elements of the chart at once. Use this parameter first, before you fine tune single elements.
 
@@ -141,7 +141,7 @@ For all chart types, it is possible to rotate the whole chart, using `rotate_rad
 
 As you will see, repeatedly trying changes and inspecting the results is necessary to generate the best possible chart. Nevertheless, the final result will be a single, relatively simple function call. I strongly recommend saving your analysis and chart creation functions in a script, so you can always reproduce the results or make changes. If you use [rmarkdown](https://rmarkdown.rstudio.com/) or [sweave](https://rpubs.com/YaRrr/SweaveIntro) to create manuscripts or reports directly from R, changes can easily be made in the scripts and adopted downstream with a single click. Therefore, do not rely on your saved graphics files. 
 
-In the following, I will go into detail on the individual chart types. Using the example, I will show the impotant customization options provided in the chart functions:
+In the following, I will go into detail on the individual chart types. Using the example, I will show the important customization options provided in the chart functions:
 
 #### Item charts
 [Above](#quick), we already saw a first example of an item chart. However, I stated, that I would like to improve the data ink ratio and use color for visual guidance. To reduce the visibility of structural elements, the `fade_... = ` parameters can be used (0 = "black", 100 = "white").
