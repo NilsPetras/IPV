@@ -33,8 +33,7 @@ plot_items(
 \item{size}{integer; changes the size of most chart objects simultaneously.}
 
 \item{file_name}{character; name of the file to save. Supported formats are:
-"pdf" (highest quality and smallest file size), "png", "jpeg". Use "none"
-to suppress file output; defaults to "myipv.pdf".}
+"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".}
 
 \item{file_width}{integer; file width in inches; defaults to 12.}
 
@@ -75,8 +74,7 @@ default.}
 \item{width_grid}{integer; grid line width relative to default.}
 }
 \value{
-Object of the class "ggplot" and, by default, the same object saved
-  as a file.
+Object of the class "ggplot".
 }
 \description{
 Generates an item chart from coordinates.

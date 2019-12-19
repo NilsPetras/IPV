@@ -39,8 +39,7 @@ item_chart(
 functions.}
 
 \item{file_name}{character; name of the file to save. Supported formats are:
-"pdf" (highest quality and smallest file size), "png", "jpeg". Use "none"
-to suppress file output; defaults to "myipv.pdf".}
+"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".}
 
 \item{size}{integer; changes the size of most chart objects simultaneously.}
 

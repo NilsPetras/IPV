@@ -8,7 +8,7 @@ nested_chart(
   data,
   xarrows = NULL,
   subradius = 0,
-  file_name = "myipv.pdf",
+  file_name = "none",
   size = 1,
   relative_scaling = 0,
   show_xarrows = FALSE,
@@ -61,8 +61,7 @@ arrows between facets of different tests; see examples.}
 circles; defaults to 0, in which case an appropriate value is estimated.}
 
 \item{file_name}{character; name of the file to save. Supported formats are:
-"pdf" (highest quality and smallest file size), "png", "jpeg". Use "none" to
-suppress file output; defaults to "myipv.pdf".}
+"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".}
 
 \item{size}{integer; changes the size of most chart objects simultaneously.}
 
@@ -176,8 +175,7 @@ facets relative to default.}
 extra arrows relative to default.}
 }
 \value{
-Object of the class "ggplot" and, by default, the same object saved as
- a file.
+Object of the class "ggplot".
 }
 \description{
 Creates a nested chart, showing several tests and their facets.
