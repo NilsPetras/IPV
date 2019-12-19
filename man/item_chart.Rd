@@ -6,7 +6,7 @@
 \usage{
 item_chart(
   data,
-  file_name = "myipv.pdf",
+  file_name = "none",
   size = 1,
   font = "sans",
   rotate_radians = 0,

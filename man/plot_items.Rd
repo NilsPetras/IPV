@@ -7,7 +7,7 @@
 plot_items(
   coord,
   size = 1,
-  file_name = "myipv.pdf",
+  file_name = "none",
   file_width = 12,
   file_height = 10,
   dpi = 500,
