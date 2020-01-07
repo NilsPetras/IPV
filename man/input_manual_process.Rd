@@ -16,7 +16,7 @@ List containing formatted data including center distances for
  \code{\link{nested_chart}}.
 }
 \description{
-Preprocesses the SEM estimates listed using \code{\link{input_manual_simple}}
+Pre-processes the SEM estimates listed using \code{\link{input_manual_simple}}
 or \code{\link{input_manual_nested}} for the use of chart functions.
 }
 \examples{

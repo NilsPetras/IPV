@@ -39,7 +39,7 @@ facets, pay attention to the order of rows and columns, which is determined
 by facet_names.}
 }
 \value{
-list containing "raw" data, that needs to be preprocessed using
+list containing "raw" data, that needs to be pre-processed using
  \code{\link{input_manual_process}}.
 }
 \description{

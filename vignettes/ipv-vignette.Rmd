@@ -137,7 +137,7 @@ Generally, **best results can be achieved using .pdf files**, since they are vec
 
 Most graphical parameters are size parameters for single elements of the chart, all named `size_... = `,  `width_... = `, or `length_... = `. Those are pretty straightforward: linear scaling parameters defaulting to 1. That means, .5 will half the size and 2 will double it. For all chart types, there is also a global `size = ` parameter, scaling all elements of the chart at once. Use this parameter first, before you fine tune single elements.
 
-For all chart types, it is possible to rotate the whole chart, using `rotate_radians = ` or `rotate_degrees = `. Also, the font can be changed, using the `font = ` parameter. I recommend using the package [extrafont](https://cran.r-project.org/web/packages/extrafont/README.html) for access to more fonts.
+For all chart types, it is possible to rotate the whole chart, using `rotate_radians = ` or `rotate_degrees = `. Also, the font can be changed, using the `font = ` parameter. I recommend using the package [extrafont](https://cran.r-project.org/package=extrafont) for access to more fonts.
 
 As you will see, repeatedly trying changes and inspecting the results is necessary to generate the best possible chart. Nevertheless, the final result will be a single, relatively simple function call. I strongly recommend saving your analysis and chart creation functions in a script, so you can always reproduce the results or make changes. If you use [rmarkdown](https://rmarkdown.rstudio.com/) or [sweave](https://rpubs.com/YaRrr/SweaveIntro) to create manuscripts or reports directly from R, changes can easily be made in the scripts and adopted downstream with a single click. Therefore, do not rely on your saved graphics files. 
 

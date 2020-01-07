@@ -5,6 +5,13 @@ date: "2019 M12 19"
 output: html_document
 ---
 
+## Resubmission
+This is a resubmission. In this version I have:
+
+* Added the requested citation in the Description field of the DESCRIPTION file.
+
+* Changed the URL format of a CRAN URL into canonical form.
+
 ## Test environments
 * local Windows 10, release (R 3.6.2) and devel
 * Ubuntu Linux 16.04 (on travis-ci), release (R 3.6.2) and devel
