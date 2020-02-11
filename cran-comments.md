@@ -6,11 +6,16 @@ output: html_document
 ---
 
 ## Resubmission
-This is a resubmission. In this version I have:
 
-* Added the requested citation in the Description field of the DESCRIPTION file.
+This is a resubmission without changes, as requested:
+---
+Dear Nils Petras,
 
-* Changed the URL format of a CRAN URL into canonical form.
+I am very sorry. It seems like I accidentally archived the package.
+Please resubmit. I will try to get it through asap.
+
+Best,
+Martina
 
 ## Test environments
 * local Windows 10, release (R 3.6.2) and devel
