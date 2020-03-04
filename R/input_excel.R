@@ -197,7 +197,7 @@ input_excel_factor <- function (file) {
     subfactor = sheet1$subfactor,
     item = as.factor(sheet1$item),
     cd = sheet1$subfactor_loading ^ 2 / sheet1$factor_loading ^ 2 - 1,
-    mean_cd = NA)
+    mean_cd = NA, stringsAsFactors = TRUE)
 
   # negative center distances are adjusted to zero for chart clarity
   bad <- min(cds$cd)

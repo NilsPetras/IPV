@@ -5,33 +5,15 @@ date: "2019 M12 19"
 output: html_document
 ---
 
-## Resubmission
-
-This is a resubmission without changes, as requested:
----
-Dear Nils Petras,
-
-I am very sorry. It seems like I accidentally archived the package.
-Please resubmit. I will try to get it through asap.
-
-Best,
-Martina
+## Submission
+Adaptation to new stringsAsFactors default in data.frame() and read.table()
 
 ## Test environments
-* local Windows 10, release (R 3.6.2) and devel
-* Ubuntu Linux 16.04 (on travis-ci), release (R 3.6.2) and devel
-* Fedora Linux (on r-hub), devel
+* local Windows 10, release () and devel
+* Ubuntu Linux 16.04 (on travis-ci), release () and devel
 
 ## R CMD check results
-There were no ERRORs, WARNINGs.
-
-There was 1 NOTE:
-
-* checking CRAN incoming feasibility ... NOTE
-  Maintainer: 'Nils Petras <nils.petras@mailbox.org>'
-  New submission
-
-  This is the first submission of the IPV package.
+There were no ERRORs, WARNINGs, or NOTEs.
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.
