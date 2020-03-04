@@ -4,23 +4,42 @@
 \alias{item_chart}
 \title{Item Chart}
 \usage{
-item_chart(data, file_name = "myipv.pdf", size = 1, font = "sans",
-  rotate_radians = 0, rotate_degrees = 0, file_width = 12,
-  file_height = 10, dpi = 500, color = "black", color2 = "black",
-  fade_axes = 50, fade_grid_major = 15, fade_grid_minor = 65,
-  dodge = 1, dist_test_label = 0.5, rotate_test_label_radians = 0,
-  rotate_test_label_degrees = 0, width_items = 1, length_items = 1,
-  length_ratio_items = 1.5, size_tick_label = 1, size_test_label = 1,
-  size_facet_labels = 1, width_axes = 1, size_arrow_heads = 1,
-  width_grid = 1)
+item_chart(
+  data,
+  file_name = "none",
+  size = 1,
+  font = "sans",
+  rotate_radians = 0,
+  rotate_degrees = 0,
+  file_width = 12,
+  file_height = 10,
+  dpi = 500,
+  color = "black",
+  color2 = "black",
+  fade_axes = 50,
+  fade_grid_major = 15,
+  fade_grid_minor = 65,
+  dodge = 1,
+  dist_test_label = 0.5,
+  rotate_test_label_radians = 0,
+  rotate_test_label_degrees = 0,
+  width_items = 1,
+  length_items = 1,
+  length_ratio_items = 1.5,
+  size_tick_label = 1,
+  size_test_label = 1,
+  size_facet_labels = 1,
+  width_axes = 1,
+  size_arrow_heads = 1,
+  width_grid = 1
+)
 }
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input
 functions.}
 
 \item{file_name}{character; name of the file to save. Supported formats are:
-"pdf" (highest quality and smallest file size), "png", "jpeg". Use "none"
-to suppress file output; defaults to "myipv.pdf".}
+"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".}
 
 \item{size}{integer; changes the size of most chart objects simultaneously.}
 

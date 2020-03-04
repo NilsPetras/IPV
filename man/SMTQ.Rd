@@ -6,8 +6,10 @@
 \title{Sports Mental Toughness Questionnaire}
 \format{An object of class \code{list} of length 2.}
 \source{
-Dantlgraber, M., Stieger, S., & Reips, U.-D. (in revision).
-  Introducing Item Pool Visualization (IPV)
+Dantlgraber, M., Stieger, S., & Reips, U. D. (2019). Introducing Item
+  Pool Visualization: A method for investigation of concepts in self-reports
+  and psychometric tests. Methodological Innovations, 12(3),
+  2059799119884283.
 }
 \usage{
 SMTQ

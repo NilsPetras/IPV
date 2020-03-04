@@ -4,13 +4,26 @@
 \alias{coord_nested}
 \title{Coord Nested}
 \usage{
-coord_nested(data, subradius = 0, tick = 0, rotate_radians = 0,
-  rotate_degrees = 0, subrotate_radians = 0, subrotate_degrees = 0,
-  dist_construct_label = 10, rotate_construct_label_radians = 0,
-  rotate_construct_label_degrees = 0, dist_test_labels = 2/3,
-  rotate_test_labels_radians = 0, rotate_test_labels_degrees = 0,
-  prepare_item_charts = FALSE, correlations = TRUE, cor_spacing = 0,
-  relative_scaling = 0, xarrows = NULL)
+coord_nested(
+  data,
+  subradius = 0,
+  tick = 0,
+  rotate_radians = 0,
+  rotate_degrees = 0,
+  subrotate_radians = 0,
+  subrotate_degrees = 0,
+  dist_construct_label = 10,
+  rotate_construct_label_radians = 0,
+  rotate_construct_label_degrees = 0,
+  dist_test_labels = 2/3,
+  rotate_test_labels_radians = 0,
+  rotate_test_labels_degrees = 0,
+  prepare_item_charts = FALSE,
+  correlations = TRUE,
+  cor_spacing = 0,
+  relative_scaling = 0,
+  xarrows = NULL
+)
 }
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input

@@ -4,9 +4,16 @@
 \alias{coord_facets}
 \title{Coord Facets}
 \usage{
-coord_facets(data, subradius = 0, tick = 0, rotate_radians = 0,
-  rotate_degrees = 0, dist_test_label = 2/3,
-  rotate_test_label_radians = 0, rotate_test_label_degrees = 0)
+coord_facets(
+  data,
+  subradius = 0,
+  tick = 0,
+  rotate_radians = 0,
+  rotate_degrees = 0,
+  dist_test_label = 2/3,
+  rotate_test_label_radians = 0,
+  rotate_test_label_degrees = 0
+)
 }
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input

@@ -4,10 +4,18 @@
 \alias{coord_items}
 \title{Coord Items}
 \usage{
-coord_items(data, rotate_radians = 0, rotate_degrees = 0,
-  dist_test_label = 0.5, rotate_test_label_radians = 0,
-  rotate_test_label_degrees = 0, width_items = 1, length_items = 1,
-  length_ratio_items = 1.5, dodge = 1)
+coord_items(
+  data,
+  rotate_radians = 0,
+  rotate_degrees = 0,
+  dist_test_label = 0.5,
+  rotate_test_label_radians = 0,
+  rotate_test_label_degrees = 0,
+  width_items = 1,
+  length_items = 1,
+  length_ratio_items = 1.5,
+  dodge = 1
+)
 }
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input

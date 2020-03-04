@@ -23,28 +23,29 @@ knitr::opts_chunk$set(
 ## About this package {#about}
 
 The IPV package is a tool to create IPV charts. The original work on IPV, including the chart concepts, can be found in:
-[*Dantlgraber, M., Stieger, S., & Reips, U.-D., 2018, Introducing Item Pool Visualization (IPV). GSDS Working Paper*](https://www.gsds.uni-konstanz.de/typo3temp/secure_downloads/64291/0/c11fa59f405bed86279fa8eb67d5d80b72685027/WP2018-08_DantlgraberStiegerReips.pdf)  
+[Dantlgraber, M., Stieger, S., & Reips, U. D. (2019). Introducing Item Pool Visualization: A method for investigation of concepts in self-reports and psychometric tests. Methodological Innovations, 12(3), 2059799119884283.](https://doi.org/10.1177/2059799119884283). Please cite this paper when using the package.
 My philosophy is that chart creation should be possible on the full spectrum between quick & dirty and highly customized. So feel free to raise an [issue on github](https://github.com/NilsPetras/IPV/issues) if something frustrates you, or you miss a customization option. Do the same if you encounter a bug (so I can fix it) or do not understand the vignette (so I can change it).
 
 ### Quick & dirty chart creation {#quick}
 Let us imagine for a second, that estimated SEM parameters are already present in the correct format in an object called "DSSEI":
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- item_chart(data = DSSEI, file_name = "christmas")
+```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
+mychart <- item_chart(data = DSSEI)
 mychart
 ```
 
-As you can see, getting a first result is meant to be trivial. All three IPV chart types can be created by specifying `data = ` only. (Here, `file_name = ` is specified with no file extension to suppress the file output.)  
-Although I have put considerable effort in setting sensible defaults (or generating them dynamically, based on the data), it is always possible to optimize the charts. For example, I prefer my charts to have a higher [data ink ratio](https://infovis-wiki.net/wiki/Data-Ink_Ratio) and like to use [color](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) to guide attention. The many graphical parameters enable e.g. to create a black and white print optimized version or a version optimized for small display.
+As you can see, getting a first result is meant to be trivial. All three IPV chart types can be created by specifying `data = ` only. In most practical cases, I **strongly recommend to** specify a `file_name = `. Results viewed within R (or RStudio) may differ from the file output in multiple ways, including quality. Here, display quality is heavily compromised to generate small files.
+
+Although I have put considerable effort in setting sensible defaults (or generating them dynamically, based on the data), it is always possible to optimize the charts. For example, I prefer my charts to have a higher [data ink ratio](https://infovis-wiki.net/wiki/Data-Ink_Ratio) and like to use [color](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) to guide attention. The many graphical parameters may also enable you to create a black and white print optimized version or a version optimized for small display.
 
 ## Workflow
-Assuming you have some interesting raw data, empirical, simulated, or manufactured mischievously, these are the necessary steps to produce IPV charts:  
+Assuming you have some interesting raw data, empirical, simulated, or faked, these are the necessary steps to produce IPV charts:  
 0. SEM estimation  
 1. Input  
 2. Chart creation  
 Tip: Call `?IPV` for an overview of the functions of the package.
 
 ### 0. SEM estimation
-The IPV package does **not** do the SEM estimation for you. But that means you get to use your favorite statistical software (e.g. the R packages [lavaan](http://lavaan.ugent.be/) or [sem](https://socialsciences.mcmaster.ca/jfox/Misc/sem/SEM-paper.pdf)). The [abovementionned paper](https://www.gsds.uni-konstanz.de/typo3temp/secure_downloads/64291/0/c11fa59f405bed86279fa8eb67d5d80b72685027/WP2018-08_DantlgraberStiegerReips.pdf) shows how to specify the SEM models. For the example used here and in the paper, you might want to take a look at figures 6-8, showing the three SEMs used. As the authors point out, the models can only be estimated as SEMs, not by means of factor analysis or in any other way.   
+The IPV package does **not** do the SEM estimation for you. But that means you get to use your favorite statistical software (e.g. the R packages [lavaan](http://lavaan.ugent.be/) or [sem](https://socialsciences.mcmaster.ca/jfox/Misc/sem/SEM-paper.pdf)). [This paper](https://doi.org/10.1177/2059799119884283) shows how to specify the SEM models. For the example, used here and in the paper, you might want to take a look at figures 6-8, which shows the three SEMs used. As the authors point out, the models can only be estimated as SEMs, not by means of factor analysis or in any other way.   
 As *nested* I will describe all cases, where the overall item pool is subdivided more than once. For example, an item pool comprising multiple tests can be divided into the tests and subdivided into the tests' facets (as seen in figure 6-8 of the paper). In this case, *nested charts* can be used to compare all three models. In nested cases, I will distinguish a *global* level, where tests are compared with each other, and a nested level, that is concerned with the internal structure of tests. Every case that is not nested, i.e. only consists of a single test, I will call *simple*.
 
 ### 1. Input
@@ -52,7 +53,7 @@ To use the chart functions, the SEM estimation results need to be formatted in a
 ```{r}
 self_confidence$tests$RSES
 ```
-Note, that `factor` refers to an item pool, that was divided into subpools (`subfactor`s). In this case, `factor` refers to the Rosenberg Self-Esteem Scale, a test with two facets: Positive Self-Esteem (Ps), and Negative Self-Esteem (Ns), which was reversed here. As seen below, the same data structure applies on the global level, with `factor` refering to the overall self-confidence item pool, comprising the three tests (`subfactor`s) RSES, SMTQ, and DSSEI.  
+Note, that `factor` refers to an item pool, that was divided into subpools (`subfactor`s). In this case, `factor` refers to the Rosenberg Self-Esteem Scale, a test with two facets: Positive Self-Esteem (Ps), and Negative Self-Esteem (Ns), which was reversed here. As seen below, the same data structure applies on the global level, with `factor` referring to the overall self-confidence item pool, comprising the three tests (`subfactor`s) RSES, SMTQ, and DSSEI.  
 ```{r}
 self_confidence$global
 ```
@@ -90,10 +91,10 @@ mydata
 input_manual_process(mydata)
 ```
 For nested cases, use the function `input_manual_nested()`, and add the individual tests using `input_manual_simple()`. Then you can run `input_manual_processs()` as in the simple case. You can find the (lengthy) example [below](#nested).  
-If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning or message is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
+If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning (or message) is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
 
 #### Using Excel files
-Excel files have the advantage, that you can just copy and paste your SEM estimates into the spreadsheets and the input function of the IPV package (`input_excel()`) does the rest. The files need to be structured as in the example, that you can find here:
+Excel files have the advantage that you can simply copy and paste your SEM estimates into the spreadsheets and the input function of the IPV package (`input_excel()`) does the rest. The files need to be structured as in the example, that you can find here:
 ```{r}
 system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
 system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE)
@@ -115,38 +116,52 @@ mydata <- input_excel(global = global, tests = tests)
 
 The data will be prepared automatically, including the calculation of center distances. If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning or message is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
 
+### Facetless tests
+In nested charts, tests do not need to have facets. If you use input by excel, use `NA` instead of providing a file name.
+
+```{r, eval=FALSE}
+global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
+tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+           system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
+           NA)
+mydata <- input_excel(global = global, tests = tests)
+```
+
+If you use manual input, do not provide data on facetless tests with `input_manual_simple()`. Any further treatment of facetless tests is handled automatically.
+
+
 ### 2. Chart creation
 As briefly outlined above, creating any chart from the formatted data is trivial. There are a few general things to consider, after which I will go into some detail on the three chart types.  
 
-Generally, best results can be achieved using .pdf files, since they are vector based. .pdf files can be zoomed and scaled indefinitely without loss of quality. Pixelated formats (.png and .jpeg are supported) will lead to lower quality results and are not scalable. The parameters `file_width = ` and `file_length = ` determine, how large the .pdf file will be, measured in inches (1 in = 2.54 cm). The size of .png or .jpeg files in pixels is determined by multiplying the size in inches with the dots per inch parameter value (`dpi = `). To inspect your results within RStudio, always use the zoom popout of the Plots window, otherwise charts are heavily distorted.  
+Generally, **best results can be achieved using .pdf files**, since they are vector based. .pdf files can be zoomed and scaled indefinitely without loss of quality. Pixelated formats (.png and .jpeg are supported) will lead to lower quality results and are not scaleable (as can be seen in this vignette). The parameters `file_width = ` and `file_length = ` determine, how large the .pdf file will be, measured in inches (1 in = 2.54 cm). The size of .png or .jpeg files in pixels is determined by multiplying the size in inches with the dots per inch parameter value (`dpi = `). In this vignette the dpi is 72, resulting in heavily pixelated graphics and small file sizes. To inspect your results within RStudio, always use the zoom pop-out of the Plots window, otherwise charts may be heavily distorted. Furthermore, I strongly recommend inspecting the graphics file itself.
 
 Most graphical parameters are size parameters for single elements of the chart, all named `size_... = `,  `width_... = `, or `length_... = `. Those are pretty straightforward: linear scaling parameters defaulting to 1. That means, .5 will half the size and 2 will double it. For all chart types, there is also a global `size = ` parameter, scaling all elements of the chart at once. Use this parameter first, before you fine tune single elements.
 
-For all chart types, it is possible to rotate the whole chart, using `rotate_radians = ` or `rotate_degrees = `. Also, the font can be changed, using the `font = ` parameter. I recommend using the package [extrafont](https://cran.r-project.org/web/packages/extrafont/README.html) for access to more fonts.
+For all chart types, it is possible to rotate the whole chart, using `rotate_radians = ` or `rotate_degrees = `. Also, the font can be changed, using the `font = ` parameter. I recommend using the package [extrafont](https://cran.r-project.org/package=extrafont) for access to more fonts.
 
 As you will see, repeatedly trying changes and inspecting the results is necessary to generate the best possible chart. Nevertheless, the final result will be a single, relatively simple function call. I strongly recommend saving your analysis and chart creation functions in a script, so you can always reproduce the results or make changes. If you use [rmarkdown](https://rmarkdown.rstudio.com/) or [sweave](https://rpubs.com/YaRrr/SweaveIntro) to create manuscripts or reports directly from R, changes can easily be made in the scripts and adopted downstream with a single click. Therefore, do not rely on your saved graphics files. 
 
-In the following, I will go into detail on the individual chart types. Using the example, I will show the impotant customization options provided in the chart functions:
+In the following, I will go into detail on the individual chart types. Using the example, I will show the important customization options provided in the chart functions:
 
 #### Item charts
 [Above](#quick), we already saw a first example of an item chart. However, I stated, that I would like to improve the data ink ratio and use color for visual guidance. To reduce the visibility of structural elements, the `fade_... = ` parameters can be used (0 = "black", 100 = "white").
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- item_chart(data = DSSEI, file_name = "cucumber",
+```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
+mychart <- item_chart(data = DSSEI,
                       color = "darkblue", color2 = "darkblue",
                       fade_axes = 70, fade_grid_major = 50, fade_grid_minor = 92)
 mychart
 ```
 To further accentuate the data, let us change some sizes.
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- item_chart(data = DSSEI, file_name = "handcuffs",
+```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
+mychart <- item_chart(data = DSSEI,
                       color = "darkblue", color2 = "darkblue",
                       fade_axes = 70, fade_grid_major = 50, fade_grid_minor = 92,
                       size = 1.3, width_items = 1.5, length_items = 1.5, width_grid = .6, size_tick_label = .6)
 mychart
 ```
 As you might have noticed, some bars, representing items, are overlapping. This problem is already attenuated, by cropping every other item bar a bit. An alternative is to use different colors or making the item bars slimmer:
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- item_chart(data = DSSEI, file_name = "gnome",
+```{r, eval=FALSE, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
+mychart <- item_chart(data = DSSEI,
                       color = "darkblue", color2 = "darkred",
                       fade_axes = 70, fade_grid_major = 50, fade_grid_minor = 92,
                       size = 1.3, length_items = 2.5, width_grid = .6, size_tick_label = .6,
@@ -154,14 +169,14 @@ mychart <- item_chart(data = DSSEI, file_name = "gnome",
 mychart
 ```
 A special feature for item charts is the `dodge = ` parameter, that allows long facet labels to dodge the rest of the chart horizontally:
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px", fig.show='hold'}
+```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", fig.show='hold', dev='png'}
 x <- DSSEI
 colnames(x$cors)[4] <- "Oachkatzlschwoaf"
 rownames(x$cors)[4] <- "Oachkatzlschwoaf"
 levels(x$cds$subfactor) <- c("Ab", "Pb", "Ph", "Oachkatzlschwoaf")
 x$cds$subfactor[16:20] <- "Oachkatzlschwoaf"
-mychart1 <- item_chart(data = x, file_name = "squirrel")
-mychart2 <- item_chart(data = x, file_name = "squirrel", dodge = 7)
+mychart1 <- item_chart(data = x)
+mychart2 <- item_chart(data = x, dodge = 7)
 mychart1
 mychart2
 ```
@@ -169,36 +184,25 @@ This works simultaneously for all labels. Labels at the top and bottom do not mo
 
 #### Facet charts
 Facet charts, as created by `facet_chart()`, can be optimized similarly to item charts, using `fade = ` and `color = `. Furthermore, there are some specific considerations.
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- facet_chart(data = DSSEI, file_name = "hachoo")
+```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
+mychart <- facet_chart(data = DSSEI)
 mychart
 ```
 As you can see in the output, two parameter values (`subradius = ` , and `tick = ` ) have been generated automatically. These need to fit the data. 
 
 The `subradius = ` parameter is important to optimize the appearance. The radius of the facet circles has no meaning. It should be chosen large enough to make the facet labels and correlations readable. But it should also be small enough to make the center distances (thick lines) dominate the first impression and to avoid overlapping facet circles.
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- facet_chart(data = DSSEI, file_name = "ants",
-                      subradius = .1)
-mychart
-```
-In this example, the radius of the facet circles is too small, to display the facet names and correlations in a reasonable size. In the example below, it is too large, so center distances do not shape the overall impression anymore, and the facet circles even overlap.
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- facet_chart(data = DSSEI, file_name = "giants",
-                      subradius = 1.5)
-mychart
-```
 
-For a simplistic version of the chart, the correlations can be omitted:
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- facet_chart(data = DSSEI, file_name = "organ",
+For a simplistic version of the chart, the correlations can be omitted.
+```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
+mychart <- facet_chart(data = DSSEI,
                       cor_labels = FALSE)
 mychart
 ```
 
 In this case, it might be more visually pleasing, to rotate the test label to the top left, and add some color:
 
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- facet_chart(data = DSSEI, file_name = "south",
+```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
+mychart <- facet_chart(data = DSSEI,
                       rotate_test_label_radians = pi, color = "firebrick4")
 mychart
 ```
@@ -206,13 +210,13 @@ mychart
 #### Nested charts
 Nested charts are the most complex IPV charts. In addition to what I mentioned earlier, there are four important considerations: the `relative_scaling = ` of the global and the nested level, the addition of `xarrows = ` to display correlation arrows between facets of different tests, the ability to `subrotate_... = ` each test individually, and the `cor_spacing = ` to display correlations between the tests. Due to the complexity one should not rely on default values too much:
 
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- nested_chart(data = self_confidence, file_name = "labyrinth")
+```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
+mychart <- nested_chart(data = self_confidence)
 mychart
 ```
 The `relative_scaling = ` should be large enough to have the center distances on the global level shape the overall impression. But a large value for the `relative_scaling = ` makes the nested facet charts of each test small, which should be readable. Note, that the axis scaling within the nested facet charts is different to the global axis scaling by exactly the factor of `relative_scaling = ` , as can be seen from the axis tick marks (small dotted circles). In this particular case, the `relative_scaling = ` seems sound to me, but the facet circles could be larger, including the font sizes within:
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- nested_chart(data = self_confidence, file_name = "aha",
+```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
+mychart <- nested_chart(data = self_confidence,
                         subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5)
 mychart
 ```
@@ -220,7 +224,7 @@ mychart
 
 The addition of correlation arrows between facets of different tests is indicated by the IPV authors as sensible, when the correlation between these facets exceed the correlation between the respective tests. In the current example, this would result in three extra arrows, that can be added as follows:
 
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
+```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
 sc_arrows <- data.frame(test1 = rep(NA, 3), facet1 = NA,
                        test2 = NA, facet2 = NA,
                        value = NA)
@@ -229,7 +233,7 @@ sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
 sc_arrows[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
 sc_arrows
 
-mychart <- nested_chart(data = self_confidence, file_name = "needle",
+mychart <- nested_chart(data = self_confidence,
                         subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5,
                         xarrows = sc_arrows, show_xarrows = TRUE)
 mychart
@@ -238,8 +242,8 @@ The data frame that indicates the names of the facets to connect and the correla
 
 Now the arrows create a lot of overlap and make the chart look messy. This problem can be solved by rotating each of the nested facet charts, so the facets connected by arrows are oriented towards the center. Also the construct label should be moved out of harms way, as well as the test label of the SMTQ.
 
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- nested_chart(data = self_confidence, file_name = "wobble",
+```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
+mychart <- nested_chart(data = self_confidence,
                         subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5,
                         xarrows = sc_arrows, show_xarrows = TRUE,
                         subrotate_degrees = c(180, 270, 90), dist_construct_label = .7,
@@ -249,8 +253,8 @@ mychart
 
 The `cor_spacing = ` refers to the ring around the nested facet charts for each test, in which the correlations between the tests are displayed. It should be large enough for the correlation labels, but not too large. If the correlations are omitted, this ring is also omitted:
 
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- nested_chart(data = self_confidence, file_name = "bad",
+```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
+mychart <- nested_chart(data = self_confidence,
                         subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5,
                         xarrows = sc_arrows, show_xarrows = TRUE,
                         subrotate_degrees = c(180, 270, 90), dist_construct_label = .7,
@@ -260,8 +264,8 @@ mychart
 ```
 To get a somewhat decent result, let us change some `size_... = ` parameters and add some color. Color can be chosen for the global and the nested level independently. Furthermore, it might be better to increase the line thickness, so the impression of the colored shapes intensifies.
 
-```{r, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
-mychart <- nested_chart(data = self_confidence, file_name = "tadaa",
+```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
+mychart <- nested_chart(data = self_confidence,
                         subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5,
                         xarrows = sc_arrows, show_xarrows = TRUE,
                         subrotate_degrees = c(180, 270, 90), dist_construct_label = .7,
@@ -272,7 +276,6 @@ mychart <- nested_chart(data = self_confidence, file_name = "tadaa",
                         width_circles_inner = 1.5, width_circles = 1.5, width_axes_inner = 1.5, width_axes = 1.5)
 mychart
 ```
-
 
 ### Appendix
 #### manual input in nested cases - example {#nested}
@@ -318,7 +321,7 @@ mydata <- input_manual_nested(
                               nrow = 3,
                               ncol = 3))
 
-# then tests have to be added individually
+# then add tests individually
 # test 1
 mydata$tests$RSES <- input_manual_simple(
   test_name = "RSES",
@@ -377,7 +380,7 @@ mydata$tests$SMTQ <- input_manual_simple(
                               nrow = 3,
                               ncol = 3))
 
-# finally process as in a simple case
+# finally process (as in a simple case)
 my_processed_data <- input_manual_process(mydata)
 my_processed_data
 ```

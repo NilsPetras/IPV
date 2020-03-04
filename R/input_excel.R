@@ -17,6 +17,9 @@
 #'   \code{tests} argument, resulting in a simple model with one test and its
 #'   facets.
 #'
+#'   If you specify an element in \code{tests} as \code{NA}, this test will be
+#'   treated as having no facets.
+#'
 #' @return List containing formatted data including center distances for
 #'   \code{\link{item_chart}}, \code{\link{facet_chart}}, and
 #'   \code{\link{nested_chart}}.
@@ -57,15 +60,18 @@ input_excel <- function(global = NULL, tests){
     # check matches between global and test level
       # factor names matching
     x <- lapply(tests_input, `[[`, 1)
+
     x <- sort(as.character(unlist(lapply(x, `[[`, "factor"))))
-    if (!isTRUE(all.equal(sort(as.character(global_input$cds$subfactor)), x))
+    if (!isTRUE(all.equal(sort(as.character(global_input$cds$subfactor)), x)) &
+        !any(is.na(tests))
         ) stop ("Factor name or item per factor count mismatch between global
                 and tests")
 
       # item names and number of items matching
     x <- lapply(tests_input, `[[`, 1)
     x <- sort(as.character(unlist(lapply(x, `[[`, "item"))))
-    if (!isTRUE(all.equal(sort(as.character(global_input$cds$item)), x))
+    if (!isTRUE(all.equal(sort(as.character(global_input$cds$item)), x)) &
+        !any(is.na(tests))
         ) stop ("Number of items or item name mismatch between global and
                 tests")
 
@@ -75,8 +81,20 @@ input_excel <- function(global = NULL, tests){
                                    global_input$cds$item,
                                    sep = ".")
 
-    for (i in 1:length(colnames(global_input$cors))) {
+    if (any(is.na(tests))) {
+      tests_input[which(is.na(tests))] <- NA
+    }
+
+    for (i in which(!is.na(tests))) {
       names(tests_input)[i] <- levels(tests_input[[c(i, 1)]]$factor)
+    }
+
+    missing_tests <- setdiff(
+      levels(global_input$cds$subfactor),
+      stats::na.omit(names(tests_input))
+    )
+    if (any(is.na(tests))) {
+      names(tests_input)[[which(is.na(tests))]] <- missing_tests
     }
 
     mydata <- list(global = global_input, tests = tests_input)
@@ -102,6 +120,8 @@ input_excel_factor <- function (file) {
 
 
   # file reading ---------------------------------------------------------------
+
+  if (is.na(file)) return(NULL)
 
   # excel sheet 1 contains the center distances, 2 contains the correlations
   sheet1 <- readxl::read_excel(file, sheet = 1, col_names = T)
@@ -177,7 +197,7 @@ input_excel_factor <- function (file) {
     subfactor = sheet1$subfactor,
     item = as.factor(sheet1$item),
     cd = sheet1$subfactor_loading ^ 2 / sheet1$factor_loading ^ 2 - 1,
-    mean_cd = NA)
+    mean_cd = NA, stringsAsFactors = TRUE)
 
   # negative center distances are adjusted to zero for chart clarity
   bad <- min(cds$cd)

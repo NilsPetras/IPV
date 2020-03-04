@@ -4,8 +4,15 @@
 \alias{input_manual_nested}
 \title{Input Manual Nested}
 \usage{
-input_manual_nested(construct_name, test_names, items_per_test, item_names,
-  construct_loadings, test_loadings, correlation_matrix)
+input_manual_nested(
+  construct_name,
+  test_names,
+  items_per_test,
+  item_names,
+  construct_loadings,
+  test_loadings,
+  correlation_matrix
+)
 }
 \arguments{
 \item{construct_name}{character; the name of the overall construct.}
@@ -34,7 +41,7 @@ by test_names.}
 \value{
 list containing "raw" data. The data on the facets of the tests needs
  to be added using \code{\link{input_manual_simple}}. Afterwards, the whole
- data needs to be preprocessed using \code{\link{input_manual_process}}.
+ data needs to be pre-processed using \code{\link{input_manual_process}}.
 }
 \description{
 Generates manual data input for a nested model with several tests.
@@ -43,13 +50,13 @@ Generates manual data input for a nested model with several tests.
 Pay attention to the order of tests and items, it has to be coherent
  throughout the whole data. test_names and items_per_test determine which
  test is listed first and how many items are listed for that test.
- item_names, construct_loadings and test_loadings have to match that
- order. The correlation matrix uses the order in test_names for rows and
- columns.
+ item_names, construct_loadings and test_loadings have to match that order.
+ The correlation matrix uses the order in test_names for rows and columns.
 
  This function only lists the name of the tests in output$tests. For each of
  those tests, the data on the facets needs to be added using
- \code{\link{input_manual_simple}}.
+ \code{\link{input_manual_simple}}. Every test for which you do not provide
+ this data will be treated as having no facets.
 
  Visually inspect the returned object before continuing with
  \code{\link{input_manual_process}}!

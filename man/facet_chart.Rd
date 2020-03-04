@@ -4,14 +4,32 @@
 \alias{facet_chart}
 \title{Facet Chart}
 \usage{
-facet_chart(data, subradius = 0, file_name = "myipv.pdf", size = 1,
-  font = "sans", rotate_radians = 0, rotate_degrees = 0,
-  file_width = 10, file_height = 10, dpi = 500, color = "black",
-  fade = 85, tick = 0, cor_labels = TRUE, dist_test_label = 2/3,
-  rotate_test_label_radians = 0, rotate_test_label_degrees = 0,
-  size_cor_labels = 1, size_test_label = 1, size_facet_labels = 1,
-  width_axes = 1, width_circles = 1, width_tick = 1,
-  size_tick_label = 1)
+facet_chart(
+  data,
+  subradius = 0,
+  file_name = "none",
+  size = 1,
+  font = "sans",
+  rotate_radians = 0,
+  rotate_degrees = 0,
+  file_width = 10,
+  file_height = 10,
+  dpi = 500,
+  color = "black",
+  fade = 85,
+  tick = 0,
+  cor_labels = TRUE,
+  dist_test_label = 2/3,
+  rotate_test_label_radians = 0,
+  rotate_test_label_degrees = 0,
+  size_cor_labels = 1,
+  size_test_label = 1,
+  size_facet_labels = 1,
+  width_axes = 1,
+  width_circles = 1,
+  width_tick = 1,
+  size_tick_label = 1
+)
 }
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input
@@ -21,8 +39,7 @@ functions.}
 circles; defaults to 0, in which case an appropriate value is estimated.}
 
 \item{file_name}{character; name of the file to save. Supported formats are:
-"pdf" (highest quality and smallest file size), "png", "jpeg". Use "none"
-to suppress file output; defaults to "myipv.pdf".}
+"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".}
 
 \item{size}{integer; changes the size of most chart objects simultaneously.}
 
@@ -78,8 +95,7 @@ global label counter-clockwise by.}
 \item{size_tick_label}{integer; axis tick font size relative to default.}
 }
 \value{
-Object of the class "ggplot" and, by default, the same object saved
-  as a file.
+Object of the class "ggplot".
 }
 \description{
 Creates a facet chart, showing the facets of a test.

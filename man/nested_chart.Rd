@@ -4,23 +4,51 @@
 \alias{nested_chart}
 \title{Nested Chart}
 \usage{
-nested_chart(data, xarrows = NULL, subradius = 0,
-  file_name = "myipv.pdf", size = 1, relative_scaling = 0,
-  show_xarrows = FALSE, font = "sans", rotate_radians = 0,
-  rotate_degrees = 0, subrotate_radians = 0, subrotate_degrees = 0,
-  file_width = 10, file_height = 10, dpi = 500,
-  color_global = "black", color_nested = "black", fade = 85,
-  cor_spacing = 0, tick = 0, dist_construct_label = 10,
+nested_chart(
+  data,
+  xarrows = NULL,
+  subradius = 0,
+  file_name = "none",
+  size = 1,
+  relative_scaling = 0,
+  show_xarrows = FALSE,
+  font = "sans",
+  rotate_radians = 0,
+  rotate_degrees = 0,
+  subrotate_radians = 0,
+  subrotate_degrees = 0,
+  file_width = 10,
+  file_height = 10,
+  dpi = 500,
+  color_global = "black",
+  color_nested = "black",
+  fade = 85,
+  cor_spacing = 0,
+  tick = 0,
+  dist_construct_label = 10,
   rotate_construct_label_radians = 0,
-  rotate_construct_label_degrees = 0, dist_test_labels = 2/3,
-  rotate_test_labels_radians = 0, rotate_test_labels_degrees = 0,
-  cor_labels_tests = TRUE, cor_labels_facets = TRUE,
-  size_construct_label = 1, size_test_labels = 1,
-  size_facet_labels = 1, width_axes = 1, width_axes_inner = 1,
-  width_circles = 1, width_circles_inner = 1, width_tick = 1,
-  width_tick_inner = 1, size_tick_label = 1, size_cor_labels = 1,
-  size_cor_labels_inner = 1, width_xarrows = 1,
-  size_xarrow_heads = 1, size_xarrow_labels = 1)
+  rotate_construct_label_degrees = 0,
+  dist_test_labels = 2/3,
+  rotate_test_labels_radians = 0,
+  rotate_test_labels_degrees = 0,
+  cor_labels_tests = TRUE,
+  cor_labels_facets = TRUE,
+  size_construct_label = 1,
+  size_test_labels = 1,
+  size_facet_labels = 1,
+  width_axes = 1,
+  width_axes_inner = 1,
+  width_circles = 1,
+  width_circles_inner = 1,
+  width_tick = 1,
+  width_tick_inner = 1,
+  size_tick_label = 1,
+  size_cor_labels = 1,
+  size_cor_labels_inner = 1,
+  width_xarrows = 1,
+  size_xarrow_heads = 1,
+  size_xarrow_labels = 1
+)
 }
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input
@@ -33,8 +61,7 @@ arrows between facets of different tests; see examples.}
 circles; defaults to 0, in which case an appropriate value is estimated.}
 
 \item{file_name}{character; name of the file to save. Supported formats are:
-"pdf" (highest quality and smallest file size), "png", "jpeg". Use "none" to
-suppress file output; defaults to "myipv.pdf".}
+"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".}
 
 \item{size}{integer; changes the size of most chart objects simultaneously.}
 
@@ -148,8 +175,7 @@ facets relative to default.}
 extra arrows relative to default.}
 }
 \value{
-Object of the class "ggplot" and, by default, the same object saved as
- a file.
+Object of the class "ggplot".
 }
 \description{
 Creates a nested chart, showing several tests and their facets.
@@ -199,6 +225,15 @@ nested_chart(self_confidence,
 nested_chart(self_confidence,
              subradius = .6,
              subrotate_radians = c(0, pi / 2, 0))
+
+# test without facets
+
+global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
+tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+           system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
+           NA)
+x <- input_excel(global = global, tests = tests)
+nested_chart(x)
 
 }
 \seealso{

@@ -5,8 +5,7 @@
 #' @param data SEM estimates in the appropriate format, given by the input
 #'   functions.
 #' @param file_name character; name of the file to save. Supported formats are:
-#'   "pdf" (highest quality and smallest file size), "png", "jpeg". Use "none"
-#'   to suppress file output; defaults to "myipv.pdf".
+#'   "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".
 #' @param size integer; changes the size of most chart objects simultaneously.
 #' @param font character; text font, use extrafonts to access additional fonts;
 #'   defaults to "sans", which is "Helvetica".
@@ -70,7 +69,7 @@
 #' @export
 item_chart <- function(
   data,
-  file_name = "myipv.pdf",
+  file_name = "none",
   size = 1,
   font = "sans",
   rotate_radians = 0,
@@ -143,8 +142,7 @@ item_chart <- function(
 #'   \code{\link{coord_nested}}.
 #' @param size integer; changes the size of most chart objects simultaneously.
 #' @param file_name character; name of the file to save. Supported formats are:
-#'   "pdf" (highest quality and smallest file size), "png", "jpeg". Use "none"
-#'   to suppress file output; defaults to "myipv.pdf".
+#'   "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".
 #' @param file_width integer; file width in inches; defaults to 12.
 #' @param file_height integer; file height in inches; defaults to 10.
 #' @param dpi integer; resolution in dots per inch for "png" and "jpeg" files;
@@ -170,14 +168,13 @@ item_chart <- function(
 #'
 #' @details Use \code{\link{item_chart}} to create item charts.
 #'
-#' @return Object of the class "ggplot" and, by default, the same object saved
-#'   as a file.
+#' @return Object of the class "ggplot".
 #'
 #' @seealso \code{\link{coord_items}} \code{\link{item_chart}}
 plot_items <- function (
   coord,
   size = 1,
-  file_name = "myipv.pdf",
+  file_name = "none",
   file_width = 12,
   file_height = 10,
   dpi = 500,

@@ -36,6 +36,52 @@ coord_facets <- function (
   rotate_test_label_degrees = 0) {
 
 
+
+
+  # test without facets --------------------------------------------------------
+
+  # tests without facets are indicated by data = NA
+  # in this case, only the test label (centered) and the outer circle
+  # (radius = subradius) should be drawn.
+
+  if (anyNA(data)) {
+    p_circs <- data.frame(phi = 0,
+                          rho = 0,
+                          radius = subradius)
+    row.names(p_circs) <- "temp"
+    c_circs <- p_circs
+    names(c_circs) <- c("x","y","radius")
+    p_axes <- data.frame(rho0 = NA,
+                         rho1 = NA,
+                         rho2 = NA,
+                         rho3 = NA,
+                         phi = NA)
+    c_axes <- data.frame(x0 = NA, y0 = NA,
+                         x1 = NA, y1 = NA,
+                         x2 = NA, y2 = NA,
+                         x3 = NA, y3 = NA)
+    axis_tick <- data.frame(rho = NA, phi = NA, x = NA, y = NA)
+    test_label <- data.frame(x = 0,
+                             y = 0,
+                             label = "temp",
+                             phi = 0,
+                             rho = 0)
+    cors <- data.frame(x = NA,
+                       y = NA,
+                       V1 = NA,
+                       V2 = NA,
+                       label = NA)
+
+    coord <- list(p_circs    = p_circs,
+                  c_circs    = c_circs,
+                  p_axes     = p_axes,
+                  c_axes     = c_axes,
+                  axis_tick  = axis_tick,
+                  test_label = test_label,
+                  cors       = cors)
+    return (coord)
+  }
+
   # helper variables -----------------------------------------------------------
 
   cplx <- length(colnames(data$cors))
@@ -62,6 +108,8 @@ coord_facets <- function (
   }
 
   # chart objects --------------------------------------------------------------
+
+
 
   ## circles ------------------------
 
@@ -169,7 +217,7 @@ coord_facets <- function (
   }
   cors$label <- as.character(cors$label)
   # exclude leading 0's for aesthetic reasons
-  cors$label[cors$label != 1 && cors$label != 0] <- substr(cors$label, 2, 4)
+  cors$label[cors$label != 1 & cors$label != 0] <- substr(cors$label, 2, 4)
 
   cors$x <- c_circs[cors$V2, "x"]
   cors$y <- c_circs[cors$V2, "y"]
