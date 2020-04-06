@@ -13,6 +13,8 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
+#' @param grid_limit integer; upper limit to which the grid lines should be
+#'   drawn; defaults to 0, in which case an appropriate value is estimated.
 #' @param file_width integer; file width in inches; defaults to 12.
 #' @param file_height integer; file height in inches; defaults to 10.
 #' @param dpi integer; resolution in dots per inch for "png" and "jpeg" files;
@@ -74,6 +76,7 @@ item_chart <- function(
   font = "sans",
   rotate_radians = 0,
   rotate_degrees = 0,
+  grid_limit = 0,
   file_width = 12,
   file_height = 10,
   dpi = 500,
@@ -100,6 +103,7 @@ item_chart <- function(
     data = data,
     rotate_radians = rotate_radians,
     rotate_degrees = rotate_degrees,
+    grid_limit = grid_limit,
     dodge = dodge,
     width_items = width_items,
     length_items = length_items,

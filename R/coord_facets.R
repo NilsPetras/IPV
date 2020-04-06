@@ -8,6 +8,8 @@
 #'   circles; defaults to 0, in which case an appropriate value is estimated.
 #' @param tick numeric; axis tick position; defaults to 0, in which case an
 #'   appropriate value is estimated.
+#' @param rotate_tick_label numeric; number of positions to move the tick label
+#'   (counter-clockwise); defaults to 0.
 #' @param rotate_radians integer; radian angle to rotate the chart
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
@@ -29,6 +31,7 @@ coord_facets <- function (
   data,
   subradius = 0,
   tick = 0,
+  rotate_tick_label = 0,
   rotate_radians = 0,
   rotate_degrees = 0,
   dist_test_label = 2 / 3,
@@ -168,7 +171,7 @@ coord_facets <- function (
   c_axes$y3 <- round(sin(p_axes$phi) * p_axes$rho3, digits = 7)
 
   axis_tick <- data.frame(rho = tick, phi = NA, x = NA, y = NA)
-  axis_tick$phi <- min(p_circs$phi) + pi / cplx
+  axis_tick$phi <- min(p_circs$phi) + (pi + 2 * pi * rotate_tick_label) / cplx
   axis_tick$x <- round(cos(axis_tick$phi) * axis_tick$rho, digits = 7)
   axis_tick$y <- round(sin(axis_tick$phi) * axis_tick$rho, digits = 7)
 

@@ -9,7 +9,8 @@
 #'@param subradius integer; same unit as center distances; radius of the facet
 #'  circles; defaults to 0, in which case an appropriate value is estimated.
 #'@param file_name character; name of the file to save. Supported formats are:
-#'  "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".
+#'  "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to
+#'  "none".
 #'@param size integer; changes the size of most chart objects simultaneously.
 #'@param relative_scaling integer; relative size of the global chart scale
 #'  compared to the nested facet chart scales; defaults to 0, in which case an
@@ -40,6 +41,8 @@
 #'  appropriate value is estimated.
 #'@param tick numeric; axis tick position; defaults to 0, in which case an
 #'  appropriate value is estimated.
+#'@param rotate_tick_label numeric; number of positions to move the tick label
+#'  (counter-clockwise); defaults to 0.
 #'@param dist_construct_label integer; position of the construct label relative
 #'  to the surrounding circle; defaults to 10, in which case an appropriate
 #'  value is estimated; a value of .5 would position the label halfway between
@@ -163,6 +166,7 @@ nested_chart <- function(
   fade = 85,
   cor_spacing = 0,
   tick = 0,
+  rotate_tick_label = 0,
   dist_construct_label = 10,
   rotate_construct_label_radians = 0,
   rotate_construct_label_degrees = 0,
@@ -191,6 +195,7 @@ nested_chart <- function(
     data = data,
     subradius = subradius,
     tick = tick,
+    rotate_tick_label = rotate_tick_label,
     rotate_radians = rotate_radians,
     rotate_degrees = rotate_degrees,
     subrotate_radians = subrotate_radians,
@@ -253,6 +258,8 @@ nested_chart <- function(
 #'  circles; defaults to 0, in which case an appropriate value is estimated.
 #'@param tick numeric; axis tick position; defaults to 0, in which case an
 #'  appropriate value is estimated.
+#'@param rotate_tick_label numeric; number of positions to move the tick label
+#'  (counter-clockwise); defaults to 0.
 #'@param rotate_radians integer; radian angle to rotate the chart
 #'  counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #'@param rotate_degrees integer; angle in degrees to rotate the chart
@@ -303,6 +310,7 @@ coord_nested <- function (
   data,
   subradius = 0,
   tick = 0,
+  rotate_tick_label = 0,
   rotate_radians = 0,
   rotate_degrees = 0,
   subrotate_radians = 0,
@@ -524,7 +532,7 @@ coord_nested <- function (
   c_axes$y3 <- round(sin(p_axes$phi) * p_axes$rho3, digits = 7)
 
   axis_tick <- data.frame(tick = tick, rho = tick, phi = NA, x = NA, y = NA)
-  axis_tick$phi <- min(p_circs$phi) + pi / cplx
+  axis_tick$phi <- min(p_circs$phi) + (pi + 2 * pi * rotate_tick_label) / cplx
   axis_tick$x <- round(cos(axis_tick$phi) *
                          max(axis_tick$rho, .1 * max(g_cds)),
                        digits = 7)

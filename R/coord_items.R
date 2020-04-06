@@ -8,6 +8,8 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
+#' @param grid_limit integer; upper limit to which the grid lines should be
+#'   drawn; defaults to 0, in which case an appropriate value is estimated.
 #' @param dist_test_label integer; position of the test label relative to the
 #'   surrounding circle; defaults to .5, in which case the test label is
 #'   displayed halfway from the center to the surrounding circle.
@@ -31,6 +33,7 @@ coord_items <- function (
   data,
   rotate_radians = 0,
   rotate_degrees = 0,
+  grid_limit = 0,
   dist_test_label = .5,
   rotate_test_label_radians = 0,
   rotate_test_label_degrees = 0,
@@ -47,6 +50,10 @@ coord_items <- function (
   rotate_test_label <- rotate_test_label_radians +
     rotate_test_label_degrees * pi / 180
   maxcd <- max(data$cds$cd)
+  if (grid_limit == 0) {
+    grid_limit <- maxcd
+  }
+  axe_limit <- max(maxcd, grid_limit)
 
 
   # chart objects --------------------------------------------------------------
@@ -57,7 +64,7 @@ coord_items <- function (
                        rho = NA,
                        rholabel = NA)
   row.names(p_axes) <- levels(data$cds$subfactor)
-  p_axes$rho <- maxcd * 1.2
+  p_axes$rho <- axe_limit * 1.2
   p_axes$phi <- c(2 * pi / cplx * c(1:cplx)) + rotate
   p_axes$phi[p_axes$phi > 2 * pi] <-
     p_axes$phi[p_axes$phi > 2 * pi] - 2 * pi
@@ -89,7 +96,7 @@ coord_items <- function (
     length = NA)
   row.names(items) <- data$cds$item
   items$phi <- p_axes$phi[data$cds$subfactor]
-  items$rho <- data$cds$cd + maxcd * .00625 * width_items
+  items$rho <- data$cds$cd + axe_limit * .00625 * width_items
   items <- items[order(items$phi, items$rho), ]
   items$x <- round(cos(items$phi) * items$rho, digits = 7)
   items$y <- round(sin(items$phi) * items$rho, digits = 7)
@@ -101,9 +108,10 @@ coord_items <- function (
     x$length[seq(from = 1, by = 2, to = length(x$length))] <- 2
   return(x$length)}))
 
-  items$length[items$length == 1] <- 1.2 * length_items * maxcd
+  items$length[items$length == 1] <- 1.2 * length_items * axe_limit
   items$length[items$length == 2] <-
-    1.2 * length_items * length_ratio_items * maxcd * 1.0001
+    1.2 * length_items * length_ratio_items * axe_limit * 1.0001
+  # factor of 1.0001 separates the bars by length for further code
 
   items$x1 <- items$x - items$y / items$rho * .03 * items$length
   items$y1 <- items$y + items$x / items$rho * .03 * items$length
@@ -116,8 +124,8 @@ coord_items <- function (
   # For the grid to scale dynamically with the data, magnitude and digits
   # are treated separately.
   # m = order of magnitude, d = digits, u = unit (10^?)
-  m <- floor(log10(maxcd))
-  d <- maxcd / 10 ^ m
+  m <- floor(log10(grid_limit))
+  d <- grid_limit / 10 ^ m
   u <- 10 ^ (m - 1)
 
   # Three cases, to ensure a similar number of grid lines for all data
@@ -166,7 +174,7 @@ coord_items <- function (
   ## test label ---------------------
 
   test_label <- data.frame(phi = mean(p_axes$phi[1] + pi / cplx) + rotate_test_label,
-                      rho = dist_test_label * maxcd,
+                      rho = dist_test_label * axe_limit,
                       label = data$cds$factor[1],
                       x = NA, y = NA)
   test_label$x <- round(cos(test_label$phi) * test_label$rho, digits = 7)

@@ -7,7 +7,8 @@
 #' @param subradius integer; same unit as center distances; radius of the facet
 #'   circles; defaults to 0, in which case an appropriate value is estimated.
 #' @param file_name character; name of the file to save. Supported formats are:
-#'   "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".
+#'   "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to
+#'   "none".
 #' @param size integer; changes the size of most chart objects simultaneously.
 #' @param font character; text font, use extrafonts to access additional fonts;
 #'   defaults to "sans", which is "Helvetica".
@@ -24,6 +25,8 @@
 #'   = "white" in steps of 1; defaults to 85.
 #' @param tick numeric; axis tick position; defaults to 0, in which case an
 #'   appropriate value is estimated.
+#' @param rotate_tick_label numeric; number of positions to move the tick label
+#'   (counter-clockwise); defaults to 0.
 #' @param cor_labels logical; if \code{TRUE}, shows latent correlations between
 #'   facets; defaults to \code{TRUE}.
 #' @param dist_test_label integer; position of the test label relative to the
@@ -68,6 +71,7 @@ facet_chart <- function(
   color = "black",
   fade = 85,
   tick = 0,
+  rotate_tick_label = 0,
   cor_labels = TRUE,
   dist_test_label = 2 / 3,
   rotate_test_label_radians = 0,
@@ -84,6 +88,7 @@ facet_chart <- function(
     data = data,
     subradius = subradius,
     tick = tick,
+    rotate_tick_label,
     rotate_radians = rotate_radians,
     rotate_degrees = rotate_degrees,
     dist_test_label = dist_test_label,
