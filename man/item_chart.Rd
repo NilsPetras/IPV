@@ -11,6 +11,7 @@ item_chart(
   font = "sans",
   rotate_radians = 0,
   rotate_degrees = 0,
+  grid_limit = 0,
   file_width = 12,
   file_height = 10,
   dpi = 500,
@@ -51,6 +52,9 @@ counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
 
 \item{rotate_degrees}{integer; angle in degrees to rotate the chart
 counter-clockwise by.}
+
+\item{grid_limit}{integer; upper limit to which the grid lines should be
+drawn; defaults to 0, in which case an appropriate value is estimated.}
 
 \item{file_width}{integer; file width in inches; defaults to 12.}
 

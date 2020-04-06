@@ -18,6 +18,7 @@ facet_chart(
   color = "black",
   fade = 85,
   tick = 0,
+  rotate_tick_label = 0,
   cor_labels = TRUE,
   dist_test_label = 2/3,
   rotate_test_label_radians = 0,
@@ -39,7 +40,8 @@ functions.}
 circles; defaults to 0, in which case an appropriate value is estimated.}
 
 \item{file_name}{character; name of the file to save. Supported formats are:
-"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".}
+"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to
+"none".}
 
 \item{size}{integer; changes the size of most chart objects simultaneously.}
 
@@ -66,6 +68,9 @@ defaults to 500.}
 
 \item{tick}{numeric; axis tick position; defaults to 0, in which case an
 appropriate value is estimated.}
+
+\item{rotate_tick_label}{numeric; number of positions to move the tick label
+(counter-clockwise); defaults to 0.}
 
 \item{cor_labels}{logical; if \code{TRUE}, shows latent correlations between
 facets; defaults to \code{TRUE}.}

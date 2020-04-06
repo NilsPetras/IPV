@@ -8,6 +8,7 @@ coord_facets(
   data,
   subradius = 0,
   tick = 0,
+  rotate_tick_label = 0,
   rotate_radians = 0,
   rotate_degrees = 0,
   dist_test_label = 2/3,
@@ -24,6 +25,9 @@ circles; defaults to 0, in which case an appropriate value is estimated.}
 
 \item{tick}{numeric; axis tick position; defaults to 0, in which case an
 appropriate value is estimated.}
+
+\item{rotate_tick_label}{numeric; number of positions to move the tick label
+(counter-clockwise); defaults to 0.}
 
 \item{rotate_radians}{integer; radian angle to rotate the chart
 counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}

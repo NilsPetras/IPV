@@ -25,6 +25,7 @@ nested_chart(
   fade = 85,
   cor_spacing = 0,
   tick = 0,
+  rotate_tick_label = 0,
   dist_construct_label = 10,
   rotate_construct_label_radians = 0,
   rotate_construct_label_degrees = 0,
@@ -61,7 +62,8 @@ arrows between facets of different tests; see examples.}
 circles; defaults to 0, in which case an appropriate value is estimated.}
 
 \item{file_name}{character; name of the file to save. Supported formats are:
-"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".}
+"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to
+"none".}
 
 \item{size}{integer; changes the size of most chart objects simultaneously.}
 
@@ -108,6 +110,9 @@ appropriate value is estimated.}
 
 \item{tick}{numeric; axis tick position; defaults to 0, in which case an
 appropriate value is estimated.}
+
+\item{rotate_tick_label}{numeric; number of positions to move the tick label
+(counter-clockwise); defaults to 0.}
 
 \item{dist_construct_label}{integer; position of the construct label relative
 to the surrounding circle; defaults to 10, in which case an appropriate

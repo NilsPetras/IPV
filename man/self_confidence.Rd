@@ -4,7 +4,9 @@
 \name{self_confidence}
 \alias{self_confidence}
 \title{Self-Confidence}
-\format{An object of class \code{list} of length 2.}
+\format{
+An object of class \code{list} of length 2.
+}
 \source{
 Dantlgraber, M., Stieger, S., & Reips, U. D. (2019). Introducing Item
  Pool Visualization: A method for investigation of concepts in self-reports

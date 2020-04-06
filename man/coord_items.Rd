@@ -8,6 +8,7 @@ coord_items(
   data,
   rotate_radians = 0,
   rotate_degrees = 0,
+  grid_limit = 0,
   dist_test_label = 0.5,
   rotate_test_label_radians = 0,
   rotate_test_label_degrees = 0,
@@ -26,6 +27,9 @@ counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
 
 \item{rotate_degrees}{integer; angle in degrees to rotate the chart
 counter-clockwise by.}
+
+\item{grid_limit}{integer; upper limit to which the grid lines should be
+drawn; defaults to 0, in which case an appropriate value is estimated.}
 
 \item{dist_test_label}{integer; position of the test label relative to the
 surrounding circle; defaults to .5, in which case the test label is
