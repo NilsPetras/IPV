@@ -17,6 +17,8 @@ plot_items(
   fade_grid_major = 15,
   fade_grid_minor = 65,
   font = "sans",
+  title = NULL,
+  size_title = 1,
   size_tick_label = 1,
   size_test_label = 1,
   size_facet_labels = 1,
@@ -57,6 +59,10 @@ lines between 0 = "black" and 100 = "white" in steps of 1; defaults to 65.}
 
 \item{font}{character; text font, use extrafonts to access additional fonts;
 defaults to "sans", which is "Helvetica".}
+
+\item{title}{character; overall chart title; defaults to NULL.}
+
+\item{size_title}{integer; title font size relative to default.}
 
 \item{size_tick_label}{integer; axis tick label font size relative to
 default.}

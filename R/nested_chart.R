@@ -70,6 +70,8 @@
 #'  between tests as text.
 #'@param cor_labels_facets logical; if \code{TRUE}, shows the correlations
 #'  between facets as text.
+#'@param title character; overall chart title; defaults to NULL.
+#'@param size_title integer; title font size relative to default.
 #'@param size_construct_label integer; construct label font size relative to
 #'  default.
 #'@param size_test_labels integer; test label font size relative to default.
@@ -112,6 +114,13 @@
 #'  Pdf files will be vector based and can be scaled arbitrarily. For other
 #'  formats use \code{file_width}, \code{file_height}, and \code{dpi} to avoid
 #'  later rescaling and loss of quality.
+#'
+#'   Consider adding title and caption in your typesetting software (LaTeX, MS
+#'   Word, ...), not here. The option to add a title is only a quick and dirty
+#'   shurtcut. It reduces chart size and is inflexible. Adding the title
+#'   manually will provide additional options, but requires you to save to a
+#'   file manually. To manually add a title or caption use
+#'   \code{\link[ggplot2]{labs}}.
 #'
 #'@return Object of the class "ggplot".
 #'
@@ -183,6 +192,8 @@ nested_chart <- function(
   rotate_test_labels_degrees = 0,
   cor_labels_tests = TRUE,
   cor_labels_facets = TRUE,
+  title = NULL,
+  size_title = 1,
   size_construct_label = 1,
   size_test_labels = 1,
   size_facet_labels = 1,
@@ -245,6 +256,8 @@ nested_chart <- function(
     width_circles_inner = width_circles_inner,
     width_tick = width_tick,
     width_tick_inner = width_tick_inner,
+    title = title,
+    size_title = size_title,
     size_tick_label = size_tick_label,
     size_cor_labels = size_cor_labels,
     size_cor_labels_inner = size_cor_labels_inner,
@@ -871,6 +884,8 @@ coord_nested <- function (
 #'@param width_tick integer; global axis tick line width relative to default.
 #'@param width_tick_inner integer; nested axis tick line width relative to
 #'  default.
+#'@param title character; overall chart title; defaults to NULL.
+#'@param size_title integer; title font size relative to default.
 #'@param size_tick_label integer; axis tick label font size relative to default.
 #'@param size_cor_labels integer; font size of the correlations between tests
 #'  relative to default.
@@ -910,6 +925,8 @@ plot_nested <- function (
   width_circles_inner = 1,
   width_tick = 1,
   width_tick_inner = 1,
+  title = NULL,
+  size_title = 1,
   size_tick_label = 1,
   size_cor_labels = 1,
   size_cor_labels_inner = 1,
@@ -966,7 +983,11 @@ plot_nested <- function (
       panel.grid.minor = ggplot2::element_blank(),
       plot.background  = ggplot2::element_blank(),
       text             = ggplot2::element_text(size = 16, family = font),
-      plot.margin      = ggplot2::margin(0, 0, 0, 0, "in")) +
+      plot.margin      = ggplot2::margin(0, 0, 0, 0, "in"),
+      plot.title       = ggplot2::element_text(
+        hjust = .5,
+        vjust = -3,
+        size = 16 * size * size_title)) +
     ggplot2::aes() +
 
 
@@ -1142,6 +1163,12 @@ plot_nested <- function (
         size = 2.25 * size * size_xarrow_labels,
         family = font,
         color = "gray20")
+  }
+
+  # title
+  if (!is.null(title)) {
+    myipv <- myipv +
+      ggplot2::ggtitle(label = title)
   }
 
 

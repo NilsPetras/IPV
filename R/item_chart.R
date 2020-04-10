@@ -42,6 +42,8 @@
 #' @param width_items integer; item bar width relative to default.
 #' @param length_items integer; item bar length relative to default.
 #' @param length_ratio_items integer; relative item bar length; defaults to 1.5.
+#' @param title character; overall chart title; defaults to NULL.
+#' @param size_title integer; title font size relative to default.
 #' @param size_test_label integer; test label font size relative to default.
 #' @param size_facet_labels integer; facet label font size relative to default.
 #' @param width_axes integer; radial axis width relative to default.
@@ -64,6 +66,13 @@
 #'   Pdf files will be vector based and can be scaled arbitrarily. For other
 #'   formats use \code{file_width}, \code{file_height}, and \code{dpi} to avoid
 #'   later rescaling and loss of quality.
+#'
+#'   Consider adding title and caption in your typesetting software (LaTeX, MS
+#'   Word, ...), not here. The option to add a title is only a quick and dirty
+#'   shurtcut. It reduces chart size and is inflexible. Adding the title
+#'   manually will provide additional options, but requires you to save to a
+#'   file manually. To manually add a title or caption use
+#'   \code{\link[ggplot2]{labs}}.
 #'
 #' @seealso \code{\link{facet_chart}} \code{\link{nested_chart}}
 #'
@@ -96,6 +105,8 @@ item_chart <- function(
   width_items = 1,
   length_items = 1,
   length_ratio_items = 1.5,
+  title = NULL,
+  size_title = 1,
   size_tick_label = 1,
   size_test_label = 1,
   size_facet_labels = 1,
@@ -130,6 +141,8 @@ item_chart <- function(
     fade_grid_major = fade_grid_major,
     fade_grid_minor = fade_grid_minor,
     font = font,
+    title = title,
+    size_title = size_title,
     size_tick_label = size_tick_label,
     size_test_label = size_test_label,
     size_facet_labels = size_facet_labels,
@@ -166,6 +179,8 @@ item_chart <- function(
 #'   lines between 0 = "black" and 100 = "white" in steps of 1; defaults to 15.
 #' @param fade_grid_minor integer; brightness of the gray tone of the minor grid
 #'   lines between 0 = "black" and 100 = "white" in steps of 1; defaults to 65.
+#' @param title character; overall chart title; defaults to NULL.
+#' @param size_title integer; title font size relative to default.
 #' @param size_test_label integer; test font size relative to default.
 #' @param size_facet_labels integer; facet font size relative to default.
 #' @param width_axes integer; radial axis width relative to default.
@@ -193,6 +208,8 @@ plot_items <- function (
   fade_grid_major = 15,
   fade_grid_minor = 65,
   font = "sans",
+  title = NULL,
+  size_title = 1,
   size_tick_label = 1,
   size_test_label = 1,
   size_facet_labels = 1,
@@ -231,7 +248,11 @@ plot_items <- function (
       panel.grid.minor = ggplot2::element_blank(),
       plot.background  = ggplot2::element_blank(),
       text             = ggplot2::element_text(size = 16, family = font),
-      plot.margin      = ggplot2::margin(0, 0, 0, 0, "in")) +
+      plot.margin      = ggplot2::margin(0, 0, 0, 0, "in"),
+      plot.title       = ggplot2::element_text(
+        hjust = .5,
+        vjust = -3,
+        size = 16 * size * size_title)) +
     ggplot2::aes() +
 
 
@@ -310,6 +331,15 @@ plot_items <- function (
       family = font,
       size = 4 * size * size_tick_label,
       color = "gray20")
+
+
+  ## optional layers ----------------
+
+  # title
+  if (!is.null(title)) {
+    myipv <- myipv +
+      ggplot2::ggtitle(label = title)
+  }
 
 
   # optional file save ---------------------------------------------------------

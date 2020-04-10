@@ -27,6 +27,8 @@ plot_nested(
   width_circles_inner = 1,
   width_tick = 1,
   width_tick_inner = 1,
+  title = NULL,
+  size_title = 1,
   size_tick_label = 1,
   size_cor_labels = 1,
   size_cor_labels_inner = 1,
@@ -89,6 +91,10 @@ default.}
 
 \item{width_tick_inner}{integer; nested axis tick line width relative to
 default.}
+
+\item{title}{character; overall chart title; defaults to NULL.}
+
+\item{size_title}{integer; title font size relative to default.}
 
 \item{size_tick_label}{integer; axis tick label font size relative to default.}
 

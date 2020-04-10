@@ -36,6 +36,8 @@ nested_chart(
   rotate_test_labels_degrees = 0,
   cor_labels_tests = TRUE,
   cor_labels_facets = TRUE,
+  title = NULL,
+  size_title = 1,
   size_construct_label = 1,
   size_test_labels = 1,
   size_facet_labels = 1,
@@ -153,6 +155,10 @@ between tests as text.}
 \item{cor_labels_facets}{logical; if \code{TRUE}, shows the correlations
 between facets as text.}
 
+\item{title}{character; overall chart title; defaults to NULL.}
+
+\item{size_title}{integer; title font size relative to default.}
+
 \item{size_construct_label}{integer; construct label font size relative to
 default.}
 
@@ -216,6 +222,13 @@ To get tidy results, it is often required to use \code{rotate_} and
  Pdf files will be vector based and can be scaled arbitrarily. For other
  formats use \code{file_width}, \code{file_height}, and \code{dpi} to avoid
  later rescaling and loss of quality.
+
+  Consider adding title and caption in your typesetting software (LaTeX, MS
+  Word, ...), not here. The option to add a title is only a quick and dirty
+  shurtcut. It reduces chart size and is inflexible. Adding the title
+  manually will provide additional options, but requires you to save to a
+  file manually. To manually add a title or caption use
+  \code{\link[ggplot2]{labs}}.
 }
 \examples{
 # as simple as that

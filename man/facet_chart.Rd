@@ -24,6 +24,8 @@ facet_chart(
   dist_test_label = 2/3,
   rotate_test_label_radians = 0,
   rotate_test_label_degrees = 0,
+  title = NULL,
+  size_title = 1,
   size_cor_labels = 1,
   size_test_label = 1,
   size_facet_labels = 1,
@@ -90,6 +92,10 @@ label counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
 \item{rotate_test_label_degrees}{integer; angle in degrees to rotate the
 global label counter-clockwise by.}
 
+\item{title}{character; overall chart title; defaults to NULL.}
+
+\item{size_title}{integer; title font size relative to default.}
+
 \item{size_cor_labels}{integer; correlation font size relative to default.}
 
 \item{size_test_label}{integer; test font size relative to default.}
@@ -114,6 +120,13 @@ Creates a facet chart, showing the facets of a test.
 Pdf files will be vector based and can be scaled arbitrarily. For
   other formats use \code{file_width}, \code{file_height}, and \code{dpi} to
   avoid later rescaling and loss of quality.
+
+  Consider adding title and caption in your typesetting software (LaTeX, MS
+  Word, ...), not here. The option to add a title is only a quick and dirty
+  shurtcut. It reduces chart size and is inflexible. Adding the title
+  manually will provide additional options, but requires you to save to a
+  file manually. To manually add a title or caption use
+  \code{\link[ggplot2]{labs}}.
 }
 \examples{
 # as simple as that:

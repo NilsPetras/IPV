@@ -28,6 +28,8 @@ item_chart(
   width_items = 1,
   length_items = 1,
   length_ratio_items = 1.5,
+  title = NULL,
+  size_title = 1,
   size_tick_label = 1,
   size_test_label = 1,
   size_facet_labels = 1,
@@ -100,6 +102,10 @@ label counter-clockwise by.}
 
 \item{length_ratio_items}{integer; relative item bar length; defaults to 1.5.}
 
+\item{title}{character; overall chart title; defaults to NULL.}
+
+\item{size_title}{integer; title font size relative to default.}
+
 \item{size_tick_label}{integer; axis tick label font size relative to
 default.}
 
@@ -132,6 +138,13 @@ When changing the size of objects, consider the \code{size}
   Pdf files will be vector based and can be scaled arbitrarily. For other
   formats use \code{file_width}, \code{file_height}, and \code{dpi} to avoid
   later rescaling and loss of quality.
+
+  Consider adding title and caption in your typesetting software (LaTeX, MS
+  Word, ...), not here. The option to add a title is only a quick and dirty
+  shurtcut. It reduces chart size and is inflexible. Adding the title
+  manually will provide additional options, but requires you to save to a
+  file manually. To manually add a title or caption use
+  \code{\link[ggplot2]{labs}}.
 }
 \examples{
 # as simple as that
