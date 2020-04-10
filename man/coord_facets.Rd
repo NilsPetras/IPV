@@ -6,6 +6,7 @@
 \usage{
 coord_facets(
   data,
+  facet_order = NULL,
   subradius = 0,
   tick = 0,
   rotate_tick_label = 0,
@@ -19,6 +20,10 @@ coord_facets(
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input
 functions.}
+
+\item{facet_order}{character; vector of facet names in desired order
+(counter-clockwise); defaults to NULL, in which case the order is based on
+the correlation matrix columns in 'data'.}
 
 \item{subradius}{integer; same unit as center distances; radius of the facet
 circles; defaults to 0, in which case an appropriate value is estimated.}

@@ -4,6 +4,12 @@
 #'
 #'@param data SEM estimates in the appropriate format, given by the input
 #'  functions.
+#'@param test_order character; vector of test names in desired order
+#'  (counter-clockwise); defaults to NULL, in which case the order is based on
+#'  the correlation matrix columns in 'data'.
+#'@param facet_order character; vector of all facet names of all tests in
+#'  desired order (counter-clockwise); defaults to NULL, in which case the order
+#'  is based on the correlation matrix columns in 'data'.
 #'@param xarrows data frame containing information about additional correlation
 #'  arrows between facets of different tests; see examples.
 #'@param subradius integer; same unit as center distances; radius of the facet
@@ -147,6 +153,8 @@
 #'@export
 nested_chart <- function(
   data,
+  test_order = NULL,
+  facet_order = NULL,
   xarrows = NULL,
   subradius = 0,
   file_name = "none",
@@ -193,6 +201,8 @@ nested_chart <- function(
 
   coord <- coord_nested(
     data = data,
+    test_order = test_order,
+    facet_order = facet_order,
     subradius = subradius,
     tick = tick,
     rotate_tick_label = rotate_tick_label,
@@ -254,6 +264,12 @@ nested_chart <- function(
 #'
 #'@param data SEM estimates in the appropriate format, given by the input
 #'  functions.
+#'@param test_order character; vector of test names in desired order
+#'  (counter-clockwise); defaults to NULL, in which case the order is based on
+#'  the correlation matrix columns in 'data'.
+#'@param facet_order character; vector of all facet names of all tests in
+#'  desired order (counter-clockwise); defaults to NULL, in which case the order
+#'  is based on the correlation matrix columns in 'data'.
 #'@param subradius integer; same unit as center distances; radius of the facet
 #'  circles; defaults to 0, in which case an appropriate value is estimated.
 #'@param tick numeric; axis tick position; defaults to 0, in which case an
@@ -308,6 +324,8 @@ nested_chart <- function(
 #'@seealso \code{\link{plot_nested}} \code{\link{nested_chart}}
 coord_nested <- function (
   data,
+  test_order = NULL,
+  facet_order = NULL,
   subradius = 0,
   tick = 0,
   rotate_tick_label = 0,
@@ -331,6 +349,7 @@ coord_nested <- function (
   # helper variables -----------------------------------------------------------
 
   cplx <- length(colnames(data$g$cors))
+
   # a vector of subrotation values can be given,
   # to allign the nested facet charts
   subrotate <- subrotate_radians + subrotate_degrees * pi / 180
@@ -364,11 +383,13 @@ coord_nested <- function (
 
   factorcoords <- list()
   for (i in 1:length(data$tests)) {
-    factorcoords[[i]] <- coord_facets(data$tests[[i]],
-                                      subradius = subradius,
-                                      rotate_radians = subrotate[i],
-                                      rotate_test_label_radians = rotate_test_labels[i],
-                                      dist_test_label = dist_test_labels[i])
+    factorcoords[[i]] <- coord_facets(
+      data$tests[[i]],
+      facet_order = facet_order,
+      subradius = subradius,
+      rotate_radians = subrotate[i],
+      rotate_test_label_radians = rotate_test_labels[i],
+      dist_test_label = dist_test_labels[i])
     if (is.na(factorcoords[[i]][["p_axes"]][1,"rho0"])) {
       x <- names(data$tests)[i]
       row.names(factorcoords[[i]][["p_circs"]]) <- x
@@ -391,7 +412,10 @@ coord_nested <- function (
 
   # helper variables -----------------------------------------------------------
 
-  nam <- colnames(data$g$cors)
+  if (is.null(test_order)) {
+    test_order <- colnames(data$g$cors)
+  }
+  nam <- test_order
   rotate <- rotate_radians + rotate_degrees * pi / 180
   rotate_construct_label <- rotate_construct_label_radians +
     rotate_construct_label_degrees * pi / 180
@@ -569,7 +593,7 @@ coord_nested <- function (
                      xnew = NA,
                      ynew = NA)
 
-  a <- row.names(data$g$cors)
+  a <- nam
   a <- c(a, a[1])
   b <- NULL
   for (k in 1:cplx) {
@@ -578,7 +602,7 @@ coord_nested <- function (
     a <- c(a, a[1])
   }
   cors$V1 <- b
-  cors$V2 <- unlist(lapply(row.names(data$g$cors), rep, times = cplx - 1))
+  cors$V2 <- unlist(lapply(nam, rep, times = cplx - 1))
 
   for (k in 1:n) {
     cors$label[k] <- data$g$cors[cors$V1[k], cors$V2[k]]

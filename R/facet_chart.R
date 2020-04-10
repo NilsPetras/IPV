@@ -4,6 +4,9 @@
 #'
 #' @param data SEM estimates in the appropriate format, given by the input
 #'   functions.
+#' @param facet_order character; vector of facet names in desired order
+#'   (counter-clockwise); defaults to NULL, in which case the order is based on
+#'   the correlation matrix columns in 'data'.
 #' @param subradius integer; same unit as center distances; radius of the facet
 #'   circles; defaults to 0, in which case an appropriate value is estimated.
 #' @param file_name character; name of the file to save. Supported formats are:
@@ -59,6 +62,7 @@
 #' @export
 facet_chart <- function(
   data,
+  facet_order = NULL,
   subradius = 0,
   file_name = "none",
   size = 1,
@@ -86,6 +90,7 @@ facet_chart <- function(
 
   coord <- coord_facets(
     data = data,
+    facet_order = facet_order,
     subradius = subradius,
     tick = tick,
     rotate_tick_label,

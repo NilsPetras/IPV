@@ -6,6 +6,8 @@
 \usage{
 nested_chart(
   data,
+  test_order = NULL,
+  facet_order = NULL,
   xarrows = NULL,
   subradius = 0,
   file_name = "none",
@@ -54,6 +56,14 @@ nested_chart(
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input
 functions.}
+
+\item{test_order}{character; vector of test names in desired order
+(counter-clockwise); defaults to NULL, in which case the order is based on
+the correlation matrix columns in 'data'.}
+
+\item{facet_order}{character; vector of all facet names of all tests in
+desired order (counter-clockwise); defaults to NULL, in which case the order
+is based on the correlation matrix columns in 'data'.}
 
 \item{xarrows}{data frame containing information about additional correlation
 arrows between facets of different tests; see examples.}

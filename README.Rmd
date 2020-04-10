@@ -22,13 +22,13 @@ The aim of IPV is to handily create item pool visualizations, as introduced in: 
 
 ## Installation
 
-You can install the released version of IPV from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of IPV from [CRAN](https://CRAN.R-project.org) by calling:
 
 ``` r
 install.packages("IPV")
 ```
 
-And the development version from [GitHub](https://github.com/) with:
+And the development version from [GitHub](https://github.com/) by calling:
 
 ``` r
 # install.packages("devtools")

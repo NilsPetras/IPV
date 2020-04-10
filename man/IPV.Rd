@@ -15,7 +15,9 @@ functions.
   manually using loose input within R \code{\link{input_manual_simple}} (and
   possibly \code{\link{input_manual_nested}}) combined with
   \code{\link{input_manual_process}}. Or input data via MS Excel files and
-  \code{\link{input_excel}} as demonstrated in the examples.
+  \code{\link{input_excel}} as demonstrated in the examples. Use
+  \code{\link{rename}} to conveniently change labels for tests, facets, or
+  items.
 }
 
 \section{Chart Functions}{
@@ -32,9 +34,10 @@ functions.
 
 
   Prepare your data using the input functions. Choose the chart type. Use the
-  chart function with your data, a filename and defaults. Then \enumerate{\item change
-  the parameter values of the chart function \item check the chart appearance
-  by opening the created file (do not rely on the display of plots in R,
-  results may differ) \item repeat until you are satisfied with the result}
+  chart function with your data, a filename and defaults. Then
+  \enumerate{\item change the parameter values of the chart function \item
+  check the chart appearance by opening the created file (do not rely on the
+  display of plots in R, results may differ) \item repeat until you are
+  satisfied with the result}
 }
 

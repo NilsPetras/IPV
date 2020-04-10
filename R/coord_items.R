@@ -4,6 +4,9 @@
 #'
 #' @param data SEM estimates in the appropriate format, given by the input
 #'   functions.
+#' @param facet_order character; vector of facet names in desired order
+#'   (counter-clockwise); defaults to NULL, in which case the order is based on
+#'   the correlation matrix columns in 'data'.
 #' @param rotate_radians integer; radian angle to rotate the chart
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
@@ -31,6 +34,7 @@
 #'   \code{\link{item_chart}}
 coord_items <- function (
   data,
+  facet_order = NULL,
   rotate_radians = 0,
   rotate_degrees = 0,
   grid_limit = 0,
@@ -54,7 +58,9 @@ coord_items <- function (
     grid_limit <- maxcd
   }
   axe_limit <- max(maxcd, grid_limit)
-
+  if (is.null(facet_order)) {
+    facet_order <- colnames(data$cors)
+  }
 
   # chart objects --------------------------------------------------------------
 
@@ -63,7 +69,7 @@ coord_items <- function (
   p_axes <- data.frame(phi = rep(NA, cplx),
                        rho = NA,
                        rholabel = NA)
-  row.names(p_axes) <- levels(data$cds$subfactor)
+  row.names(p_axes) <- facet_order
   p_axes$rho <- axe_limit * 1.2
   p_axes$phi <- c(2 * pi / cplx * c(1:cplx)) + rotate
   p_axes$phi[p_axes$phi > 2 * pi] <-
@@ -95,7 +101,7 @@ coord_items <- function (
     x2  = NA, y2  = NA,
     length = NA)
   row.names(items) <- data$cds$item
-  items$phi <- p_axes$phi[data$cds$subfactor]
+  items$phi <- p_axes[as.character(data$cds$subfactor), "phi"]
   items$rho <- data$cds$cd + axe_limit * .00625 * width_items
   items <- items[order(items$phi, items$rho), ]
   items$x <- round(cos(items$phi) * items$rho, digits = 7)

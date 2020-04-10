@@ -4,6 +4,9 @@
 #'
 #' @param data SEM estimates in the appropriate format, given by the input
 #'   functions.
+#' @param facet_order character; vector of facet names in desired order
+#'   (counter-clockwise); defaults to NULL, in which case the order is based on
+#'   the correlation matrix columns in 'data'.
 #' @param file_name character; name of the file to save. Supported formats are:
 #'   "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".
 #' @param size integer; changes the size of most chart objects simultaneously.
@@ -71,6 +74,7 @@
 #' @export
 item_chart <- function(
   data,
+  facet_order = NULL,
   file_name = "none",
   size = 1,
   font = "sans",
@@ -101,6 +105,7 @@ item_chart <- function(
 
   coord <- coord_items(
     data = data,
+    facet_order = facet_order,
     rotate_radians = rotate_radians,
     rotate_degrees = rotate_degrees,
     grid_limit = grid_limit,

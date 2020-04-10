@@ -6,6 +6,7 @@
 \usage{
 coord_items(
   data,
+  facet_order = NULL,
   rotate_radians = 0,
   rotate_degrees = 0,
   grid_limit = 0,
@@ -21,6 +22,10 @@ coord_items(
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input
 functions.}
+
+\item{facet_order}{character; vector of facet names in desired order
+(counter-clockwise); defaults to NULL, in which case the order is based on
+the correlation matrix columns in 'data'.}
 
 \item{rotate_radians}{integer; radian angle to rotate the chart
 counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).}
