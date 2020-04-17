@@ -229,8 +229,8 @@ coord_facets <- function (
   }
   cors$label <- as.character(cors$label)
   # exclude leading 0's for aesthetic reasons
-  cors$label[cors$label != 1 & cors$label > 0] <- substr(cors$label, 2, 4)
   cors$label[cors$label < 0] <- paste("-", substr(cors$label, 3, 5), sep = "")
+  cors$label[cors$label != 1 & cors$label > 0] <- substr(cors$label, 2, 4)
 
   cors$x <- c_circs[cors$V2, "x"]
   cors$y <- c_circs[cors$V2, "y"]
