@@ -13,3 +13,4 @@ Release
 * Standardized the default order of facets across facet charts and item charts. It is now consistently the order of the correlation matrix columns in the data.
 * Added a function ("rename") for convenient changing of test, facet, or item labels.
 * Added the option to add an overall title for all chart types. This is only a quick and dirty shortcut. For best results (and additional options) use your typesetting software or add a title layer manually.
+* Fixed a bug that caused negative correlations between facets or tests to be displayed incorrectly.
