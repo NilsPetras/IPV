@@ -108,6 +108,7 @@ coord_facets <- function (
     tick <- signif(max(.15 * max(mcd), .3 * min(mcd)), 1)
     sc <- rep(c(1, 2, 5), 5) * 10 ^ rep(-3:1, each = 3)
     tick <- sc[which.min(abs(tick - sc))]
+    message(paste("Axis tick set to ", tick," based on the data.", sep = ""))
   }
   if (subradius == 0) {
     subradius <- max(mean(mcd), .25 * max(mcd)) *

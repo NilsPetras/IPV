@@ -14,3 +14,4 @@ Release
 * Added a function ("rename") for convenient changing of test, facet, or item labels.
 * Added the option to add an overall title for all chart types. This is only a quick and dirty shortcut. For best results (and additional options) use your typesetting software or add a title layer manually.
 * Fixed a bug that caused negative correlations between facets or tests to be displayed incorrectly.
+* Fixed an erroneous message claiming that the axis tick was set automatically when it was set manually.

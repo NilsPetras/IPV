@@ -205,7 +205,6 @@ plot_facets <- function(
   facet_labels <- row.names(coord$c_circs)
 
   tick <- signif(sqrt((coord$axis_tick$x ^ 2) + (coord$axis_tick$y ^ 2)), 1)
-  message(paste("Axis tick set to ", tick," based on the data.", sep = ""))
   tick_label_label <- as.character(formatC(tick, format = "fg"))
   tick_label_x <- 1.3 * coord$axis_tick$x
   tick_label_y <- 1.3 * coord$axis_tick$y

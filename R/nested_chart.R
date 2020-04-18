@@ -396,13 +396,13 @@ coord_nested <- function (
 
   factorcoords <- list()
   for (i in 1:length(data$tests)) {
-    factorcoords[[i]] <- coord_facets(
+    factorcoords[[i]] <- suppressMessages(coord_facets(
       data$tests[[i]],
       facet_order = facet_order,
       subradius = subradius,
       rotate_radians = subrotate[i],
       rotate_test_label_radians = rotate_test_labels[i],
-      dist_test_label = dist_test_labels[i])
+      dist_test_label = dist_test_labels[i]))
     if (is.na(factorcoords[[i]][["p_axes"]][1,"rho0"])) {
       x <- names(data$tests)[i]
       row.names(factorcoords[[i]][["p_circs"]]) <- x
