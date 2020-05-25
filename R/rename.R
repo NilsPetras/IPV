@@ -78,7 +78,7 @@ rename_simple <- function(data, before, after, regex = FALSE) {
   for (i in 1:3) {
     levels(data$cds[ ,i]) <- lev[i]
   }
-
+  levels(data$cds[ ,"factor"]) <- data$cds[1, "factor"]
 
   return(data)
 }
