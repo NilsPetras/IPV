@@ -16,7 +16,9 @@ Depends: R (>= 3.0.0)
 Imports:
     ggforce,
     ggplot2,
-    stats
+    stats,
+    stringr,
+    lavaan
 Suggests:
     knitr,
     rmarkdown,
