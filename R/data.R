@@ -178,3 +178,23 @@
 #'   2059799119884283.
 #'
 "SMTQ"
+
+#' IPIP HEXACO Equivalent Scales
+#'
+#' Cleaned-up data from an ad-hoc online sample of n = 22786 participants on the
+#' 240 items of the IPIP HEXACO Equivalent Scales. Data were collected before
+#' 21st June 2014 within the openpsychometrics project
+#' (\url{https://openpsychometrics.org/}). After listwise deletion of missing
+#' values and including only those participants who did at least "agree" on the
+#' items "I understand the instructions for this test." and "I have answered all
+#' of these questions as accurately as possible.", data on n = 20174
+#' participants remains.
+#'
+#' @section Items
+#'
+#'   \url{https://ipip.ori.org/newhexaco_pi_key.htm}
+#'
+#' @section source
+#'
+#'   \url{https://openpsychometrics.org/_rawdata/} (May 6th, 2020)
+"HEXACO"

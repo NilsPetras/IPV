@@ -1,4 +1,36 @@
-ipv_est <- function(dat, name, estimator = "ML", include_raw = TRUE, include_lav = FALSE) {
+#' IPV estimation
+#'
+#' @param dat data frame; raw data (see details)
+#' @param name character; name of the overall construct or test that comprises
+#'   all items used
+#' @param estimator character; estimator used by lavaan; defaults to "ML"
+#'   (Maximum Likelihood)
+#' @param include_raw logical; should raw estimates of factor loadings be
+#'   included in the output?; defaults to TRUE
+#' @param include_lav logical; should lavaan objects of the fitted models be
+#'   included in the output?; defaults to TRUE
+#'
+#'
+#' @details the data given to \code{dat} have to conform to the following rules:
+#'   * no additional variables / columns * variables are named according to the
+#'   following scheme: \code{"test_facet_item"}. * If there is only one test in
+#'   the data, the pattern is "facet_item". For tests without facets in a larger
+#'   dataset also comprising tests with items, the pattern is "test_item". *
+#'   Variable names have to be unique at the level of the test AND the facet.
+#'   Item names have to be unique at the level of the test (not only at the
+#'   level of the facet) See example
+#' @return list; \code{$est} includes the center distances and all necessary
+#'   input for the IPV chart functions, \code{$est_raw} includes the factor
+#'   loadings and latent correlations, \code{$lav} includes the fitted models
+#'   (class: \code{lavaan}); by default, all three of these elements are
+#'   provided.
+#' @export
+#'
+#' @examples
+#' # an IPV that comprises the honesty/humility and the agreeableness factor of the HEXACO
+#' res <- ipv_est(HEXACO[ ,c(2:41, 122:161)], "HA") # estimation with that many items takes some time
+#' nested_chart(res$est)
+ipv_est <- function(dat, name, estimator = "ML", include_raw = TRUE, include_lav = TRUE) {
 
   # helper variables
   nam <- get_names(dat)
@@ -142,7 +174,7 @@ write_IPV_syntax <- function(dat, name) {
 #'   "...variable_...". Variable names have to be unique and cannot be contained
 #'   in one another like this: "variable_" and "ariable_"
 #'
-#' @return
+#' @return character; lavaan model syntax
 ind_lav <- function(vars, indicators) {
 
   temp <- list()

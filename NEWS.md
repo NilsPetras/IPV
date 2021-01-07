@@ -15,5 +15,5 @@ Release
 * Added the option to add an overall title for all chart types. This is only a quick and dirty shortcut. For best results (and additional options) use your typesetting software or add a title layer manually.
 * Fixed a bug that caused negative correlations between facets or tests to be displayed incorrectly.
 * Fixed an erroneous message claiming that the axis tick was set automatically when it was set manually.
-
-*WIP: adding option to input raw data with automated model estimation via lavaan
+* Added option to input raw data with automated model estimation via lavaan (function "ipv_est")
+* Added raw example data ("HEXACO") from the open psychometrics project (\url{https://openpsychometrics.org/}) (see ?HEXACO)
