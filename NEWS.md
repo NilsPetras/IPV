@@ -17,3 +17,5 @@ Release
 * Fixed an erroneous message claiming that the axis tick was set automatically when it was set manually.
 * Added option to input raw data with automated model estimation via lavaan (function "ipv_est")
 * Added raw example data ("HEXACO") from the open psychometrics project (\url{https://openpsychometrics.org/}) (see ?HEXACO)
+*added function to create an overview over all squared factor loadings in all models (function "item_overview", nested case only)
+* Overhauled the Vignette, including recent changes

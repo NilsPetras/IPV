@@ -8,6 +8,13 @@
 The IPV package provides two sets of functions: input functions, and chart
 functions.
 }
+\section{Estimation function}{
+
+
+  \code{\link{ipv_est}} uses raw data to estimate the IPV models and
+  pre-format their estimates for chart creation.
+}
+
 \section{Input Functions}{
 
 
@@ -33,11 +40,11 @@ functions.
 \section{Workflow}{
 
 
-  Prepare your data using the input functions. Choose the chart type. Use the
-  chart function with your data, a filename and defaults. Then
-  \enumerate{\item change the parameter values of the chart function \item
-  check the chart appearance by opening the created file (do not rely on the
-  display of plots in R, results may differ) \item repeat until you are
-  satisfied with the result}
+  Prepare your estimates using the estimation function (or input functions).
+  Choose the chart type. Use the chart function with your data, a filename
+  and defaults. Then \enumerate{\item change the parameter values of the
+  chart function \item check the chart appearance by opening the created file
+  (do not rely on the display of plots in R, results may differ) \item repeat
+  until you are satisfied with the result}
 }
 

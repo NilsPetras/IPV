@@ -13,12 +13,11 @@
 #'
 #' @details the data given to \code{dat} have to conform to the following rules:
 #'   * no additional variables / columns * variables are named according to the
-#'   following scheme: \code{"test_facet_item"}. * If there is only one test in
+#'   following pattern: \code{"test_facet_item"}. * If there is only one test in
 #'   the data, the pattern is "facet_item". For tests without facets in a larger
 #'   dataset also comprising tests with items, the pattern is "test_item". *
-#'   Variable names have to be unique at the level of the test AND the facet.
-#'   Item names have to be unique at the level of the test (not only at the
-#'   level of the facet) See example
+#'   Variable names have to be unique. Item names have to be unique at the level
+#'   of the test (not only at the level of the facet) See example
 #' @return list; \code{$est} includes the center distances and all necessary
 #'   input for the IPV chart functions, \code{$est_raw} includes the factor
 #'   loadings and latent correlations, \code{$lav} includes the fitted models

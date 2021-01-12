@@ -20,4 +20,16 @@ items "I understand the instructions for this test." and "I have answered all
 of these questions as accurately as possible.", data on n = 20174
 participants remains.
 }
+\section{Items}{
+
+
+  \url{https://ipip.ori.org/newhexaco_pi_key.htm}
+}
+
+\section{source}{
+
+
+  \url{https://openpsychometrics.org/_rawdata/} (May 6th, 2020)
+}
+
 \keyword{datasets}
