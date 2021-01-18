@@ -36,84 +36,149 @@ item_overview <- function(
   data,
   squared = TRUE,
   file_name = "none",
-  # size = 1,
   dpi = 500) {
 
 
-  # size parameter currently out of use, not yet properly implemented
 
+  # helper variables -----------------------------------------------------------
+
+  nested <- !is.null(data$global)
 
 
   # data preparation -----------------------------------------------------------
 
-  # collect factor loadings
-  loads <- data$global$fls
-  names(loads) <- c(
-    "construct",
-    "test",
-    "item",
-    "construct_loading",
-    "test_loading")
-  loads$facet <- NA
-  loads$facet_loading <- NA
-  loads <- loads[ ,c(1, 2, 6, 3, 4, 5, 7)]
-  temp <- lapply(data$tests, '[[', 1)
-  temp <- lapply(temp, function(x){ # rename items uniquely
-    x$item <- as.character(paste(
-      x$factor,
-      sep = ".",
-      x$item))
-    return(x)
-  })
-  temp <- do.call("rbind", temp)
-  facets <- temp$subfactor
-  names(facets) <- temp$item
-  facet_loadings <- temp$subfactor_loading
-  names(facet_loadings) <- temp$item
-  loads$facet <- facets[as.character(loads$item)]
-  loads$facet_loading <- facet_loadings[as.character(loads$item)]
+  # nested case (multiple tests) ----
 
-  # set loadings < 0 to NA and throw warning if so
-  loads[ ,5:7][apply(loads[,5:7], 2, function(x) x < 0)] <- NA
-  if (any(is.na(loads))) {
-    warning(paste(
-      sum(is.na(loads)),
-      " negative factor loadings set to 0 for display.",
-      sep = ""))
-  }
-  loads[is.na(loads)] <- 0
-
-  if (squared) {
-    loads[ ,5:7] <- apply(loads[ ,5:7], 2, function(x){
-      x <- x ^ 2
+  if (nested) {
+    # collect factor loadings
+    loads <- data$global$fls
+    names(loads) <- c(
+      "construct",
+      "test",
+      "item",
+      "construct_loading",
+      "test_loading")
+    loads$facet <- NA
+    loads$facet_loading <- NA
+    loads <- loads[ ,c(1, 2, 6, 3, 4, 5, 7)]
+    temp <- lapply(data$tests, '[[', 1)
+    temp <- lapply(temp, function(x){ # rename items uniquely
+      x$item <- as.character(paste(
+        x$factor,
+        sep = ".",
+        x$item))
+      return(x)
     })
-  }
+    temp <- do.call("rbind", temp)
+    facets <- temp$subfactor
+    names(facets) <- temp$item
+    facet_loadings <- temp$subfactor_loading
+    names(facet_loadings) <- temp$item
+    loads$facet <- facets[as.character(loads$item)]
+    loads$facet_loading <- facet_loadings[as.character(loads$item)]
 
-  # factor loadings in long format
-  long <- reshape2::melt(loads, id.vars = 4, measure.vars = 5:7)
-  long$variable <- as.character(long$variable)
-  long$variable[long$variable == "construct_loading"] <-
-    as.character(loads$construct)
-  long$variable[long$variable == "test_loading"] <-
-    as.character(loads$test)
-  long$variable[long$variable == "facet_loading"] <-
-    as.character(loads$facet)
-  long$variable <- factor(
-    long$variable,
-    levels = unique(long$variable)) # conserves level order
-  long$test <- rep(
-    long[(1 / 3 * nrow(long) + 1) : (2 / 3 * nrow(long)), "variable"],
-    3)
+    # set loadings < 0 to NA and throw warning if so
+    loads[ ,5:7][apply(loads[,5:7], 2, function(x) x < 0)] <- NA
+    if (any(is.na(loads))) {
+      warning(paste(
+        sum(is.na(loads)),
+        " negative factor loadings set to 0 for display.",
+        sep = ""))
+    }
+    loads[is.na(loads)] <- 0
 
-  # hierarchical data structure as list to sort plots
-  chunks <- long[(2 / 3 * nrow(long) + 1) : nrow(long), ]
-  chunks <- split(
-    chunks,
-    f = chunks[ ,"test"],
-    drop = T)
-  for (i in 1:length(chunks)) {
-    chunks[[i]] <- split(chunks[[i]], f = droplevels(chunks[[i]][ ,"variable"]))
-    chunks[[i]] <- lapply(chunks[[i]], '[[', 1)
+    # squared loadings are variance portions (as in formula of center distances)
+    if (squared) {
+      loads[ ,5:7] <- apply(loads[ ,5:7], 2, function(x){
+        x <- x ^ 2
+      })
+    }
+
+    # factor loadings in long format
+    long <- reshape2::melt(loads, id.vars = 4, measure.vars = 5:7)
+    long$variable <- as.character(long$variable)
+    long$variable[long$variable == "construct_loading"] <-
+      as.character(loads$construct)
+    long$variable[long$variable == "test_loading"] <-
+      as.character(loads$test)
+    long$variable[long$variable == "facet_loading"] <-
+      as.character(loads$facet)
+    long$variable <- factor(
+      long$variable,
+      levels = unique(long$variable)) # conserves level order
+    long$test <- rep(
+      long[(1 / 3 * nrow(long) + 1) : (2 / 3 * nrow(long)), "variable"],
+      3)
+
+    # hierarchical data structure as list to sort plots
+    chunks <- long[(2 / 3 * nrow(long) + 1) : nrow(long), ]
+    chunks <- split(
+      chunks,
+      f = chunks[ ,"test"],
+      drop = T)
+    for (i in 1:length(chunks)) {
+      chunks[[i]] <- split(chunks[[i]], f = droplevels(chunks[[i]][ ,"variable"]))
+      chunks[[i]] <- lapply(chunks[[i]], '[[', 1)
+    }
+
+  # simple case (one test) ----------
+
+  } else {
+
+    # collect factor loadings
+    loads <- data$fls
+    names(loads) <- c(
+      "test",
+      "facet",
+      "item",
+      "test_loading",
+      "facet_loading")
+
+    # set loadings < 0 to NA and throw warning if so
+    loads[ ,4:5][apply(loads[,4:5], 2, function(x) x < 0)] <- NA
+    if (any(is.na(loads))) {
+      warning(paste(
+        sum(is.na(loads)),
+        " negative factor loadings set to 0 for display.",
+        sep = ""))
+    }
+    loads[is.na(loads)] <- 0
+
+    # squared loadings are variance portions (as in formula of center distances)
+    if (squared) {
+      loads[ ,4:5] <- apply(loads[ ,4:5], 2, function(x){
+        x <- x ^ 2
+      })
+    }
+
+    # factor loadings in long format
+    long <- reshape2::melt(loads, id.vars = 3, measure.vars = 4:5)
+    long$variable <- as.character(long$variable)
+    long$variable[long$variable == "test_loading"] <-
+      as.character(loads$test)
+    long$variable[long$variable == "facet_loading"] <-
+      as.character(loads$facet)
+    long$variable <- factor(
+      long$variable,
+      levels = unique(long$variable)) # conserves level order
+
+    long$test <- rep(
+      long[1 : (1 / 2 * nrow(long)), "variable"],
+      2)
+
+    # hierarchical data structure as list to sort plots
+    chunks <- long[(1 / 2 * nrow(long) + 1) : nrow(long), ]
+
+    # code below as in nested for convenience
+    chunks <- split(
+      chunks,
+      f = chunks[ ,"test"],
+      drop = T)
+
+    for (i in 1:length(chunks)) {
+      chunks[[i]] <- split(chunks[[i]], f = droplevels(chunks[[i]][ ,"variable"]))
+      chunks[[i]] <- lapply(chunks[[i]], '[[', 1)
+    }
   }
 
 
@@ -121,16 +186,9 @@ item_overview <- function(
 
   plots <- list()
 
-  # plots <- chunks
-  # for (i in 1:length(plots)) {
-  #   plots[[i]] <- lapply(plots[[i]], as.list)
-  #   for (j in 1:length(plots[[i]])) {
-  #     names(plots[[i]][[j]]) <- chunks[[i]][[j]]
-  #   }}
-
     ## individual item plot for each item
 
-  for (i in names(chunks)) { # i = test
+  for (i in names(chunks)) { # i = test, only one in simple case
     for (j in names(chunks[[i]])) { # j = facet
       # for loop doesn't work properly with ggplot, so lapply instead
       # see: https://stackoverflow.com/questions/31993704/
@@ -141,7 +199,7 @@ item_overview <- function(
             long[which(long$item == x), ]) +
 
             # initialize
-            ggplot2::scale_fill_brewer(palette = "Greens") +
+            ggplot2::scale_fill_brewer(palette = "Set1") +
             ggplot2::theme_minimal() +
             ggplot2::ylim(0,1) +
             ggplot2::theme(
@@ -163,6 +221,7 @@ item_overview <- function(
                 y = long[which(long$item == x), ]$value,
                 fill = long[which(long$item == x), ]$variable))
 
+          # one y-axis text per row looks cleaner
           if (which(chunks[[i]][[j]] == x) > 1) {
             p <-  p +
               ggplot2::theme(
@@ -184,8 +243,13 @@ item_overview <- function(
 
   for (i in 1:length(chunks)) {
     for (j in 1:length(chunks[[i]])) {
-      labels <- unlist(lapply(strsplit(names(plots[[i]][[j]]), split = "\\."), "[[", 2))
-      hjust <- -10 / nchar(labels) # adjust labels based on string length
+      if(nested) {
+        labels <- unlist(lapply(strsplit(names(plots[[i]][[j]]), split = "\\."), "[[", 2))
+      } else {
+        labels <- names(plots[[i]][[j]])
+      }
+      # adjust labels based on string length to center in plot
+      hjust <- -8 / nchar(labels)
 
   # plot grid of item plots for each facet
       facets[[i]][[j]] <- cowplot::plot_grid(
@@ -194,7 +258,8 @@ item_overview <- function(
         hjust = hjust,
         vjust = 3,
         nrow = 1,
-        label_size = 10)
+        label_size = 10,
+        label_fontfamily = "mono")
     }
 
   # plot grid of facet plot grids for each test
@@ -202,17 +267,29 @@ item_overview <- function(
       plotlist = facets[[i]],
       labels = names(plots[[i]]),
       ncol = 1,
-      vjust = -.5)
+      vjust = -.5,
+      label_fontfamily = "mono")
   }
 
-  # overall plot grid of test plot grids
-  grd <- cowplot::plot_grid(
-    plotlist = tests,
-    labels = names(plots),
-    ncol = 1,
-    vjust = 5.5 * nrows + 1,
-    rel_heights = nrows,
-    scale = .8)
+  if(!is.null(data$global)) {
+    # overall plot grid of test plot grids
+    grd <- cowplot::plot_grid(
+      plotlist = tests,
+      labels = names(plots),
+      ncol = 1,
+      vjust = 5.5 * nrows + 1,
+      rel_heights = nrows,
+      scale = .8,
+      label_fontfamily = "mono") +
+      ggplot2::theme(
+        plot.margin = ggplot2::margin(l = 1.5, unit = "cm")
+      )
+  } else {
+    grd <- tests[[1]] +
+      ggplot2::theme(
+        plot.margin = ggplot2::margin(t = 1.5, r = 1.5, l = 1.5, unit = "cm")
+      )
+  }
 
 
   # optional file save ---------------------------------------------------------
