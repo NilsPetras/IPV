@@ -36,8 +36,7 @@ Although the following terminology will intuitively fit many practical purposes,
 
 The IPV package provides functions for the following steps:
 
-1a. estimate models (recommended)
-1b. read existing estimates
+1. estimate models (recommended) or read existing estimates
 2. Create, customize, and save IPV charts
 
 Call `?IPV` for an overview of all functions.
@@ -50,7 +49,7 @@ The `ipv_est()` function is recommended for model estimation, because it automat
 To use this function, your data needs to be formatted as follows:
 
 - all items (indicator variables) are (numeric) columns of a data frame
-- the data frame contains only those variables used in the models
+- the data frame contains only those variables used in the models (or use indexing as in the example)
 - all columns are named according to the pattern "test_facet_item"
 - all variable names are unique
 - all item names ("..._..._item") are unique at the level of the test (not only at the level of the facet!)
@@ -65,7 +64,9 @@ HEXACO[1:3, 2:4]
 ```
 
 H = honesty/humility ("test")
+
 Sinc = sincerity (a "facet" of honesty/humility)
+
 Sinc_1 = first "item" of the sincerity facet
 
 ```{r, eval = FALSE}
@@ -77,8 +78,11 @@ res_A <- ipv_est(dat = HEXACO[ ,c(122:161)], name = "A")
 ```
 
 Results are provided as a list with the following elements:
+
 - "lav": the lavaan object for each estimated model (optional)
+
 - "est_raw": estimates (factor loadings, latent correlations) structured based on the item pools, (optional)
+
 - "est": pre-formatted list of center distances and latent correlations for IPV chart creation
 
 When creating IPV charts, you will work with "est". But you should always inspect the estimated models ("lav") to understand what is going on with your data! Use the lavaan functions (e.g. `lavaan::fitmeasures`, `lavaan::summary`, `lavaan::lavInspect`) for this purpose.
@@ -117,16 +121,20 @@ mydata <- input_manual_simple(
 test_name = "RSES",
 facet_names = c("Ns", "Ps"),
 items_per_facet = 5,
-item_names = c(2, 5, 6, 8, 9,
-               1, 3, 4, 7, 10),
-test_loadings = c(.5806, .5907, .6179, .5899, .6559,
-                  .6005, .4932, .4476, .5033, .6431),
-facet_loadings = c(.6484, .6011, .6988, .6426, .6914,
-                   .6422, .5835, .536, .5836, .6791),
-correlation_matrix = matrix(data = c(1, .69,
-                                     .69, 1),
-                            nrow = 2,
-                            ncol = 2))
+item_names = c(
+  2, 5, 6, 8, 9,
+  1, 3, 4, 7, 10),
+test_loadings = c(
+  .5806, .5907, .6179, .5899, .6559,
+  .6005, .4932, .4476, .5033, .6431),
+facet_loadings = c(
+  .6484, .6011, .6988, .6426, .6914,
+  .6422, .5835, .536, .5836, .6791),
+correlation_matrix = matrix(
+  data = c(1, .69,
+           .69, 1),
+  nrow = 2,
+  ncol = 2))
 mydata
 input_manual_process(mydata)
 ```
@@ -135,7 +143,7 @@ If any factor loading is below .1 or any center distance below 0, it is set to t
 
 #### ...using Excel files
 Excel files have the advantage that you can simply copy and paste your SEM estimates into the spreadsheets and the input function of the IPV package (`input_excel()`) does the rest. The files need to be structured as in the example, that you can find here:
-```{r}
+```{r, eval = FALSE}
 system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
 system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE)
 system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE)
@@ -204,7 +212,7 @@ For all chart types, it is possible to rotate the whole chart, using `rotate_rad
 
 #### 2.2.4. Font
 
-The font can be changed using the `font = ` parameter. I recommend using the package [extrafont](https://cran.r-project.org/package=extrafont) for access to more fonts.
+The font can be changed using the `font = ` parameter. I recommend [extrafont](https://cran.r-project.org/package=extrafont) for access to more fonts.
 
 #### 2.2.5. Structural elements and data ink ratio
 
@@ -212,6 +220,11 @@ To reduce the visibility of structural elements, the `fade_... = ` parameters ca
 
 #### 2.2.6. Colour
 
+For the use of colours and gray tones, I recommend [this guide](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). All charts functions have at least one colour parameter to highlight the data using colour.
+
+
+
+#### 2.2.7. Special options for item charts
 
 You can use different colors for every second item to increase readability of item charts:
 ```{r, eval=FALSE, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
@@ -223,10 +236,7 @@ mychart <- item_chart(data = DSSEI,
 mychart
 ```
 
-
-#### 2.2.7. Special options for item charts
-
-A special feature for item charts is the `dodge = ` parameter, that allows long facet labels to dodge the rest of the chart horizontally:
+The `dodge = ` parameter allows long facet labels to dodge the rest of the chart horizontally:
 ```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", fig.show='hold', dev='png'}
 x <- DSSEI
 colnames(x$cors)[4] <- "Oachkatzlschwoaf"
@@ -246,7 +256,7 @@ This works simultaneously for all labels. Labels at the top and bottom do not mo
 mychart <- facet_chart(data = DSSEI)
 mychart
 ```
-As you can see in the output (and the message in the console), two parameter values (`subradius = ` , and `tick = ` ) have been generated automatically. These need to fit the data. 
+As you can see in the output (and the message in the console), two parameter values (`subradius = ` , and `tick = ` ) have been generated automatically. These can be used to improve readability. 
 
 
 
