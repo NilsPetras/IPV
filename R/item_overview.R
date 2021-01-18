@@ -42,6 +42,8 @@ item_overview <- function(
 
   # size parameter currently out of use, not yet properly implemented
 
+
+
   # data preparation -----------------------------------------------------------
 
   # collect factor loadings
@@ -117,52 +119,59 @@ item_overview <- function(
 
   # plot creation --------------------------------------------------------------
 
-  plots <- chunks
-  for (i in 1:length(plots)) {
-    plots[[i]] <- lapply(plots[[i]], as.list)
-    for (j in 1:length(plots[[i]])) {
-      names(plots[[i]][[j]]) <- chunks[[i]][[j]]
-    }}
+  plots <- list()
+
+  # plots <- chunks
+  # for (i in 1:length(plots)) {
+  #   plots[[i]] <- lapply(plots[[i]], as.list)
+  #   for (j in 1:length(plots[[i]])) {
+  #     names(plots[[i]][[j]]) <- chunks[[i]][[j]]
+  #   }}
 
     ## individual item plot for each item
 
-  for (i in 1:length(chunks)) { # i = test
-    for (j in 1:length(chunks[[i]])) { # j = facet
-      # is_last <- as.numeric(j == length(chunks[[i]]))
-      for (k in 1:length(chunks[[i]][[j]])) { # k = item
+  for (i in names(chunks)) { # i = test
+    for (j in names(chunks[[i]])) { # j = facet
+      # for loop doesn't work properly with ggplot, so lapply instead
+      # see: https://stackoverflow.com/questions/31993704/
+      plots[[i]][[j]] <- lapply(
+        as.list(chunks[[i]][[j]]),
+        function(x) {
+          p <- ggplot2::ggplot(
+            long[which(long$item == x), ]) +
 
-        plots[[i]][[j]][[k]] <- ggplot2::ggplot(
-          long[which(long$item == chunks[[i]][[j]][k]), ]) +
-
-          # initialize
-          ggplot2::scale_fill_brewer(palette = "Greens") +
-          ggplot2::theme_minimal() +
-          ggplot2::ylim(0,1) +
-          ggplot2::theme(
-            panel.grid.major.x = ggplot2::element_blank(),
-            panel.grid.major.y = ggplot2::element_line(
-              color = "gray", size = .25, linetype = "dashed"),
-            panel.grid.minor.y = ggplot2::element_blank(),
-            legend.position    = "none",
-            axis.title.x       = ggplot2::element_blank(),
-            axis.title.y       = ggplot2::element_blank(),
-            plot.margin        = grid::unit(c(0, 0, .5, 0), "in"),
-            axis.text          = ggplot2::element_text(size = 6),
-            axis.text.y        = ggplot2::element_text(color = "gray")) +
-
-          # bar plot
-          ggplot2::geom_col(
-            ggplot2::aes(
-              x = long[which(long$item == chunks[[i]][[j]][k]), ]$variable,
-              y = long[which(long$item == chunks[[i]][[j]][k]), ]$value,
-              fill = long[which(long$item == chunks[[i]][[j]][k]), ]$variable))
-
-        if (k > 1) {
-          plots[[i]][[j]][[k]] <-  plots[[i]][[j]][[k]] +
+            # initialize
+            ggplot2::scale_fill_brewer(palette = "Greens") +
+            ggplot2::theme_minimal() +
+            ggplot2::ylim(0,1) +
             ggplot2::theme(
-              axis.text.y = ggplot2::element_blank())
+              panel.grid.major.x = ggplot2::element_blank(),
+              panel.grid.major.y = ggplot2::element_line(
+                color = "gray", size = .25, linetype = "dashed"),
+              panel.grid.minor.y = ggplot2::element_blank(),
+              legend.position    = "none",
+              axis.title.x       = ggplot2::element_blank(),
+              axis.title.y       = ggplot2::element_blank(),
+              plot.margin        = grid::unit(c(0, 0, .5, 0), "in"),
+              axis.text          = ggplot2::element_text(size = 6),
+              axis.text.y        = ggplot2::element_text(color = "gray")) +
+
+            # bar plot
+            ggplot2::geom_col(
+              ggplot2::aes(
+                x = long[which(long$item == x), ]$variable,
+                y = long[which(long$item == x), ]$value,
+                fill = long[which(long$item == x), ]$variable))
+
+          if (which(chunks[[i]][[j]] == x) > 1) {
+            p <-  p +
+              ggplot2::theme(
+                axis.text.y = ggplot2::element_blank())
+          }
+          return(p)
         }
-      }
+      )
+      names(plots[[i]][[j]]) <- chunks[[i]][[j]]
     }
   }
 
@@ -173,8 +182,8 @@ item_overview <- function(
   facets <- chunks
   tests <- chunks
 
-  for (i in 1:length(facets)) {
-    for (j in 1:length(facets[[i]])) {
+  for (i in 1:length(chunks)) {
+    for (j in 1:length(chunks[[i]])) {
       labels <- unlist(lapply(strsplit(names(plots[[i]][[j]]), split = "\\."), "[[", 2))
       hjust <- -10 / nchar(labels) # adjust labels based on string length
 
