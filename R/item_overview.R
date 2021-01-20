@@ -9,6 +9,8 @@
 #' @param file_name character; name of the file to save. Supported formats are:
 #'   "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to
 #'   "none".
+#' @param pal character; name of color palette to use for bars (fill); defaults
+#'   to "Set1"
 #' @param dpi integer; resolution in dots per inch for "png" and "jpeg" files;
 #'   defaults to 500.
 #'
@@ -16,18 +18,16 @@
 #'   (squared) factor loadings of that item in all IPV models, arranged by
 #'   facets and tests
 #'
-#' @details
-#'   File output produces much more reliable results than display within R.
+#' @details File output produces much more reliable results than display within
+#'   R. Display within R may scatter elements of the chart.
 #'
-#'   Unlike the IPV chart functions, this function is not meant to
-#'   produce print-ready output under all circumstances. Suggestions via github
-#'   are welcome.
 #'
 #' @export
 #'
 #' @examples
 #' # Honesty/Humility and Agreeableness items
-#' # the use of file output is recommended to prevent irregular placement of plot labels
+#' # the use of file output is recommended
+#' # to prevent irregular placement of plot labels
 #' res <- ipv_est(HEXACO[ ,c(2:41, 122:161)], "HA")
 #' item_overview(res$est_raw)
 #'
@@ -36,6 +36,7 @@ item_overview <- function(
   data,
   squared = TRUE,
   file_name = "none",
+  pal = "Set1",
   dpi = 500) {
 
 
@@ -199,7 +200,7 @@ item_overview <- function(
             long[which(long$item == x), ]) +
 
             # initialize
-            ggplot2::scale_fill_brewer(palette = "Set1") +
+            ggplot2::scale_fill_brewer(palette = pal) +
             ggplot2::theme_minimal() +
             ggplot2::ylim(0,1) +
             ggplot2::theme(

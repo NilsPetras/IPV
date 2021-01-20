@@ -5,17 +5,20 @@ Release
 * Fixed issues due to  [changes to data.frame()](https://developer.r-project.org/Blog/public/2020/02/16/stringsasfactors/index.html
 ).
 
-## dev
-* Added option to rotate the tick label in facet charts and nested charts to avoid overlap (parameter "rotate_tick_label")
-* Added option to set the limit of the grid in item charts (parameter "grid_limit"). Therefore, it is now possible to generate item charts on different data with the same scaling. Note that a) the number of grid lines is determined automatically in all cases and b) values of grid_limit below the maximum center distance in the data will reduce the scope of the grid, but have no effect on the overall scaling of the chart.
-* Added the option to set the order of facets for all charts types (parameter: "facet_order").
-* Added the option to set the order of tests for nested charts (parameter: "test_order").
-* Standardized the default order of facets across facet charts and item charts. It is now consistently the order of the correlation matrix columns in the data.
-* Added a function ("rename") for convenient changing of test, facet, or item labels.
-* Added the option to add an overall title for all chart types. This is only a quick and dirty shortcut. For best results (and additional options) use your typesetting software or add a title layer manually.
-* Fixed a bug that caused negative correlations between facets or tests to be displayed incorrectly.
-* Fixed an erroneous message claiming that the axis tick was set automatically when it was set manually.
-* Added option to input raw data with automated model estimation via lavaan (function "ipv_est")
-* Added raw example data ("HEXACO") from the open psychometrics project (\url{https://openpsychometrics.org/}) (see ?HEXACO)
-*added function to create an overview over all squared factor loadings in all models (function "item_overview", nested case only)
-* Overhauled the Vignette, including recent changes
+## IPV 0.2.0
+Added Features
+* Work based on raw data with automated model estimation using lavaan (function `ipv_est`). This is now the recommended workflow!
+* New raw example data (`HEXACO`) from the open psychometrics project (\url{https://openpsychometrics.org/}) (see ?HEXACO).
+* Create an overview over all (squared) factor loadings in all models (function `item_overview`).
+* Function ("rename") for convenient changing of test, facet, or item labels (function `rename`).
+* Rotate the tick label in facet charts and nested charts to avoid overlap (parameter `rotate_tick_label`).
+* Set the limit of the grid in item charts (parameter `grid_limit`).
+* Set the order of facets for all charts types (parameter: `facet_order`).
+* Set the order of tests for nested charts (parameter: `test_order`).
+* Add an overall title for all chart types (parameter `title`).
+* Overhaul of the documentation in the Vignette.
+
+Bugfixes
+* Standardized the default order of facets across facet charts and item charts. It is now consistently the order of the correlation matrix columns in `data = `.
+* Negative correlations between facets or tests should now be displayed correctly.
+* Removed an erroneous message claiming that the axis tick was set automatically when it was set manually.

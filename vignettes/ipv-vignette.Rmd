@@ -198,6 +198,11 @@ I recommend you to inspect the graphics file itself. To inspect your results wit
 
 Although some graphical options are automatically optimized based on the data, there are many ways to optimize the charts' appearance (e.g. for print). For example you may use [color](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) to guide attention, or re-size elements of the chart for readability.
 
+#### 2.2.0. Changing labels
+
+The function `rename()` can be used to change any item, facet, test, or construct name, using a before-after syntax.
+
+
 #### 2.2.1. Size of chart elements
 
 Most graphical parameters are size parameters for single elements of the chart, all named `size_... = `,  `width_... = `, or `length_... = `. Those are pretty straightforward: linear scaling parameters defaulting to 1. That means, .5 will half the size and 2 will double it. For all chart types, there is also a global `size = ` parameter, scaling all elements of the chart at once. Use this parameter first, before you fine tune single elements.
@@ -206,9 +211,9 @@ Most graphical parameters are size parameters for single elements of the chart, 
 
 The parameters `file_width = ` and `file_length = ` determine, how large the .pdf file will be, measured in inches (1 in = 2.54 cm). The size of .png or .jpeg files in pixels is determined by multiplying the size in inches with the dots per inch parameter value (`dpi = `).
 
-#### 2.2.3. Rotation
+#### 2.2.3. Rotation and order
 
-For all chart types, it is possible to rotate the whole chart, using `rotate_radians = ` or `rotate_degrees = `.
+For all chart types, it is possible to rotate the whole chart, using `rotate_radians = ` (use fractions of $2\pi$) or `rotate_degrees = ` (use 0-360). In all charts, the parameter `facet_order = ` enables you to set the (counter-clockwise) order of facets. In nested charts, `test_order = ` and `subrotate_degrees = `/`subrotate_radians = ` will function likewise. Several `rotate_... = ` parameters can be used to re-position single elements of the chart relative to the origin.
 
 #### 2.2.4. Font
 

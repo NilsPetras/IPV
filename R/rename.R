@@ -20,10 +20,11 @@ rename <- function(data, before, after) {
     data <- rename_simple(data, before, after)
   } else {
     data$global <- rename_simple(data$global, before, after, regex = TRUE)
-    data$tests <- lapply(X = data$tests,
-                         FUN = rename_simple,
-                         before = before,
-                         after = after)
+    data$tests <- lapply(
+      X = data$tests,
+      FUN = rename_simple,
+      before = before,
+      after = after)
     for (i in seq_along(before)) {
       names(data$tests)[names(data$tests) == before[i]] <- after[i]
     }
