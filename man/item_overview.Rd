@@ -4,7 +4,13 @@
 \alias{item_overview}
 \title{Item Overview}
 \usage{
-item_overview(data, squared = TRUE, file_name = "none", dpi = 500)
+item_overview(
+  data,
+  squared = TRUE,
+  file_name = "none",
+  pal = "Set1",
+  dpi = 500
+)
 }
 \arguments{
 \item{data}{raw SEM estimates in the appropriate format, given by the input
@@ -15,6 +21,9 @@ functions.}
 \item{file_name}{character; name of the file to save. Supported formats are:
 "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to
 "none".}
+
+\item{pal}{character; name of color palette to use for bars (fill); defaults
+to "Set1"}
 
 \item{dpi}{integer; resolution in dots per inch for "png" and "jpeg" files;
 defaults to 500.}
@@ -29,15 +38,13 @@ Shows all (squared) factor loadings of all items in all models in a plot grid
 of bar plots.
 }
 \details{
-File output produces much more reliable results than display within R.
-
-  Unlike the IPV chart functions, this function is not meant to
-  produce print-ready output under all circumstances. Suggestions via github
-  are welcome.
+File output produces much more reliable results than display within
+  R. Display within R may scatter elements of the chart.
 }
 \examples{
 # Honesty/Humility and Agreeableness items
-# the use of file output is recommended to prevent irregular placement of plot labels
+# the use of file output is recommended
+# to prevent irregular placement of plot labels
 res <- ipv_est(HEXACO[ ,c(2:41, 122:161)], "HA")
 item_overview(res$est_raw)
 

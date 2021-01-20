@@ -1,12 +1,6 @@
-# IPV 0.1.0
-Release
+# IPV 0.2.0
 
-## IPV 0.1.1.
-* Fixed issues due to  [changes to data.frame()](https://developer.r-project.org/Blog/public/2020/02/16/stringsasfactors/index.html
-).
-
-## IPV 0.2.0
-Added Features
+## Added Features
 * Work based on raw data with automated model estimation using lavaan (function `ipv_est`). This is now the recommended workflow!
 * New raw example data (`HEXACO`) from the open psychometrics project (\url{https://openpsychometrics.org/}) (see ?HEXACO).
 * Create an overview over all (squared) factor loadings in all models (function `item_overview`).
@@ -18,7 +12,15 @@ Added Features
 * Add an overall title for all chart types (parameter `title`).
 * Overhaul of the documentation in the Vignette.
 
-Bugfixes
+## Bugfixes
 * Standardized the default order of facets across facet charts and item charts. It is now consistently the order of the correlation matrix columns in `data = `.
 * Negative correlations between facets or tests should now be displayed correctly.
 * Removed an erroneous message claiming that the axis tick was set automatically when it was set manually.
+
+# IPV 0.1.0
+Release
+
+## IPV 0.1.1.
+* Fixed issues due to  [changes to data.frame()](https://developer.r-project.org/Blog/public/2020/02/16/stringsasfactors/index.html
+).
+

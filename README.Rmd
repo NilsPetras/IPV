@@ -41,19 +41,16 @@ This is an example how charts can be created:
 ```{r example, fig.width=10, fig.height=10, dpi=300, out.height="685px", out.width="685px"}
 library(IPV)
 
-# read model estimates from excel files (manual input is also facilitated)
 # Here, a toy example provided in the package is used.
-# ?self_confidence
-global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
-tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
-             system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
-             system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
-x <- input_excel(global = global, tests = tests)
+# ?HEXACO
+
+# estimate the underlying model from (clean) raw data
+x <- ipv_est(HEXACO[ ,c(2:41, 122:161)], "HA")
 
 # create a nested chart (one of three available chart types)
-nested_chart(x)
+nested_chart(x$est)
+
 # the next step would be to customize the appearance
-# ...
 ```
 
 For further introduction, please check out the vignette.

@@ -1,7 +1,7 @@
 Package: IPV
 Title: Item Pool Visualization
 Type: Package
-Version: 0.1.2
+Version: 0.2.0
 Authors@R: c(
     person("Nils", "Petras", email = "nils.petras@mailbox.org",
     role = c("aut", "cre")),
@@ -28,7 +28,7 @@ Suggests:
     readxl,
     cowplot
 VignetteBuilder: knitr    
-Date: 2021-01-12
+Date: 2021-01-20
 License: GPL-2
 LazyData: true
 Maintainer: Nils Petras <nils.petras@mailbox.org>

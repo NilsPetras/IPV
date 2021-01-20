@@ -47,7 +47,8 @@ functions.}
 the correlation matrix columns in 'data'.}
 
 \item{file_name}{character; name of the file to save. Supported formats are:
-"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".}
+"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to
+"none".}
 
 \item{size}{integer; changes the size of most chart objects simultaneously.}
 
@@ -145,6 +146,9 @@ When changing the size of objects, consider the \code{size}
   manually will provide additional options, but requires you to save to a
   file manually. To manually add a title or caption use
   \code{\link[ggplot2]{labs}}.
+
+  Using a \code{grid_limit} higher than the default will re-scale the whole
+  chart, while a value below the default will only remove grid lines.
 }
 \examples{
 # as simple as that
