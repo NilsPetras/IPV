@@ -220,7 +220,8 @@ item_overview <- function(
               ggplot2::aes(
                 x = long[which(long$item == x), ]$variable,
                 y = long[which(long$item == x), ]$value,
-                fill = long[which(long$item == x), ]$variable))
+                fill = long[which(long$item == x), ]$variable),
+              width = .99)
 
           # one y-axis text per row looks cleaner
           if (which(chunks[[i]][[j]] == x) > 1) {

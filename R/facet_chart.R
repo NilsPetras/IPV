@@ -255,6 +255,14 @@ plot_facets <- function(
       linetype = "dotted",
       size = .5 * min(size, 1) * width_tick) +
 
+    # facet circle background
+    ggforce::geom_circle(
+      data = coord$c_circs[-1, ],
+      ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
+      size = .5 * size * width_circles,
+      color = color,
+      fill = "white") +
+
     # outer axis segments
     ggplot2::geom_segment(
       data = coord$c_axes,

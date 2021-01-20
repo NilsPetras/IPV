@@ -1014,6 +1014,14 @@ plot_nested <- function (
       linetype = "dotted",
       size = .5 * min(size, 1) * width_tick) +
 
+    # test circle background
+    ggforce::geom_circle(
+      data = coord$g$c_circs[-1, ],
+      ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
+      size = .5 * size * width_circles,
+      color = color_global,
+      fill = "white") +
+
     # global outer axis segments
     ggplot2::geom_segment(
       data = coord$g$c_axes,
@@ -1059,6 +1067,14 @@ plot_nested <- function (
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "tick"),
       size = .5 * min(size, .5) * width_tick_inner,
       linetype = "dotted") +
+
+    # facet circle background
+    ggforce::geom_circle(
+      data = coord$g$nested$circles,
+      ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
+      size = .25 * size * width_circles_inner,
+      color = color_nested,
+      fill = "white") +
 
     # global inner axis segments
     ggplot2::geom_segment(
@@ -1124,13 +1140,15 @@ plot_nested <- function (
 
     # rings
     # c() enables putting layer on the bottom, by listing the layer first
-    myipv$layers <- c(
+    myipv$layers <- append(
+      myipv$layers,
       ggforce::geom_circle(
         data = coord$g$c_ring,
         ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
         size = .25 * size * width_axes_inner,
         color = paste("gray", fade, sep = "")),
-      myipv$layers)
+      after = 3
+      )
 
     # labels
     myipv <-  myipv +
