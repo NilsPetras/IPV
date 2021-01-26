@@ -9,6 +9,8 @@
 #'   included in the output?; defaults to TRUE
 #' @param include_lav logical; should lavaan objects of the fitted models be
 #'   included in the output?; defaults to TRUE
+#' @param include_xarrow logical; should an object for the drawing of arrows in
+#'   nested plots be returned?; defaults to TRUE
 #'
 #'
 #' @details the data given to \code{dat} have to conform to the following rules:
@@ -29,7 +31,13 @@
 #' # an IPV that comprises the honesty/humility and the agreeableness factor of the HEXACO
 #' res <- ipv_est(HEXACO[ ,c(2:41, 122:161)], "HA") # estimation with that many items takes some time
 #' nested_chart(res$est)
-ipv_est <- function(dat, name, estimator = "ML", include_raw = TRUE, include_lav = TRUE) {
+ipv_est <- function(
+  dat,
+  name,
+  estimator = "ML",
+  include_raw = TRUE,
+  include_lav = TRUE,
+  include_xarrow = TRUE) {
 
   # helper variables
   nam <- get_names(dat)
@@ -37,6 +45,10 @@ ipv_est <- function(dat, name, estimator = "ML", include_raw = TRUE, include_lav
 
   # model estimation
   mods <- write_IPV_syntax(dat, name)
+  if (length(mods) == 2) { # xarrows don't exist in simple models
+    include_xarrow = FALSE
+  }
+
   fits <- lapply(mods, function(x) {
     lavaan::cfa(x, dat, estimator = estimator)
   })
@@ -45,11 +57,11 @@ ipv_est <- function(dat, name, estimator = "ML", include_raw = TRUE, include_lav
   cors <- lapply(fits, cormat)
 
   # data formatting
-  if(length(mods) == 2) { # simple case
+  if (length(mods) == 2) { # simple case
     est_raw <- list(
       fls = data.frame(
         factor = as.factor(rep(name)),
-        subfactor = as.factor(nam$test),
+        subfactor = as.factor(nam$facet),
         item = as.factor(nam$item),
         factor_loading = loads[[1]],
         subfactor_loading = loads[[2]]),
@@ -81,6 +93,10 @@ ipv_est <- function(dat, name, estimator = "ML", include_raw = TRUE, include_lav
         cors = cors[[3]][rownames(cors[[3]]) %in% facets,
                          colnames(cors[[3]]) %in% facets])
     }
+
+    if (include_xarrow) {
+      xarrow <- get_xarrows(cors = cors, design = unique(nam[ ,1:2]))
+    }
   }
 
 
@@ -89,11 +105,14 @@ ipv_est <- function(dat, name, estimator = "ML", include_raw = TRUE, include_lav
 
 
   y <- list(est = est)
-  if(include_raw == TRUE) {
+  if (include_raw) {
     y[["est_raw"]] <- est_raw
   }
-  if(include_lav == TRUE) {
+  if (include_lav) {
     y[["lav"]] <- fits
+  }
+  if (include_xarrow) {
+    y[["xarrow"]] <- xarrow
   }
   return(y)
 }
@@ -117,37 +136,55 @@ ipv_est <- function(dat, name, estimator = "ML", include_raw = TRUE, include_lav
 write_IPV_syntax <- function(dat, name) {
 
   # helper variables
+
   nam <- get_names(dat)
-  tests <- unique(nam$test)
+  if (is.null(nam$test)) {
+    simple <- TRUE
+  } else {
+    simple <- FALSE
+  }
+
+  if (!simple) {
+    tests <- unique(nam$test)
+  }
   facets <- unique(nam$facet)[unique(nam$facet) != ""]
 
   # checks
   # duplicated facet label across tests
-  temp <- unlist(tapply(nam$facet, nam$test, unique))
-  temp <- temp[temp != ""]
-  if(any(duplicated(temp))) {
-    stop("The data contain a duplicate facet name across tests, please disambiguate.")
+  if (!simple) {
+    temp <- unlist(tapply(nam$facet, nam$test, unique))
+    temp <- temp[temp != ""]
+    if(any(duplicated(temp))) {
+      stop("The data contain a duplicate facet name across tests, please disambiguate.")
+    }
+    rm(temp)
   }
-  rm(temp)
+
 
   # duplicated item label
-  if(any(duplicated(names(dat)))) {
+  if (any(duplicated(names(dat)))) {
     stop("The data contain a duplicate indicator variable name, please disambiguate.")
   }
 
-  # construct model
+  # construct model (nested case) / test model (simple case)
   mod1 <- paste(
     name, "=~",
     paste(names(dat), collapse = " + "))
 
-  # test model
-  mod2 <- ind_lav(tests, names(dat))
+  if (!simple) { # nested case
+    # test model
+    mod2 <- ind_lav(tests, names(dat))
 
-  # facet model
-  if(all(nam$facet == "")) {
-    mod3 <- NULL
+    # facet model
+    if (all(nam$facet == "")) {
+      mod3 <- NULL
+    } else {
+      mod3 <- ind_lav(
+        facets,
+        names(dat))
+    }
   } else {
-    mod3 <- ind_lav(
+    mod2 <- ind_lav(
       facets,
       names(dat))
   }
@@ -155,7 +192,9 @@ write_IPV_syntax <- function(dat, name) {
   y <- list(
     mod1 = mod1,
     mod2 = mod2)
-  y[["mod3"]] <- mod3 # assures that no addition is made in case of mod3 == NULL
+  if (exists("mod3")) {
+    y[["mod3"]] <- mod3
+  }
 
   return(y)
 }
@@ -208,20 +247,33 @@ ind_lav <- function(vars, indicators) {
 get_names <- function(dat) {
   temp <- names(dat)
 
-  nam <- data.frame(
-    test = sub(
-      "_.*",
-      "",
-      temp),
-    facet = gsub(
-      "_|character\\(0\\)",
-      "",
-      as.character(stringr::str_extract_all(temp, "_.*_"))),
-    item = sub(
-      ".*_",
-      "",
-      temp)
-  )
+  if (length(grep("_.+_", temp)) > 0) { # nested case
+    nam <- data.frame(
+      test = sub(
+        "_.*",
+        "",
+        temp),
+      facet = gsub(
+        "_|character\\(0\\)",
+        "",
+        as.character(stringr::str_extract_all(temp, "_.*_"))),
+      item = sub(
+        ".*_",
+        "",
+        temp)
+    )
+  } else { # simple case
+    nam <- data.frame(
+      facet = sub(
+        "_.*",
+        "",
+        temp),
+      item = sub(
+        ".*_",
+        "",
+        temp)
+    )
+  }
 
   return(nam)
 }
@@ -260,4 +312,47 @@ loads <- function(fit, vars = NULL) {
   x <- x[x$op == "=~", "est.std"]
 
   return(x)
+}
+
+#' Get Xarrows
+#'
+#' Creates a data frame for the drawing of arrows in nested charts, including
+#' all correlations between facets that exceed the correlation of the respective
+#' tests.
+#'
+#' @param cors list; list of latent correlation matrices of each model
+#' @param design data frame; each facet (column "facet") is matched with its
+#'   superordinate test (column "test")
+#'
+#' @return data frame; data frame in the required format for the drawing of
+#'   arrows in nested charts, including only those latent facet correlations,
+#'   that exceed the correlation between the respective tests.
+get_xarrows <- function (cors, design) {
+  x <- combn(colnames(cors$mod3), 2, simplify = FALSE)
+  y <- lapply(x, function(x) {
+    test1 <- design[design$facet == x[1], "test"]
+    test2 <- design[design$facet == x[2], "test"]
+    if (
+      cors$mod3[x[1], x[2]] >
+      cors$mod2[test1,test2]
+      ) {
+      y <- data.frame(
+        test1 = test1,
+        facet1 = x[1],
+        test2 = test2,
+        facet2 = x[2],
+        value = cors$mod3[x[1], x[2]]
+      )
+      return(y)
+
+    } else {
+      return(NA)
+    }
+  })
+  y <- na.omit(do.call(rbind, y))
+  y$value <- as.character(y$value)
+  y$value <- y$value[y$value != 1 & y$value > 0] <-
+    substr(y$value[y$value != 1 & y$value > 0], 2, 4)
+
+  return(y)
 }
