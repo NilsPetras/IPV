@@ -206,8 +206,10 @@ plot_facets <- function(
 
   tick <- signif(sqrt((coord$axis_tick$x ^ 2) + (coord$axis_tick$y ^ 2)), 1)
   tick_label_label <- as.character(formatC(tick, format = "fg"))
-  tick_label_x <- 1.3 * coord$axis_tick$x
-  tick_label_y <- 1.3 * coord$axis_tick$y
+  tick_label_x <- coord$axis_tick$x +
+    0.03 * size * cos(coord$axis_tick$phi) * coord$p_circs[1, "radius"]
+  tick_label_y <- coord$axis_tick$y +
+    0.03 * size * sin(coord$axis_tick$phi) * coord$p_circs[1, "radius"]
 
 
   # chart ----------------------------------------------------------------------

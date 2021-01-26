@@ -959,8 +959,11 @@ plot_nested <- function (
   # some calculations are not possible within aes_string(), so aesthetics are
   # prepared here
   tick <- coord$g$axis_tick$tick
-  tick_label_x <- 1.3 * coord$g$rs * coord$g$axis_tick$x
-  tick_label_y <- 1.3 * coord$g$rs * coord$g$axis_tick$y
+  tick_label_x <- coord$g$rs * coord$g$axis_tick$x +
+    0.03 * size * cos(coord$g$axis_tick$phi) * coord$g$p_circs[1, "radius"]
+  tick_label_y <- coord$g$rs * coord$g$axis_tick$y +
+    0.03 * size * sin(coord$g$axis_tick$phi) * coord$g$p_circs[1, "radius"]
+
   tick_label_label <- as.character(formatC(tick, format = "fg"))
 
 

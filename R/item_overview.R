@@ -13,6 +13,8 @@
 #'   to "Set1"
 #' @param dpi integer; resolution in dots per inch for "png" and "jpeg" files;
 #'   defaults to 500.
+#' @param color character; vector of hex codes for colors; defaults to the
+#'   colors "seagreen", "orchid4", and "dodgerblue"
 #'
 #' @return gg / ggplot object; plot grid with one bar plot per item showing
 #'   (squared) factor loadings of that item in all IPV models, arranged by
@@ -37,13 +39,17 @@ item_overview <- function(
   squared = TRUE,
   file_name = "none",
   pal = "Set1",
-  dpi = 500) {
+  dpi = 500,
+  color = NULL) {
 
 
 
   # helper variables -----------------------------------------------------------
 
   nested <- !is.null(data$global)
+  if (is.null(color)) {
+    color <- gplots::col2hex(c("seagreen", "orchid4", "dodgerblue"))
+  }
 
 
   # data preparation -----------------------------------------------------------
@@ -200,7 +206,7 @@ item_overview <- function(
             long[which(long$item == x), ]) +
 
             # initialize
-            ggplot2::scale_fill_brewer(palette = pal) +
+            # ggplot2::scale_fill_brewer(palette = palette(color)) +
             ggplot2::theme_minimal() +
             ggplot2::ylim(0,1) +
             ggplot2::theme(
@@ -219,9 +225,9 @@ item_overview <- function(
             ggplot2::geom_col(
               ggplot2::aes(
                 x = long[which(long$item == x), ]$variable,
-                y = long[which(long$item == x), ]$value,
-                fill = long[which(long$item == x), ]$variable),
-              width = .99)
+                y = long[which(long$item == x), ]$value),
+              width = .99,
+              fill = color)
 
           # one y-axis text per row looks cleaner
           if (which(chunks[[i]][[j]] == x) > 1) {
