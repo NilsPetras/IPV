@@ -20,11 +20,18 @@
 #'   dataset also comprising tests with items, the pattern is "test_item". *
 #'   Variable names have to be unique. Item names have to be unique at the level
 #'   of the test (not only at the level of the facet) See example
+#'
 #' @return list; \code{$est} includes the center distances and all necessary
 #'   input for the IPV chart functions, \code{$est_raw} includes the factor
 #'   loadings and latent correlations, \code{$lav} includes the fitted models
-#'   (class: \code{lavaan}); by default, all three of these elements are
-#'   provided.
+#'   (class: \code{lavaan}), \code{$xarrow} includes a data frame for arrows
+#'   between facets in nested charts, that can be passed on directly to
+#'   \code{nested_chart}; by default, all three of these elements are provided.
+#'
+#'   \code{$xarrow} includes only those cases, where the estimate of the latent
+#'   correlation between facets exceeds the estimate of the latent correlation
+#'   between their respective tests, as recommended by the original authors.
+#'
 #' @export
 #'
 #' @examples
@@ -118,6 +125,9 @@ ipv_est <- function(
 }
 
 
+
+
+
 #' Write IPV syntax
 #'
 #' Write lavaan model syntax of IPV models on the given dataset
@@ -200,6 +210,9 @@ write_IPV_syntax <- function(dat, name) {
 }
 
 
+
+
+
 #' ind lav
 #'
 #' create a lavaan model syntax based on a set of variable names and indicator
@@ -229,6 +242,7 @@ ind_lav <- function(vars, indicators) {
 
   return(syn)
 }
+
 
 
 
@@ -278,6 +292,10 @@ get_names <- function(dat) {
   return(nam)
 }
 
+
+
+
+
 #' Cor(relation) Mat(rix)
 #'
 #' Retrieve factor correlation matrix from lavaan model
@@ -292,6 +310,9 @@ cormat <- function (fit) {
   if(any(is.nan(X))) X[,] <- NA
   return(X)
 }
+
+
+
 
 
 #' Load(ing)s
@@ -313,6 +334,10 @@ loads <- function(fit, vars = NULL) {
 
   return(x)
 }
+
+
+
+
 
 #' Get Xarrows
 #'
@@ -350,9 +375,13 @@ get_xarrows <- function (cors, design) {
     }
   })
   y <- na.omit(do.call(rbind, y))
-  y$value <- as.character(y$value)
-  y$value <- y$value[y$value != 1 & y$value > 0] <-
-    substr(y$value[y$value != 1 & y$value > 0], 2, 4)
+  if (length(y) > 0) {
+    y$value <- as.character(y$value)
+    y$value <- y$value[y$value != 1 & y$value > 0] <-
+      substr(y$value[y$value != 1 & y$value > 0], 2, 4)
+  } else {
+    y <- NULL
+  }
 
   return(y)
 }

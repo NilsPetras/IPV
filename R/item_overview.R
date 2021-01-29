@@ -48,7 +48,8 @@ item_overview <- function(
 
   nested <- !is.null(data$global)
   if (is.null(color)) {
-    color <- gplots::col2hex(c("seagreen", "orchid4", "dodgerblue"))
+    color <- c("#006666", "#33CCFF", "#66FF33")
+    # color <- gplots::col2hex(c("seagreen", "orchid4", "dodgerblue"))
   }
 
 
@@ -69,7 +70,7 @@ item_overview <- function(
     loads$facet_loading <- NA
     loads <- loads[ ,c(1, 2, 6, 3, 4, 5, 7)]
     temp <- lapply(data$tests, '[[', 1)
-    temp <- lapply(temp, function(x){ # rename items uniquely
+    temp[!is.na(temp)] <- lapply(temp[!is.na(temp)], function(x){ # rename items uniquely
       x$item <- as.character(paste(
         x$factor,
         sep = ".",

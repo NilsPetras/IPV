@@ -115,12 +115,16 @@
 #'  formats use \code{file_width}, \code{file_height}, and \code{dpi} to avoid
 #'  later rescaling and loss of quality.
 #'
-#'   Consider adding title and caption in your typesetting software (LaTeX, MS
-#'   Word, ...), not here. The option to add a title is only a quick and dirty
-#'   shurtcut. It reduces chart size and is inflexible. Adding the title
-#'   manually will provide additional options, but requires you to save to a
-#'   file manually. To manually add a title or caption use
-#'   \code{\link[ggplot2]{labs}}.
+#'  If \code{facet1} or \code{facet2} is \code{NA} for a given xarrow, the arrow
+#'  will end on the test's circle. Note: this correlation is usually not part of
+#'  the model.
+#'
+#'  Consider adding title and caption in your typesetting software (LaTeX, MS
+#'  Word, ...), not here. The option to add a title is only a quick and dirty
+#'  shurtcut. It reduces chart size and is inflexible. Adding the title manually
+#'  will provide additional options, but requires you to save to a file
+#'  manually. To manually add a title or caption use
+#'  \code{\link[ggplot2]{labs}}.
 #'
 #'@return Object of the class "ggplot".
 #'
@@ -736,7 +740,8 @@ coord_nested <- function (
                          xlabel = NA,
                          ylabel = NA)
     arrows$label <- xarrows$value
-    # note: facet circles are named as 'factor.facet' within nested$circles
+    # facet circles are named as 'test.facet' within nested$circles
+    # arrow ends on facets
     arrows$x1 <- nested$circles[paste(xarrows$test1,
                                       xarrows$facet1,
                                       sep = "."),
@@ -753,6 +758,16 @@ coord_nested <- function (
                                       xarrows$facet2,
                                       sep = "."),
                                 "y"]
+
+    # arrow ends on tests
+    arrows[is.na(xarrows$facet1), c("x1", "y1")] <-
+      c_circs[
+        xarrows[is.na(xarrows$facet1),"test1"],
+        c("x", "y")]
+    arrows[is.na(xarrows$facet2), c("x2", "y2")] <-
+      c_circs[
+        xarrows[is.na(xarrows$facet2),"test2"],
+        c("x", "y")]
 
 
     ## labels -----------------------
@@ -810,16 +825,27 @@ coord_nested <- function (
 
     ## arrows again -----------------
 
-    arrows$x1new <- arrows$x1 + subradius / dist_small * xdist_small
-    arrows$x2new <- arrows$x2 + subradius / dist_small * -xdist_small
-    arrows$y1new <- arrows$y1 + subradius / dist_small * ydist_small
-    arrows$y2new <- arrows$y2 + subradius / dist_small * -ydist_small
+    arrows$radius1 <- subradius
+    arrows$radius2 <- subradius
+
+    # overwrite in case of arrows ending in test (instead of facet)
+    arrows[is.na(xarrows$facet1), "radius1"] <-
+      c_circs[xarrows[is.na(xarrows$facet1), "test1"],
+              "radius"]
+    arrows[is.na(xarrows$facet2), "radius2"] <-
+      c_circs[xarrows[is.na(xarrows$facet2), "test2"],
+              "radius"]
+
+    arrows$x1new <- arrows$x1 + arrows$radius1 / dist_small * xdist_small
+    arrows$x2new <- arrows$x2 + arrows$radius2 / dist_small * -xdist_small
+    arrows$y1new <- arrows$y1 + arrows$radius1 / dist_small * ydist_small
+    arrows$y2new <- arrows$y2 + arrows$radius2 / dist_small * -ydist_small
     arrows$x1 <- arrows$x1new
     arrows$x2 <- arrows$x2new
     arrows$y1 <- arrows$y1new
     arrows$y2 <- arrows$y2new
 
-    arrows[8:11] <- list(NULL)
+    arrows[8:13] <- list(NULL)
     rm(n)
   } else arrows <- NULL
 
