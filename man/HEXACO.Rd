@@ -7,13 +7,18 @@
 \format{
 An object of class \code{data.frame} with 20174 rows and 245 columns.
 }
+\source{
+:
+
+  \url{https://openpsychometrics.org/_rawdata/} (May 6th, 2020)
+}
 \usage{
 HEXACO
 }
 \description{
 Cleaned-up data from an ad-hoc online sample of n = 22786 participants on the
 240 items of the IPIP HEXACO Equivalent Scales. Data were collected before
-21st June 2014 within the openpsychometrics project
+21st June 2014 within the Open-Source Psychometrics Project
 (\url{https://openpsychometrics.org/}). After listwise deletion of missing
 values and including only those participants who did at least "agree" on the
 items "I understand the instructions for this test." and "I have answered all
@@ -24,12 +29,6 @@ participants remains.
 
 
   \url{https://ipip.ori.org/newhexaco_pi_key.htm}
-}
-
-\section{source}{
-
-
-  \url{https://openpsychometrics.org/_rawdata/} (May 6th, 2020)
 }
 
 \keyword{datasets}

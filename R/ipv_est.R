@@ -353,7 +353,7 @@ loads <- function(fit, vars = NULL) {
 #'   arrows in nested charts, including only those latent facet correlations,
 #'   that exceed the correlation between the respective tests.
 get_xarrows <- function (cors, design) {
-  x <- combn(colnames(cors$mod3), 2, simplify = FALSE)
+  x <- utils::combn(colnames(cors$mod3), 2, simplify = FALSE)
   y <- lapply(x, function(x) {
     test1 <- design[design$facet == x[1], "test"]
     test2 <- design[design$facet == x[2], "test"]
@@ -374,7 +374,7 @@ get_xarrows <- function (cors, design) {
       return(NA)
     }
   })
-  y <- na.omit(do.call(rbind, y))
+  y <- stats::na.omit(do.call(rbind, y))
   if (length(y) > 0) {
     y$value <- as.character(y$value)
     y$value <- y$value[y$value != 1 & y$value > 0] <-

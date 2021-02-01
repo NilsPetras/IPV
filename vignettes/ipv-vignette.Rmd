@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
     toc: true
-    toc_depth: 4
+    toc_depth: 3
 vignette: >
   %\VignetteIndexEntry{Item Pool Visualization}
   %\VignetteEngine{knitr::rmarkdown}
@@ -24,27 +24,42 @@ knitr::opts_chunk$set(
 
 The IPV package is a tool to create IPV charts. The original work on IPV, including the chart concepts, can be found in:
 [Dantlgraber, M., Stieger, S., & Reips, U. D. (2019). Introducing Item Pool Visualization: A method for investigation of concepts in self-reports and psychometric tests. Methodological Innovations, 12(3), 2059799119884283.](https://doi.org/10.1177/2059799119884283). Please cite this paper when using the package.
-The package is built to enable chart creation quick & dirty or highly customized. Feel free to raise an [issue on github](https://github.com/NilsPetras/IPV/issues) in case of bugs or to make suggestions.
+The package is built to enable chart creation -- quick & dirty or highly customized. Please raise an [issue on github](https://github.com/NilsPetras/IPV/issues) in case of bugs or to make suggestions.
 
-### Terminology
+### Example data
 
-Although the following terminology will intuitively fit many practical purposes, IPV can be used for any possible subdivision of an item pool on multiple levels of specificity (see Dantlgraber et al., 2019).
+The package contains two sets of example data:
 
-"Item"s are single indicator variables within an item pool. A "test" (e.g. a questionnaire) is an item pool consisting of several "item"s. Within the "test", the "item"s may (or may not) be organized within smaller item pools ("facets"). If the data contains multiple tests of an overall "construct", this will be called a "nested" case. In such a case, the item pools of each "test" are nested within an overall item pool of the "construct".
+1. The model estimates from the original IPV paper `?self_confidence` `?DSSEI` `?SMTQ` (also available as excel spreadsheets, see Appendix)
+2. Raw data from the [Open-Source Psychometrics Project](https://openpsychometrics.org/) `?HEXACO`
 
-## Workflow
+### Terminology within the package
 
-The IPV package provides functions for the following steps:
+IPV uses the concept of item pools, that can be divided into smaller item (sub-)pools. The hierarchy of terms for item pools in this package is "construct" > "test" > "facet", from large to small. The total item pool of a (psychological) construct may comprise multiple tests, which in turn may comprise multiple facets. This terminology is based on the common data structure in psychological assessment. But IPV can be used for any possible subdivision of an item pool on multiple levels of specificity (see Dantlgraber et al., 2019). In other words, what is called "test" here does not need to be an actual test, etc.
 
-1. estimate models (recommended) or read existing estimates
-2. Create, customize, and save IPV charts
+## Recommended Workflow
+
+1. Prepare your raw data.
+2. Generate the model estimates using `ipv_est()`.
+3. Select a chart function and use it with the estimates, a file name, and otherwise default values.
+4. Customize the appearance using further arguments of the chart function.
+5. Check the chart's appearance by opening the created file.
+6. Repeat 4. + 5. until you are satisfied with the result.
+
+Minimal example:
+```{r, eval = FALSE}
+mydata <- HEXACO[ ,c(2:41, 122:161)] # (1.) HEXACO is a data frame containing raw data
+res <- ipv_est(mydata, name = "HA") # (2.) produce a formatted bundle of estimates to use
+nested_chart(res$est, file_name = "test.pdf") # (3.) create a chart with default formatting
+```
+
+There are some additional helper functions, such as the `input_...` functions, which enable you to format already existing model estimates.
 
 Call `?IPV` for an overview of all functions.
 
+### 1. Prepare data
 
-### 1a. Estimate Models
-
-The `ipv_est()` function is recommended for model estimation, because it automatically formats the results for chart creation. It provides the lavaan objects of the estimated models, raw estimates of factor loadings and latent correlations, and center distances.
+The `ipv_est()` function is recommended for model estimation, because it only needs raw data. It automatically estimates the models underlying IPV charts. Its output can be plugged into the chart functions directly.
 
 To use this function, your data needs to be formatted as follows:
 
@@ -55,8 +70,6 @@ To use this function, your data needs to be formatted as follows:
 - all item names ("..._..._item") are unique at the level of the test (not only at the level of the facet!)
 - tests without facets use the pattern "test_item"
 - in the simple case of a single test, the pattern is "facet_item"
-
-The function automatically determines which models to estimate, uses the [lavaan package](https://lavaan.ugent.be/) to estimate them, and provides formatted results.
 
 For example:
 ```{r, echo = FALSE}
@@ -69,6 +82,11 @@ Sinc = sincerity (a "facet" of honesty/humility)
 
 Sinc_1 = first "item" of the sincerity facet
 
+### 2. Generate model estimates
+
+`ipv_est()` automatically determines which models to estimate, uses the [lavaan package](https://lavaan.ugent.be/) to estimate them, and provides formatted results.
+
+
 ```{r, eval = FALSE}
 # nested case: honesty/humility and agreeableness as "tests" (= sub-pools)
 # of an overarching "construct" (= item pool)
@@ -76,6 +94,8 @@ res_HA <- ipv_est(dat = HEXACO[ ,c(2:41, 122:161)], name = "HA")
 # simple case: agreeableness only
 res_A <- ipv_est(dat = HEXACO[ ,c(122:161)], name = "A")
 ```
+
+If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning (or message) is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, check if you have properly recoded negatively keyed items.
 
 Results are provided as a list with the following elements:
 
@@ -87,98 +107,9 @@ Results are provided as a list with the following elements:
 
 When creating IPV charts, you will work with "est". But you should always inspect the estimated models ("lav") to understand what is going on with your data! Use the lavaan functions (e.g. `lavaan::fitmeasures`, `lavaan::summary`, `lavaan::lavInspect`) for this purpose.
 
-A more thorough introduction to the formatting of the objects representing model estimates can be found in section 1b. below.
+A more thorough introduction to the formatting of the objects representing model estimates can be found in the section on the alternative workflow in the Appendix.
 
-### 1b. Read existing estimates
-
-**Estimating the models yourself and reading in the estimates will take more effort than formatting the raw data and using `ipv_est()`. For this reason, it is not recommended.** On the other hand, it provides you with additional options during model estimation.
-
-To use the chart functions, the model estimation results need an appropriate format. This is an example for the format used within the IPV package:
-```{r}
-self_confidence$tests$RSES
-```
-Note, that `factor` refers to an item pool, that was divided into subpools (`subfactor`s). In this case, `factor` refers to the Rosenberg Self-Esteem Scale, a test with two facets: Positive Self-Esteem (Ps), and Negative Self-Esteem (Ns), which was reversed here. As seen below, the same data structure applies on the global level, with `factor` referring to the overall self-confidence item pool, comprising the three tests (`subfactor`s) RSES, SMTQ, and DSSEI.  
-```{r}
-self_confidence$global
-```
-`cd` is short for center distance  
-\begin{equation}
-  cd_i = \frac{\lambda^2_{is}}{\lambda^2_{ig}} -1
-\end{equation}  
-while `mean_cd` is the mean center distance of the items of a facet or test. Furthermore, the matrix of latent correlations between `subfactor`s is given as a second item of the list. To see how the data is combined for nested cases, load the package and call the example object `self_confidence`.  
-To spare you the task of creating this data structure by hand, I implemented two automated input pathways. You can either use excel files or the manual input function. In both cases, center distances are calculated automatically and the data is automatically checked for (obvious) errors. Negative center distances are always set to zero before mean center distances are calculated. Regardless of the input mode, you will need to provide:  
-
-* the names of all latent variables and items  
-* the factor loadings of the SEMs  
-* the latent correlations between the factors within the SEMs.
-
-#### ...using manual input functions
-These functions allow you to reduce the manual work to a minimum. They are especially useful, when your SEM estimates are already in your R environment (e.g. because you read them from a .csv file). The functions `input_manual_nested()` and `input_manual_simple()` allow you to feed in factor loadings, item names, etc. variable by variable. The correct format is then generated automatically. Run `input_manual_process()` on the result, to automatically calculate center distances.  
-This is an example, where all values have been put in individually for demonstration:
-
-```{r}
-mydata <- input_manual_simple(
-test_name = "RSES",
-facet_names = c("Ns", "Ps"),
-items_per_facet = 5,
-item_names = c(
-  2, 5, 6, 8, 9,
-  1, 3, 4, 7, 10),
-test_loadings = c(
-  .5806, .5907, .6179, .5899, .6559,
-  .6005, .4932, .4476, .5033, .6431),
-facet_loadings = c(
-  .6484, .6011, .6988, .6426, .6914,
-  .6422, .5835, .536, .5836, .6791),
-correlation_matrix = matrix(
-  data = c(1, .69,
-           .69, 1),
-  nrow = 2,
-  ncol = 2))
-mydata
-input_manual_process(mydata)
-```
-For nested cases, use the function `input_manual_nested()`, and add the individual tests using `input_manual_simple()`. Then you can run `input_manual_processs()` as in the simple case. You can find a (lengthy) example [below](#nested).  
-If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning (or message) is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
-
-#### ...using Excel files
-Excel files have the advantage that you can simply copy and paste your SEM estimates into the spreadsheets and the input function of the IPV package (`input_excel()`) does the rest. The files need to be structured as in the example, that you can find here:
-```{r, eval = FALSE}
-system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
-system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE)
-system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE)
-system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE)
-```
-
-As you can see, there is a file for each test, and a global file. You might want to use a copy as your template, so you can just fill in your values. Open a file to see how it works.  
-
-On sheet 1 you need to provide the factor loadings from your SEM estimation results, on sheet 2 you need to provide the named and complete latent correlation matrix. On sheet 1, "factor" contains a single factor name and "factor_loading" the factor loadings of items on that factor (not squared). "subfactor" contains the names of grouped factors and "subfactor_loading" the factor loadings of items on these factors (not squared). "item" contains the item names. Therefore, each row contains the full information on the respective item.  
-Read these excel sheets using input_excel. In the example:
-```{r}
-global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
-tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
-           system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
-           system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
-mydata <- input_excel(global = global, tests = tests)
-```
-
-The data will be prepared automatically, including the calculation of center distances. If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning or message is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
-
-#### Mixing tests with and without facets
-In nested charts, tests do not need to have facets. If you use input by excel, use `NA` instead of providing a file name.
-
-```{r, eval=FALSE}
-global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
-tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
-           system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
-           NA)
-mydata <- input_excel(global = global, tests = tests)
-```
-
-If you use manual input, do not provide data on facetless tests with `input_manual_simple()`. Any further treatment of facetless tests is handled automatically.
-
-
-### 2.1. Create and save IPV charts
+### 3. Create and save IPV charts
 
 Use the chart functions (`item_chart`, `facet_chart`, `nested_chart`) to create an IPV chart from your data.
 
@@ -194,42 +125,39 @@ I strongly recommend to use vector-based .pdf graphics output using the `file_na
 I recommend you to inspect the graphics file itself. To inspect your results within RStudio, always use the zoom pop-out of the Plots window, otherwise charts may be heavily distorted. 
 
 
-### 2.2. Customize IPV charts
+### 4. Customize IPV charts
 
 Although some graphical options are automatically optimized based on the data, there are many ways to optimize the charts' appearance (e.g. for print). For example you may use [color](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) to guide attention, or re-size elements of the chart for readability.
 
-#### 2.2.0. Changing labels
+#### 4.1. Variable labels
 
-The function `rename()` can be used to change any item, facet, test, or construct name, using a before-after syntax.
+The function `rename()` can be used to change any item, facet, test, or construct name, using a before-after syntax (see documentation).
 
-
-#### 2.2.1. Size of chart elements
+#### 4.2. Size of chart elements
 
 Most graphical parameters are size parameters for single elements of the chart, all named `size_... = `,  `width_... = `, or `length_... = `. Those are pretty straightforward: linear scaling parameters defaulting to 1. That means, .5 will half the size and 2 will double it. For all chart types, there is also a global `size = ` parameter, scaling all elements of the chart at once. Use this parameter first, before you fine tune single elements.
 
-#### 2.2.2. Scale output file
+#### 4.3 Output file properties
 
 The parameters `file_width = ` and `file_length = ` determine, how large the .pdf file will be, measured in inches (1 in = 2.54 cm). The size of .png or .jpeg files in pixels is determined by multiplying the size in inches with the dots per inch parameter value (`dpi = `).
 
-#### 2.2.3. Rotation and order
+#### 4.4. Rotation and order
 
 For all chart types, it is possible to rotate the whole chart, using `rotate_radians = ` (use fractions of $2\pi$) or `rotate_degrees = ` (use 0-360). In all charts, the parameter `facet_order = ` enables you to set the (counter-clockwise) order of facets. In nested charts, `test_order = ` and `subrotate_degrees = `/`subrotate_radians = ` will function likewise. Several `rotate_... = ` parameters can be used to re-position single elements of the chart relative to the origin.
 
-#### 2.2.4. Font
+#### 4.5. Font
 
 The font can be changed using the `font = ` parameter. I recommend [extrafont](https://cran.r-project.org/package=extrafont) for access to more fonts.
 
-#### 2.2.5. Structural elements and data ink ratio
+#### 4.6. Structural elements
 
 To reduce the visibility of structural elements, the `fade_... = ` parameters can be used (0 = "black", 100 = "white").
 
-#### 2.2.6. Colour
+#### 4.7. Colour
 
-For the use of colours and gray tones, I recommend [this guide](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). All charts functions have at least one colour parameter to highlight the data using colour.
+For the use of colours and gray tones, I recommend [this guide](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). All charts functions have at least one colour parameter to increase visual contrast.
 
-
-
-#### 2.2.7. Special options for item charts
+#### 4.8. Special options for item charts
 
 You can use different colors for every second item to increase readability of item charts:
 ```{r, eval=FALSE, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
@@ -255,7 +183,7 @@ mychart2
 ```
 This works simultaneously for all labels. Labels at the top and bottom do not move, labels on the right and left move the most.
 
-#### 2.2.8. Special options for facet charts
+#### 4.9. Special options for facet charts
 
 ```{r, fig.width=10, fig.height=10, dpi=72, out.height="685px", out.width="685px", dev='png'}
 mychart <- facet_chart(data = DSSEI)
@@ -272,8 +200,7 @@ mychart <- facet_chart(data = DSSEI,
 mychart
 ```
 
-
-#### 2.2.9. Special options for nested charts
+#### 4.10. Special options for nested charts
 
 There are four important options specific to nested charts: the `relative_scaling = ` of the global and the nested level, the addition of `xarrows = ` to display correlation arrows between facets of different tests, the ability to `subrotate_... = ` each test individually, and the `cor_spacing = ` to display correlations between the tests. Due to the complexity one should not rely on default values too much:
 
@@ -348,8 +275,105 @@ mychart <- nested_chart(data = self_confidence,
 mychart
 ```
 
-### Appendix
-#### manual input in nested cases - example {#nested}
+## Object structure within the package
+
+This is an example for the data format, that is required by the chart functions and produced by `ipv_est()`:
+
+```{r}
+str(self_confidence, 2)
+self_confidence$tests$RSES
+```
+Note, that `factor` refers to an item pool, that was divided into subpools (`subfactor`s). In this case, `factor` refers to the Rosenberg Self-Esteem Scale, a test with two facets: Positive Self-Esteem (Ps), and Negative Self-Esteem (Ns), which was reversed here. As seen below, the same data structure applies on the global level, with `factor` referring to the overall self-confidence item pool, comprising the three tests (`subfactor`s) RSES, SMTQ, and DSSEI.  
+```{r}
+self_confidence$global
+```
+`cd` is short for center distance  
+\begin{equation}
+  cd_i = \frac{\lambda^2_{is}}{\lambda^2_{ig}} -1
+\end{equation}  
+while `mean_cd` is the mean center distance of the items of a facet or test. Furthermore, the matrix of latent correlations between `subfactor`s is given as a second item of the list.
+
+There is a raw variant (`$est_raw` in the output of `ipv_est`) of this, providing factor loadings instead of center distances.
+
+## Appendix
+
+### 2. Read existing estimates (alternative Workflow)
+
+**Estimating the models yourself and reading in the estimates will take more effort than formatting the raw data and using `ipv_est()`. For this reason, it is not recommended.** On the other hand, it provides you with additional options during model estimation, or the ability to use published estimates without access to the raw data.
+
+Regardless of the input mode, you will need to provide:  
+
+* the names of all latent variables and items  
+* the factor loadings of the SEMs  
+* the latent correlations between the factors within the SEMs.
+
+To spare you the task of formatting estimates by hand, I implemented two automated input pathways. You can either use excel files or the manual input function. In both cases, center distances are calculated automatically and the estimates are automatically checked for (obvious) errors. Negative center distances are always set to zero before mean center distances are calculated. 
+
+#### ... using estimates from within R
+These functions allow you to reduce the manual work to a minimum. They are especially useful, when your SEM estimates are already in your R environment (e.g. because you read them from a .csv file). The functions `input_manual_nested()` and `input_manual_simple()` allow you to feed in vectors of factor loadings, item names, etc. The correct format for plotting is then generated automatically. Run `input_manual_process()` on the result, to automatically calculate center distances.  
+This is an example, where all estimates are put in completely manually for demonstration purposes:
+
+```{r}
+mydata <- input_manual_simple(
+test_name = "RSES",
+facet_names = c("Ns", "Ps"),
+items_per_facet = 5,
+item_names = c(
+  2, 5, 6, 8, 9,
+  1, 3, 4, 7, 10),
+test_loadings = c(
+  .5806, .5907, .6179, .5899, .6559,
+  .6005, .4932, .4476, .5033, .6431),
+facet_loadings = c(
+  .6484, .6011, .6988, .6426, .6914,
+  .6422, .5835, .536, .5836, .6791),
+correlation_matrix = matrix(
+  data = c(1, .69,
+           .69, 1),
+  nrow = 2,
+  ncol = 2))
+mydata
+input_manual_process(mydata)
+```
+For nested cases, use the function `input_manual_nested()`, and add the individual tests using `input_manual_simple()`. Then you can run `input_manual_processs()` as in the simple case. You can find a (lengthy) example [below](#nested).  
+
+#### ... using Excel files
+Excel files have the advantage that you can simply copy and paste your SEM estimates into spreadsheets and the input function of the IPV package (`input_excel()`) does the rest. The files need to be structured as in the example, that you can find here:
+```{r, eval = FALSE}
+system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
+system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE)
+system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE)
+system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE)
+```
+
+As you can see, there is a file for each test, and a global file. You might want to use a copy as your template, so you can just fill in your values. Open a file to see how it works.  
+
+On sheet 1 you need to provide the factor loadings from your SEM estimation results, on sheet 2 you need to provide the named and complete latent correlation matrix. On sheet 1, "factor" contains a single factor name and "factor_loading" the factor loadings of items on that factor (not squared). "subfactor" contains the names of grouped factors and "subfactor_loading" the factor loadings of items on these factors (not squared). "item" contains the item names. Therefore, each row contains the full information on the respective item.  
+Read these excel sheets using input_excel. In the example:
+```{r}
+global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
+tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+           system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
+           system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
+mydata <- input_excel(global = global, tests = tests)
+```
+
+The data will be prepared automatically, including the calculation of center distances. If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning or message is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, recode your data appropriately.
+
+#### Mix tests with and without facets
+In nested charts, tests do not need to have facets. If you use input by excel, use `NA` instead of providing a file name.
+
+```{r, eval=FALSE}
+global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
+tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+           system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
+           NA)
+mydata <- input_excel(global = global, tests = tests)
+```
+
+If you use manual input, do not provide data on facetless tests with `input_manual_simple()`. Any further treatment of facetless tests is handled automatically.
+
+#### Manual input in nested cases - example {#nested}
 
 Note that all values that are put in manually for presentation purposes here could be read from an arbitrarily formatted R object. Copying values manually from another source is error-prone and therefore not recommended.
 

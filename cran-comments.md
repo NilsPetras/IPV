@@ -11,7 +11,7 @@ New features and fixed bugs
 ## Test environments
 * local Windows 10, release (4.0.3)
 * Windows 10, devel (via devtools::check_win_devel)
-* Ubuntu Linux 16.04 (on travis-ci), release (4.0.3) and devel
+* Ubuntu Linux 16.04.6 LTS (on travis-ci), release (4.0.3) and devel
 
 ## R CMD check results
 There were no ERRORs, WARNINGs, or NOTEs.

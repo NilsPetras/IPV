@@ -4,7 +4,14 @@
 \alias{ipv_est}
 \title{IPV estimation}
 \usage{
-ipv_est(dat, name, estimator = "ML", include_raw = TRUE, include_lav = TRUE)
+ipv_est(
+  dat,
+  name,
+  estimator = "ML",
+  include_raw = TRUE,
+  include_lav = TRUE,
+  include_xarrow = TRUE
+)
 }
 \arguments{
 \item{dat}{data frame; raw data (see details)}
@@ -20,13 +27,21 @@ included in the output?; defaults to TRUE}
 
 \item{include_lav}{logical; should lavaan objects of the fitted models be
 included in the output?; defaults to TRUE}
+
+\item{include_xarrow}{logical; should an object for the drawing of arrows in
+nested plots be returned?; defaults to TRUE}
 }
 \value{
 list; \code{$est} includes the center distances and all necessary
   input for the IPV chart functions, \code{$est_raw} includes the factor
   loadings and latent correlations, \code{$lav} includes the fitted models
-  (class: \code{lavaan}); by default, all three of these elements are
-  provided.
+  (class: \code{lavaan}), \code{$xarrow} includes a data frame for arrows
+  between facets in nested charts, that can be passed on directly to
+  \code{nested_chart}; by default, all three of these elements are provided.
+
+  \code{$xarrow} includes only those cases, where the estimate of the latent
+  correlation between facets exceeds the estimate of the latent correlation
+  between their respective tests, as recommended by the original authors.
 }
 \description{
 IPV estimation

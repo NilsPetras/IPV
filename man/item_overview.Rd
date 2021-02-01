@@ -9,7 +9,8 @@ item_overview(
   squared = TRUE,
   file_name = "none",
   pal = "Set1",
-  dpi = 500
+  dpi = 500,
+  color = NULL
 )
 }
 \arguments{
@@ -27,6 +28,9 @@ to "Set1"}
 
 \item{dpi}{integer; resolution in dots per inch for "png" and "jpeg" files;
 defaults to 500.}
+
+\item{color}{character; vector of hex codes for colors; defaults to the
+colors "seagreen", "orchid4", and "dodgerblue"}
 }
 \value{
 gg / ggplot object; plot grid with one bar plot per item showing

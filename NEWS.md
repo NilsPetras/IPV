@@ -3,8 +3,8 @@
 ## Added Features
 * Package now works based on raw data with automated model estimation using lavaan (function `ipv_est`). This is now the recommended workflow!
 * New raw example data (`HEXACO`) from the open psychometrics project (\url{https://openpsychometrics.org/}) (see `?HEXACO`).
-* Create an overview over all (squared) factor loadings in all models (function `item_overview`).
-* Function ("rename") for convenient changing of test, facet, or item labels (function `rename`).
+* Create an overview over all (squared) factor loadings in all three models on which a nested chart is based (function `item_overview`).
+* Function for convenient changing of test, facet, or item labels (function `rename`).
 * Rotate the tick label in facet charts and nested charts to avoid overlap (parameter `rotate_tick_label`).
 * Set the limit of the grid in item charts (parameter `grid_limit`).
 * Set the order of facets for all charts types (parameter: `facet_order`).

@@ -223,12 +223,16 @@ To get tidy results, it is often required to use \code{rotate_} and
  formats use \code{file_width}, \code{file_height}, and \code{dpi} to avoid
  later rescaling and loss of quality.
 
-  Consider adding title and caption in your typesetting software (LaTeX, MS
-  Word, ...), not here. The option to add a title is only a quick and dirty
-  shurtcut. It reduces chart size and is inflexible. Adding the title
-  manually will provide additional options, but requires you to save to a
-  file manually. To manually add a title or caption use
-  \code{\link[ggplot2]{labs}}.
+ If \code{facet1} or \code{facet2} is \code{NA} for a given xarrow, the arrow
+ will end on the test's circle. Note: this correlation is usually not part of
+ the model.
+
+ Consider adding title and caption in your typesetting software (LaTeX, MS
+ Word, ...), not here. The option to add a title is only a quick and dirty
+ shurtcut. It reduces chart size and is inflexible. Adding the title manually
+ will provide additional options, but requires you to save to a file
+ manually. To manually add a title or caption use
+ \code{\link[ggplot2]{labs}}.
 }
 \examples{
 # as simple as that
