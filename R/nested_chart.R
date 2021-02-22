@@ -21,8 +21,6 @@
 #'@param relative_scaling integer; relative size of the global chart scale
 #'  compared to the nested facet chart scales; defaults to 0, in which case an
 #'  appropriate value is estimated.
-#'@param show_xarrows logical; if \code{TRUE}, shows correlation arrows between
-#'  facets of different tests, according to xarrows.
 #'@param font character; text font, use extrafonts to access additional fonts;
 #'  defaults to "sans", which is "Helvetica".
 #'@param rotate_radians integer; radian angle to rotate the chart
@@ -146,8 +144,7 @@
 #' sc_arrows[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
 #' nested_chart(self_confidence,
 #'              subradius = .6,
-#'              xarrows = sc_arrows,
-#'              show_xarrows = TRUE)
+#'              xarrows = sc_arrows)
 #'
 #' # rotating the nested facet charts one by one
 #' nested_chart(self_confidence,
@@ -173,7 +170,6 @@ nested_chart <- function(
   file_name = "none",
   size = 1,
   relative_scaling = 0,
-  show_xarrows = FALSE,
   font = "sans",
   rotate_radians = 0,
   rotate_degrees = 0,
@@ -250,7 +246,6 @@ nested_chart <- function(
     color_nested = color_nested,
     fade = fade,
     font = font,
-    show_xarrows = show_xarrows,
     size_construct_label = size_construct_label,
     size_test_labels = size_test_labels,
     size_facet_labels = size_facet_labels,
@@ -897,8 +892,6 @@ coord_nested <- function (
 #'@param color_nested nested accent color; defaults to "black".
 #'@param fade integer; brightness of the gray tones between 0 (black) and 100
 #'  (white) in steps of 1; defaults to 85.
-#'@param show_xarrows logical; if \code{TRUE}, shows correlation arrows between
-#'  facets of different tests, according to xarrows.
 #'@param font character; text font, use extrafonts to access additional fonts;
 #'  defaults to "sans", which is "Helvetica".
 #'@param size_construct_label integer; construct label font size relative to
@@ -944,7 +937,6 @@ plot_nested <- function (
   color_nested = "black",
   fade = 85,
   font = "sans",
-  show_xarrows = FALSE,
   size_construct_label = 1,
   size_test_labels = 1,
   size_facet_labels = 1,
@@ -1190,7 +1182,7 @@ plot_nested <- function (
   }
 
   # extra arrows
-  if (show_xarrows == TRUE) {
+  if (!is.null(xarrows)) {
     myipv <- myipv +
 
       # arrows
