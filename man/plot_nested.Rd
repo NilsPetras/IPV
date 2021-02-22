@@ -17,7 +17,6 @@ plot_nested(
   color_nested = "black",
   fade = 85,
   font = "sans",
-  show_xarrows = FALSE,
   size_construct_label = 1,
   size_test_labels = 1,
   size_facet_labels = 1,
@@ -67,9 +66,6 @@ between facets as text.}
 
 \item{font}{character; text font, use extrafonts to access additional fonts;
 defaults to "sans", which is "Helvetica".}
-
-\item{show_xarrows}{logical; if \code{TRUE}, shows correlation arrows between
-facets of different tests, according to xarrows.}
 
 \item{size_construct_label}{integer; construct label font size relative to
 default.}

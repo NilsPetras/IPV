@@ -13,7 +13,6 @@ nested_chart(
   file_name = "none",
   size = 1,
   relative_scaling = 0,
-  show_xarrows = FALSE,
   font = "sans",
   rotate_radians = 0,
   rotate_degrees = 0,
@@ -82,9 +81,6 @@ circles; defaults to 0, in which case an appropriate value is estimated.}
 \item{relative_scaling}{integer; relative size of the global chart scale
 compared to the nested facet chart scales; defaults to 0, in which case an
 appropriate value is estimated.}
-
-\item{show_xarrows}{logical; if \code{TRUE}, shows correlation arrows between
-facets of different tests, according to xarrows.}
 
 \item{font}{character; text font, use extrafonts to access additional fonts;
 defaults to "sans", which is "Helvetica".}
@@ -240,18 +236,17 @@ nested_chart(self_confidence, subradius = .6)
 
 # adding xarrows, in this example for all cases where the correlation between
 # facets exceeds the correlation between their respective tests.
-sc_arrows <- data.frame(test1 = rep(NA, 3),
+x <- data.frame(test1 = rep(NA, 3),
                         facet1 = NA,
                         test2 = NA,
                         facet2 = NA,
                         value = NA)
-sc_arrows[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
-sc_arrows[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
-sc_arrows[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
+x[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
+x[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
+x[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
 nested_chart(self_confidence,
              subradius = .6,
-             xarrows = sc_arrows,
-             show_xarrows = TRUE)
+             xarrows = x)
 
 # rotating the nested facet charts one by one
 nested_chart(self_confidence,
