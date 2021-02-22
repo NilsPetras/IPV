@@ -19,6 +19,7 @@
 * Removed an erroneous message claiming that the axis tick was set automatically when it was set manually.
 * The axis tick mark (gray dotted circle) now disappears "behind" circles of facet charts and nested charts, instead of cutting through them.
 * the axis tick label (number) now more reliably appears close to the axis tick mark in facet charts and nested charts.
+* removed the argument `show_xarrows` in `nested_chart`, which only existed for technical reasons.
 
 # IPV 0.1.0
 Release
