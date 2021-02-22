@@ -49,7 +49,6 @@ rename <- function(data, before, after) {
 #' @return the same data with renamed values / variables
 rename_simple <- function(data, before, after, regex = FALSE) {
 
-  lev <- sapply(data$cds[1:3], levels)
   data$cds[ ,1:3] <- sapply(data$cds[1:3], as.character)
 
   for (i in seq_along(before)) {
@@ -75,11 +74,9 @@ rename_simple <- function(data, before, after, regex = FALSE) {
 
   }
 
-  data$cds[ ,1:3] <- sapply(data$cds[1:3], as.factor)
   for (i in 1:3) {
-    levels(data$cds[ ,i]) <- lev[i]
+    data$cds[ ,i] <- as.factor(data$cds[ ,i])
   }
-  levels(data$cds[ ,"factor"]) <- data$cds[1, "factor"]
 
   return(data)
 }
