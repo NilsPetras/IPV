@@ -48,7 +48,8 @@ item_overview <- function(
 
   nested <- !is.null(data$global)
   if (is.null(color)) {
-    color <- c("#006666", "#33CCFF", "#66FF33")
+    if (nested) {color <- c("#006666", "#33CCFF", "#66FF33")}
+    else {color <- c("#33CCFF", "#66FF33")}
     # color <- gplots::col2hex(c("seagreen", "orchid4", "dodgerblue"))
   }
 
@@ -311,7 +312,8 @@ item_overview <- function(
                     width = 2 * width, # * size,
                     height = 2 * (sum(nrows) + length(nrows) - 1), # * size,
                     units = "in",
-                    dpi = dpi)
+                    dpi = dpi,
+                    limitsize = FALSE)
   }
 
 
@@ -323,7 +325,8 @@ item_overview <- function(
                     width = 2 * width, # * size,
                     height = 2 * (sum(nrows) + length(nrows) - 1), # * size,
                     units = "in",
-                    dpi = dpi)
+                    dpi = dpi,
+                    limitsize = FALSE)
   }
 
 
@@ -335,7 +338,8 @@ item_overview <- function(
                     width = 2 * width, # * size,
                     height = 2 * (sum(nrows) + length(nrows) - 1), # * size,
                     units = "in",
-                    dpi = dpi)
+                    dpi = dpi,
+                    limitsize = FALSE)
   }
 
 
