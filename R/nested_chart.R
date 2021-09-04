@@ -4,6 +4,8 @@
 #'
 #'@param data SEM estimates in the appropriate format, given by the input
 #'  functions.
+#'@param cd_method character; method to summarize center distances, either
+#'  "mean" or "aggregate", see details; defaults to "aggregate".
 #'@param test_order character; vector of test names in desired order
 #'  (counter-clockwise); defaults to NULL, in which case the order is based on
 #'  the correlation matrix columns in 'data'.
@@ -92,7 +94,15 @@
 #'@param size_xarrow_labels integer; font size of the correlations indicated by
 #'  extra arrows relative to default.
 #'
-#'@details To get tidy results, it is often required to use \code{rotate_} and
+#'@details To summarize center distances (\code{cd_method}), the "mean" method
+#'  computes the average center distance (compute cds first, summarize across
+#'  items second), while the "aggregate" method computes a center distance
+#'  based on the sum of the squared loadings (summarize across items first,
+#'  compute cds second). "Aggregate" (default) is recommended, because it is
+#'  more meaningful in cases with heterogeneous factor loadings, while "mean"
+#'  is the originally proposed method.
+#'
+#'  To get tidy results, it is often required to use \code{rotate_} and
 #'  \code{subrotate_} for better alignment.
 #'
 #'  If you set \code{subrotate_} to a single value, all nested facet charts will
@@ -163,6 +173,7 @@
 #'@export
 nested_chart <- function(
   data,
+  cd_method = "aggregate",
   test_order = NULL,
   facet_order = NULL,
   xarrows = NULL,
@@ -212,6 +223,7 @@ nested_chart <- function(
 
   coord <- coord_nested(
     data = data,
+    cd_method = cd_method,
     test_order = test_order,
     facet_order = facet_order,
     subradius = subradius,
@@ -276,6 +288,8 @@ nested_chart <- function(
 #'
 #'@param data SEM estimates in the appropriate format, given by the input
 #'  functions.
+#'@param cd_method character; method to summarize center distances, either
+#'  "mean" or "aggregate", see details; defaults to "aggregate".
 #'@param test_order character; vector of test names in desired order
 #'  (counter-clockwise); defaults to NULL, in which case the order is based on
 #'  the correlation matrix columns in 'data'.
@@ -336,6 +350,7 @@ nested_chart <- function(
 #'@seealso \code{\link{plot_nested}} \code{\link{nested_chart}}
 coord_nested <- function (
   data,
+  cd_method = "aggregate",
   test_order = NULL,
   facet_order = NULL,
   subradius = 0,
@@ -378,7 +393,8 @@ coord_nested <- function (
   # default subradius needs to scale with the data to avoid messy results
   def_subradius <- function (data) {
     cplx <- length(colnames(data$cors))
-    mcd <- data$cds$mean_cd
+    if (cd_method == "aggregate") mcd <- data$cds$aggregate_cd
+    if (cd_method == "mean") mcd <- data$cds$mean_cd
     subradius <- max(mean(mcd), .25 * max(mcd)) *
       (5 / (3 + cplx)) *
       (.25 + .25 * (min(max(mean(mcd), .25 * max(mcd)) / stats::sd(mcd), 3)))
@@ -397,6 +413,7 @@ coord_nested <- function (
   for (i in 1:length(data$tests)) {
     factorcoords[[i]] <- suppressMessages(coord_facets(
       data$tests[[i]],
+      cd_method = cd_method,
       facet_order = facet_order,
       subradius = subradius,
       rotate_radians = subrotate[i],
@@ -447,8 +464,15 @@ coord_nested <- function (
   }
   circsize <- circsize + correlations * cor_spacing
 
-  g_cds <- data.frame(lapply(split(data$g$cds, data$g$cds$subfactor),
-                             function (x) y <- x$mean_cd[1]))
+  if (cd_method == "aggregate") {
+    g_cds <- data.frame(lapply(split(data$g$cds, data$g$cds$subfactor),
+                               function (x) y <- x$aggregate_cd[1]))
+  }
+  if (cd_method == "mean") {
+    g_cds <- data.frame(lapply(split(data$g$cds, data$g$cds$subfactor),
+                               function (x) y <- x$mean_cd[1]))
+  }
+
   g_cds <- t(g_cds)
   g_cds <- data.frame(g_cds)
 
@@ -464,10 +488,12 @@ coord_nested <- function (
 
   # default axis tick also scales with the data, selected from a set of possible
   # ticks to avoid odd values
+  if (cd_method == "aggregate") tot_cd <- data$g$cds$aggregate_cd
+  if (cd_method == "mean") tot_cd <- data$g$cds$mean_cd
   if (tick == 0){
     tick <- signif(
-      max(.15 * max(data$g$cds$mean_cd),
-          .3 * min(data$g$cds$mean_cd)) *
+      max(.15 * max(tot_cd),
+          .3 * min(tot_cd)) *
         rs ^ .25,
       1)
     if (rs < 3 * (cplx + 3) / 200){

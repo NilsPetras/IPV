@@ -207,7 +207,11 @@ input_excel_factor <- function (file) {
 
   mean_cds <- lapply(split(cds, cds$subfactor),
                      function (x) x$mean_cd <- mean(x$cd))
+  aggregate_cds <- lapply(split(sheet1, sheet1$subfactor), function(x) {
+    x$aggregate_cd <- max(sum(x$subfactor_loading ^ 2) / sum(x$factor_loading ^ 2) - 1, 0)
+  })
   cds$mean_cd <- as.numeric(mean_cds[cds$subfactor])
+  cds$aggregate_cd <- as.numeric(aggregate_cds[cds$subfactor])
 
 
   ## correlations -------------------

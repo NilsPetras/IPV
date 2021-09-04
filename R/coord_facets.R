@@ -4,6 +4,8 @@
 #'
 #' @param data SEM estimates in the appropriate format, given by the input
 #'   functions.
+#' @param cd_method character; method to summarize center distances, either
+#'   "mean" or "aggregate", see details; defaults to "aggregate".
 #' @param facet_order character; vector of facet names in desired order
 #'   (counter-clockwise); defaults to NULL, in which case the order is based on
 #'   the correlation matrix columns in 'data'.
@@ -32,6 +34,7 @@
 #' @seealso \code{\link{plot_facets}} \code{\link{facet_chart}}
 coord_facets <- function (
   data,
+  cd_method = "aggregate",
   facet_order = NULL,
   subradius = 0,
   tick = 0,
@@ -95,7 +98,8 @@ coord_facets <- function (
   rotate <- rotate_radians + rotate_degrees * pi / 180
   rotate_test_label <- rotate_test_label_radians +
     rotate_test_label_degrees * pi / 180
-  mcd <- data$cds$mean_cd
+  if(cd_method == "aggregate") mcd <- data$cds$aggregate_cd
+  if(cd_method == "mean") mcd <- data$cds$mean_cd
   if (is.null(facet_order)) {
     facet_order <- colnames(data$cors)
   }
@@ -135,9 +139,13 @@ coord_facets <- function (
                           facet_order)
   p_circs$radius[1] <- max(mcd) + 2 * subradius
   p_circs$radius[2:length(p_circs$radius)] <- subradius
-  mean_cds <- tapply(data$cds$cd, data$cds$subfactor, mean)
-  p_circs[facet_order, "rho"] <- mean_cds[facet_order] + subradius
-  rm(mean_cds)
+  if(cd_method == "aggregate"){
+    tot_cds <- tapply(data$cds$aggregate_cd, data$cds$subfactor, mean)}
+  if(cd_method == "mean") {
+    tot_cds <- tapply(data$cds$cd, data$cds$subfactor, mean)}
+
+  p_circs[facet_order, "rho"] <- tot_cds[facet_order] + subradius
+  rm(tot_cds)
   p_circs$phi <- c(0, 2 * pi / cplx * c(1:cplx)) + rotate
   p_circs$phi[p_circs$phi > 2 * pi] <-
     p_circs$phi[p_circs$phi > 2 * pi] - 2 * pi

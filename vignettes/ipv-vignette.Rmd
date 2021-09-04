@@ -136,19 +136,27 @@ It is advisable to inspect the graphics file itself. If you inspect your results
 
 Although some graphical options are automatically optimized based on the data, there are many ways to optimize the charts' appearance (e.g. for print). For example you may use [color](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf) to guide attention, or re-size elements of the chart for readability.
 
-#### 4.1. Variable labels
+#### 4.1 center distance method
+
+The parameter `cd_method = ` allows to switch between aggregation methods for center distances in facet charts and nested charts. There are two options:
+
+`"aggregate"` computes the sum of the squared loadings of all items first and in a second step computes the center distance based on the aggregated values. This is the recommended option and the default. It is more meaningful in cases with heterogeneous factor loadings across items.
+
+`"mean"` first computes the center distance of each item and in a second step computes the mean of these center distances. This is the originally proposed option (Dantlgraber et al., 2019). It can be intuitively derived from item charts.
+
+#### 4.2. Variable labels
 
 The function `rename()` can be used to change any item, facet, test, or construct name, using a before-after syntax (see documentation).
 
-#### 4.2. Size of chart elements {#size}
+#### 4.3. Size of chart elements {#size}
 
 Most graphical parameters are size parameters for single elements of the chart, all named `size_... = `,  `width_... = `, or `length_... = `. Those are pretty straightforward: linear scaling parameters defaulting to 1. That means, .5 will half the size and 2 will double it. For all chart types, there is also a global `size = ` parameter, scaling all elements of the chart at once. Use this parameter first, before you fine tune single elements.
 
-#### 4.3 Output file properties
+#### 4.4 Output file properties
 
 The parameters `file_width = ` and `file_length = ` determine, how large the .pdf file will be, measured in inches (1 in = 2.54 cm). The size of .png or .jpeg files in pixels is determined by multiplying the size in inches with the dots per inch parameter value (`dpi = `).
 
-#### 4.4. Rotation and order
+#### 4.5. Rotation and order
 
 For all chart types, it is possible to rotate the whole chart, using `rotate_radians = ` (use fractions of $2\pi$) or `rotate_degrees = ` (use 0-360). In all charts, the parameter `facet_order = ` enables you to set the (counter-clockwise) order of facets. For example:
 
@@ -158,19 +166,19 @@ item_chart(DSSEI, facet_order = c("Ab", "So", "Ph", "Pb"))
 
 In nested charts, `test_order = ` and `subrotate_degrees = `/`subrotate_radians = ` will function likewise. Several `rotate_... = ` parameters can be used to re-position single elements of the chart relative to the origin.
 
-#### 4.5. Font
+#### 4.6. Font
 
 The font can be changed using the `font = ` parameter. The package [extrafont](https://cran.r-project.org/package=extrafont) allows access to many more fonts. For changes to the font size, see [section 4.2](#size).
 
-#### 4.6. Structural elements
+#### 4.7. Structural elements
 
 To reduce the visibility of structural elements, the `fade_... = ` parameters can be used (0 = "black", 100 = "white").
 
-#### 4.7. Colour
+#### 4.8. Colour
 
 For the use of colours and gray tones, see [this guide](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). All charts functions have at least one colour parameter to increase visual contrast.
 
-#### 4.8. Special options for item charts
+#### 4.9. Special options for item charts
 
 You can use different colors for every second item to increase readability of item charts:
 ```{r, eval=FALSE, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
@@ -191,7 +199,7 @@ mychart2
 ```
 This works simultaneously for all labels. Labels at the top and bottom do not move, labels on the right and left move the most.
 
-#### 4.9. Special options for facet charts
+#### 4.10. Special options for facet charts
 
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
 mychart <- facet_chart(data = DSSEI)
@@ -206,7 +214,7 @@ mychart <- facet_chart(data = DSSEI,
 mychart
 ```
 
-#### 4.10. Special options for nested charts
+#### 4.11. Special options for nested charts
 
 Due to the complexity one should not rely on default values too much:
 

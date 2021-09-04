@@ -4,6 +4,8 @@
 #'
 #' @param data SEM estimates in the appropriate format, given by the input
 #'   functions.
+#' @param cd_method character; method to summarize center distances, either
+#'   "mean" or "aggregate", see details; defaults to "aggregate".
 #' @param facet_order character; vector of facet names in desired order
 #'   (counter-clockwise); defaults to NULL, in which case the order is based on
 #'   the correlation matrix columns in 'data'.
@@ -49,9 +51,17 @@
 #' @param size_tick_label integer; axis tick font size relative to default.
 #' @param size_cor_labels integer; correlation font size relative to default.
 #'
-#' @details Pdf files will be vector based and can be scaled arbitrarily. For
-#'   other formats use \code{file_width}, \code{file_height}, and \code{dpi} to
-#'   avoid later rescaling and loss of quality.
+#' @details To summarize center distances (\code{cd_method}), the "mean" method
+#'   computes the average center distance (compute cds first, summarize across
+#'   items second), while the "aggregate" method computes a center distance
+#'   based on the sum of the squared loadings (summarize across items first,
+#'   compute cds second). "Aggregate" (default) is recommended, because it is
+#'   more meaningful in cases with heterogeneous factor loadings, while "mean"
+#'   is the originally proposed method.
+#'
+#'   Pdf files will be vector based and can be scaled arbitrarily. For other
+#'   formats use \code{file_width}, \code{file_height}, and \code{dpi} to avoid
+#'   later rescaling and loss of quality.
 #'
 #'   Consider adding title and caption in your typesetting software (LaTeX, MS
 #'   Word, ...), not here. The option to add a title is only a quick and dirty
@@ -71,6 +81,7 @@
 #' @export
 facet_chart <- function(
   data,
+  cd_method = "aggregate",
   facet_order = NULL,
   subradius = 0,
   file_name = "none",
@@ -101,6 +112,7 @@ facet_chart <- function(
 
   coord <- coord_facets(
     data = data,
+    cd_method = cd_method,
     facet_order = facet_order,
     subradius = subradius,
     tick = tick,
