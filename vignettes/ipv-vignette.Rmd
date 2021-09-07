@@ -156,7 +156,11 @@ Most graphical parameters are size parameters for single elements of the chart, 
 
 The parameters `file_width = ` and `file_length = ` determine, how large the .pdf file will be, measured in inches (1 in = 2.54 cm). The size of .png or .jpeg files in pixels is determined by multiplying the size in inches with the dots per inch parameter value (`dpi = `).
 
-#### 4.5. Rotation and order
+#### 4.5 Showing sections of the chart ("Screenshots")
+
+In some cases, it may be desirable to cut the chart to the informative area for better readability, or to zoom in on a certain section of the chart. It is possible to create vector-based PDF versions of sections of the chart. The parameters `zoom_x = ` and `zoom_y = ` can be used to crop the chart to a certain area by providing lower and upper limits on both dimensions. The aspect ratio is automatically retained if both parameters are used. This method is superior to a manual screenshot, because it retains maximum graphics quality and is exactly reproducible.
+
+#### 4.6. Rotation and order
 
 For all chart types, it is possible to rotate the whole chart, using `rotate_radians = ` (use fractions of $2\pi$) or `rotate_degrees = ` (use 0-360). In all charts, the parameter `facet_order = ` enables you to set the (counter-clockwise) order of facets. For example:
 
@@ -166,19 +170,19 @@ item_chart(DSSEI, facet_order = c("Ab", "So", "Ph", "Pb"))
 
 In nested charts, `test_order = ` and `subrotate_degrees = `/`subrotate_radians = ` will function likewise. Several `rotate_... = ` parameters can be used to re-position single elements of the chart relative to the origin.
 
-#### 4.6. Font
+#### 4.7. Font
 
-The font can be changed using the `font = ` parameter. The package [extrafont](https://cran.r-project.org/package=extrafont) allows access to many more fonts. For changes to the font size, see [section 4.2](#size).
+The font can be changed using the `font = ` parameter. The package [extrafont](https://cran.r-project.org/package=extrafont) allows access to many more fonts. For changes to the font size, see [section 4.3](#size).
 
-#### 4.7. Structural elements
+#### 4.8. Structural elements
 
 To reduce the visibility of structural elements, the `fade_... = ` parameters can be used (0 = "black", 100 = "white").
 
-#### 4.8. Colour
+#### 4.9. Colour
 
 For the use of colours and gray tones, see [this guide](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). All charts functions have at least one colour parameter to increase visual contrast.
 
-#### 4.9. Special options for item charts
+#### 4.10. Special options for item charts
 
 You can use different colors for every second item to increase readability of item charts:
 ```{r, eval=FALSE, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
@@ -199,7 +203,7 @@ mychart2
 ```
 This works simultaneously for all labels. Labels at the top and bottom do not move, labels on the right and left move the most.
 
-#### 4.10. Special options for facet charts
+#### 4.11. Special options for facet charts
 
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
 mychart <- facet_chart(data = DSSEI)
@@ -214,7 +218,7 @@ mychart <- facet_chart(data = DSSEI,
 mychart
 ```
 
-#### 4.11. Special options for nested charts
+#### 4.12. Special options for nested charts
 
 Due to the complexity one should not rely on default values too much:
 
@@ -322,7 +326,7 @@ self_confidence$global
 \begin{equation}
   cd_i = \frac{\lambda^2_{is}}{\lambda^2_{ig}} -1
 \end{equation}  
-while `mean_cd` is the mean center distance of the items of a facet or test. Furthermore, the matrix of latent correlations between `subfactor`s is given as a second item of the list.
+while `mean_cd` is the mean center distance of the items of a facet or test. `aggregate_cd` is the center distance of a facet or test as a whole (see `cd_method`). Furthermore, the matrix of latent correlations between `subfactor`s is given as a second item of the list.
 
 There is a raw variant (`$est_raw` in the output of `ipv_est`) of this, providing factor loadings instead of center distances.
 

@@ -21,6 +21,10 @@
 #'   counter-clockwise by; use fractions of pi (e.g. pi/2 = 90 degrees).
 #' @param rotate_degrees integer; angle in degrees to rotate the chart
 #'   counter-clockwise by.
+#' @param zoom_x integer; vector with two values, the edges of the zoomed
+#'   section on the x-axis; defaults to NULL.
+#' @param zoom_y integer; vector with two values, the edges of the zoomed
+#'   section on the y-axis; defaults to NULL.
 #' @param file_width integer; file width in inches; defaults to 10.
 #' @param file_height integer; file height in inches; defaults to 10.
 #' @param dpi integer; resolution in dots per inch for "png" and "jpeg" files;
@@ -63,6 +67,13 @@
 #'   formats use \code{file_width}, \code{file_height}, and \code{dpi} to avoid
 #'   later rescaling and loss of quality.
 #'
+#'   Instead of using screenshots to crop the chart, it is highly recommendable
+#'   to use \code{zoom_x} and \code{zoom_y}. This allows for vector-based
+#'   graphics quality when showing sections of the chart. With this cropping
+#'   method, use \code{file_width} to set the overall size of the file output,
+#'   \code{file_height} will automatically adjust to retain the correct aspect
+#'   ratio, if both \code{zoom_x} and \code{zoom_y} are provided.
+#'
 #'   Consider adding title and caption in your typesetting software (LaTeX, MS
 #'   Word, ...), not here. The option to add a title is only a quick and dirty
 #'   shurtcut. It reduces chart size and is inflexible. Adding the title
@@ -91,6 +102,8 @@ facet_chart <- function(
   rotate_degrees = 0,
   file_width = 10,
   file_height = 10,
+  zoom_x = NULL,
+  zoom_y = NULL,
   dpi = 500,
   color = "black",
   fade = 85,
@@ -130,6 +143,8 @@ facet_chart <- function(
     file_name = file_name,
     file_width = file_width,
     file_height = file_height,
+    zoom_x = zoom_x,
+    zoom_y = zoom_y,
     dpi = dpi,
     color = color,
     fade = fade,
@@ -158,7 +173,12 @@ facet_chart <- function(
 #' @param title character; overall chart title; defaults to NULL.
 #' @param size integer; changes the size of most chart objects simultaneously.
 #' @param file_name character; name of the file to save. Supported formats are:
-#'   "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".
+#'   "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to
+#'   "none".
+#' @param zoom_x integer; vector with two values, the edges of the zoomed
+#'   section on the x-axis; defaults to NULL.
+#' @param zoom_y integer; vector with two values, the edges of the zoomed
+#'   section on the y-axis; defaults to NULL.
 #' @param file_width integer; file width in inches; defaults to 10.
 #' @param file_height integer; file height in inches; defaults to 10.
 #' @param dpi integer; resolution in dots per inch for "png" and "jpeg" files;
@@ -191,6 +211,8 @@ plot_facets <- function(
   file_name = "none",
   file_width = 10,
   file_height = 10,
+  zoom_x = NULL,
+  zoom_y = NULL,
   dpi = 500,
   color = "black",
   fade = 85,
@@ -222,6 +244,12 @@ plot_facets <- function(
     0.03 * size * cos(coord$axis_tick$phi) * coord$p_circs[1, "radius"]
   tick_label_y <- coord$axis_tick$y +
     0.03 * size * sin(coord$axis_tick$phi) * coord$p_circs[1, "radius"]
+
+  # aspect ratio correction (to manage zoomed cases)
+  if(!is.null(zoom_x) & !is.null(zoom_y)) {
+    asp <- diff(zoom_y) / diff(zoom_x)
+    file_height <- asp * file_width
+  }
 
 
   # chart ----------------------------------------------------------------------
@@ -347,6 +375,20 @@ plot_facets <- function(
   if (!is.null(title)) {
     myipv <- myipv +
       ggplot2::ggtitle(label = title)
+  }
+
+  # section
+  if (!is.null(c(zoom_x, zoom_y))) {
+    myipv <- myipv +
+      ggplot2::coord_cartesian(xlim = zoom_x, ylim = zoom_y, expand = FALSE)
+    if(!is.null(zoom_x) & !is.null(zoom_y)) {
+      message(paste(
+        "file_height was set to ",
+        signif(asp, 4),
+        " times the file_width, to retain the aspect ratio.",
+        sep = ""))
+    }
+
   }
 
 

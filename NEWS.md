@@ -5,6 +5,7 @@
 * New raw example data (`HEXACO`) from the open psychometrics project (\url{https://openpsychometrics.org/}) (see `?HEXACO`).
 * Create an overview over all (squared) factor loadings in all three models on which a nested chart is based (function `item_overview`).
 * Refined method available to compute center distances for groups of items (parameter `cd_method`). This is now the default method!
+* Show only a section of a chart (parameters `zoom_x` and `zoom_y`)
 * Function for convenient changing of test, facet, or item labels (function `rename`).
 * Rotate the tick label in facet charts and nested charts to avoid overlap (parameter `rotate_tick_label`).
 * Set the limit of the grid in item charts (parameter `grid_limit`).

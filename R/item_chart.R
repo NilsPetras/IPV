@@ -19,6 +19,10 @@
 #'   counter-clockwise by.
 #' @param grid_limit integer; upper limit to which the grid lines should be
 #'   drawn; defaults to 0, in which case an appropriate value is estimated.
+#' @param zoom_x integer; vector with two values, the edges of the zoomed
+#'   section on the x-axis; defaults to NULL.
+#' @param zoom_y integer; vector with two values, the edges of the zoomed
+#'   section on the y-axis; defaults to NULL.
 #' @param file_width integer; file width in inches; defaults to 12.
 #' @param file_height integer; file height in inches; defaults to 10.
 #' @param dpi integer; resolution in dots per inch for "png" and "jpeg" files;
@@ -68,6 +72,13 @@
 #'   formats use \code{file_width}, \code{file_height}, and \code{dpi} to avoid
 #'   later rescaling and loss of quality.
 #'
+#'   Instead of using screenshots to crop the chart, it is highly recommendable
+#'   to use \code{zoom_x} and \code{zoom_y}. This allows for vector-based
+#'   graphics quality when showing sections of the chart. With this cropping
+#'   method, use \code{file_width} to set the overall size of the file output,
+#'   \code{file_height} will automatically adjust to retain the correct aspect
+#'   ratio, if both \code{zoom_x} and \code{zoom_y} are provided.
+#'
 #'   Consider adding title and caption in your typesetting software (LaTeX, MS
 #'   Word, ...), not here. The option to add a title is only a quick and dirty
 #'   shurtcut. It reduces chart size and is inflexible. Adding the title
@@ -96,6 +107,8 @@ item_chart <- function(
   grid_limit = 0,
   file_width = 12,
   file_height = 10,
+  zoom_x = NULL,
+  zoom_y = NULL,
   dpi = 500,
   color = "black",
   color2 = "black",
@@ -138,6 +151,8 @@ item_chart <- function(
     file_name = file_name,
     file_width = file_width,
     file_height = file_height,
+    zoom_x = zoom_x,
+    zoom_y = zoom_y,
     dpi = dpi,
     color = color,
     color2 = color2,
@@ -169,6 +184,10 @@ item_chart <- function(
 #' @param size integer; changes the size of most chart objects simultaneously.
 #' @param file_name character; name of the file to save. Supported formats are:
 #'   "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".
+#' @param zoom_x integer; vector with two values, the edges of the zoomed
+#'   section on the x-axis; defaults to NULL.
+#' @param zoom_y integer; vector with two values, the edges of the zoomed
+#'   section on the y-axis; defaults to NULL.
 #' @param file_width integer; file width in inches; defaults to 12.
 #' @param file_height integer; file height in inches; defaults to 10.
 #' @param dpi integer; resolution in dots per inch for "png" and "jpeg" files;
@@ -205,6 +224,8 @@ plot_items <- function (
   file_name = "none",
   file_width = 12,
   file_height = 10,
+  zoom_x = NULL,
+  zoom_y = NULL,
   dpi = 500,
   color = "black",
   color2 = "black",
@@ -228,6 +249,12 @@ plot_items <- function (
   # some calculations are not possible within aes_string(), so aesthetics are
   # prepared here
   axis_labels <- row.names(coord$c_axes)
+
+  # aspect ratio correction (to manage zoomed cases)
+  if(!is.null(zoom_x) & !is.null(zoom_y)) {
+    asp <- diff(zoom_y) / diff(zoom_x)
+    file_height <- asp * file_width
+  }
 
 
   # chart ----------------------------------------------------------------------
@@ -343,6 +370,20 @@ plot_items <- function (
   if (!is.null(title)) {
     myipv <- myipv +
       ggplot2::ggtitle(label = title)
+  }
+
+  # section
+  if (!is.null(c(zoom_x, zoom_y))) {
+    myipv <- myipv +
+      ggplot2::coord_cartesian(xlim = zoom_x, ylim = zoom_y, expand = FALSE)
+    if(!is.null(zoom_x) & !is.null(zoom_y)) {
+      message(paste(
+        "file_height was set to ",
+        signif(asp, 4),
+        " times the file_width, to retain the aspect ratio.",
+        sep = ""))
+    }
+
   }
 
 
