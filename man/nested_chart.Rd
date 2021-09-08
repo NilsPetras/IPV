@@ -6,6 +6,7 @@
 \usage{
 nested_chart(
   data,
+  cd_method = "aggregate",
   test_order = NULL,
   facet_order = NULL,
   xarrows = NULL,
@@ -20,6 +21,8 @@ nested_chart(
   subrotate_degrees = 0,
   file_width = 10,
   file_height = 10,
+  zoom_x = NULL,
+  zoom_y = NULL,
   dpi = 500,
   color_global = "black",
   color_nested = "black",
@@ -57,6 +60,9 @@ nested_chart(
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input
 functions.}
+
+\item{cd_method}{character; method to summarize center distances, either
+"mean" or "aggregate", see details; defaults to "aggregate".}
 
 \item{test_order}{character; vector of test names in desired order
 (counter-clockwise); defaults to NULL, in which case the order is based on
@@ -101,6 +107,12 @@ rotate the nested facet charts counter-clockwise by.}
 \item{file_width}{integer; file width in inches; defaults to 10.}
 
 \item{file_height}{integer; file height in inches; defaults to 10.}
+
+\item{zoom_x}{integer; vector with two values, the edges of the zoomed
+section on the x-axis; defaults to NULL.}
+
+\item{zoom_y}{integer; vector with two values, the edges of the zoomed
+section on the y-axis; defaults to NULL.}
 
 \item{dpi}{integer; resolution in dots per inch for "png" and "jpeg" files;
 defaults to 500.}
@@ -198,7 +210,15 @@ Object of the class "ggplot".
 Creates a nested chart, showing several tests and their facets.
 }
 \details{
-To get tidy results, it is often required to use \code{rotate_} and
+To summarize center distances (\code{cd_method}), the "mean" method
+ computes the average center distance (compute cds first, summarize across
+ items second), while the "aggregate" method computes a center distance
+ based on the sum of the squared loadings (summarize across items first,
+ compute cds second). "Aggregate" (default) is recommended, because it is
+ more meaningful in cases with heterogeneous factor loadings, while "mean"
+ is the originally proposed method.
+
+ To get tidy results, it is often required to use \code{rotate_} and
  \code{subrotate_} for better alignment.
 
  If you set \code{subrotate_} to a single value, all nested facet charts will
@@ -218,6 +238,13 @@ To get tidy results, it is often required to use \code{rotate_} and
  Pdf files will be vector based and can be scaled arbitrarily. For other
  formats use \code{file_width}, \code{file_height}, and \code{dpi} to avoid
  later rescaling and loss of quality.
+
+ Instead of using screenshots to crop the chart, it is highly recommendable
+ to use \code{zoom_x} and \code{zoom_y}. This allows for vector-based
+ graphics quality when showing sections of the chart. With this cropping
+ method, use \code{file_width} to set the overall size of the file output,
+ \code{file_height} will automatically adjust to retain the correct aspect
+ ratio, if both \code{zoom_x} and \code{zoom_y} are provided.
 
  If \code{facet1} or \code{facet2} is \code{NA} for a given xarrow, the arrow
  will end on the test's circle. Note: this correlation is usually not part of

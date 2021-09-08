@@ -15,6 +15,8 @@ item_chart(
   grid_limit = 0,
   file_width = 12,
   file_height = 10,
+  zoom_x = NULL,
+  zoom_y = NULL,
   dpi = 500,
   color = "black",
   color2 = "black",
@@ -67,6 +69,12 @@ drawn; defaults to 0, in which case an appropriate value is estimated.}
 \item{file_width}{integer; file width in inches; defaults to 12.}
 
 \item{file_height}{integer; file height in inches; defaults to 10.}
+
+\item{zoom_x}{integer; vector with two values, the edges of the zoomed
+section on the x-axis; defaults to NULL.}
+
+\item{zoom_y}{integer; vector with two values, the edges of the zoomed
+section on the y-axis; defaults to NULL.}
 
 \item{dpi}{integer; resolution in dots per inch for "png" and "jpeg" files;
 defaults to 500.}
@@ -139,6 +147,13 @@ When changing the size of objects, consider the \code{size}
   Pdf files will be vector based and can be scaled arbitrarily. For other
   formats use \code{file_width}, \code{file_height}, and \code{dpi} to avoid
   later rescaling and loss of quality.
+
+  Instead of using screenshots to crop the chart, it is highly recommendable
+  to use \code{zoom_x} and \code{zoom_y}. This allows for vector-based
+  graphics quality when showing sections of the chart. With this cropping
+  method, use \code{file_width} to set the overall size of the file output,
+  \code{file_height} will automatically adjust to retain the correct aspect
+  ratio, if both \code{zoom_x} and \code{zoom_y} are provided.
 
   Consider adding title and caption in your typesetting software (LaTeX, MS
   Word, ...), not here. The option to add a title is only a quick and dirty

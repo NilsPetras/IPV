@@ -6,6 +6,7 @@
 \usage{
 coord_nested(
   data,
+  cd_method = "aggregate",
   test_order = NULL,
   facet_order = NULL,
   subradius = 0,
@@ -31,6 +32,9 @@ coord_nested(
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input
 functions.}
+
+\item{cd_method}{character; method to summarize center distances, either
+"mean" or "aggregate", see details; defaults to "aggregate".}
 
 \item{test_order}{character; vector of test names in desired order
 (counter-clockwise); defaults to NULL, in which case the order is based on

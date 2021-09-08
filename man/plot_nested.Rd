@@ -10,6 +10,8 @@ plot_nested(
   file_name = "none",
   file_width = 10,
   file_height = 10,
+  zoom_x = NULL,
+  zoom_y = NULL,
   dpi = 500,
   cor_labels_tests = TRUE,
   cor_labels_facets = TRUE,
@@ -47,6 +49,12 @@ plot_nested(
 \item{file_width}{integer; file width in inches; defaults to 10.}
 
 \item{file_height}{integer; file height in inches; defaults to 10.}
+
+\item{zoom_x}{integer; vector with two values, the edges of the zoomed
+section on the x-axis; defaults to NULL.}
+
+\item{zoom_y}{integer; vector with two values, the edges of the zoomed
+section on the y-axis; defaults to NULL.}
 
 \item{dpi}{integer; resolution in dots per inch for "png" and "jpeg" files;
 defaults to 500.}

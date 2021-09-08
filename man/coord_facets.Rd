@@ -6,6 +6,7 @@
 \usage{
 coord_facets(
   data,
+  cd_method = "aggregate",
   facet_order = NULL,
   subradius = 0,
   tick = 0,
@@ -20,6 +21,9 @@ coord_facets(
 \arguments{
 \item{data}{SEM estimates in the appropriate format, given by the input
 functions.}
+
+\item{cd_method}{character; method to summarize center distances, either
+"mean" or "aggregate", see details; defaults to "aggregate".}
 
 \item{facet_order}{character; vector of facet names in desired order
 (counter-clockwise); defaults to NULL, in which case the order is based on
