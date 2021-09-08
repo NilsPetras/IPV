@@ -1278,7 +1278,7 @@ plot_nested <- function (
         xlim = zoom_x,
         ylim = zoom_y,
         expand = FALSE)
-    if(!is.null(zoom_x) & !is.null(zoom_y)) {
+    if(!is.null(zoom_x) & !is.null(zoom_y) & file_name != "none") {
       message(paste(
         "file_height was set to ",
         signif(asp, 4),

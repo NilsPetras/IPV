@@ -376,7 +376,7 @@ plot_items <- function (
   if (!is.null(c(zoom_x, zoom_y))) {
     myipv <- myipv +
       ggplot2::coord_cartesian(xlim = zoom_x, ylim = zoom_y, expand = FALSE)
-    if(!is.null(zoom_x) & !is.null(zoom_y)) {
+    if(!is.null(zoom_x) & !is.null(zoom_y) & file_name != "none") {
       message(paste(
         "file_height was set to ",
         signif(asp, 4),
