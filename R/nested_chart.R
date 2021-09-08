@@ -1026,9 +1026,9 @@ plot_nested <- function (
   # prepared here
   tick <- coord$g$axis_tick$tick
   tick_label_x <- coord$g$rs * coord$g$axis_tick$x +
-    0.03 * size * cos(coord$g$axis_tick$phi) * coord$g$p_circs[1, "radius"]
+    0.03 * size * size_tick_label * cos(coord$g$axis_tick$phi) * coord$g$p_circs[1, "radius"]
   tick_label_y <- coord$g$rs * coord$g$axis_tick$y +
-    0.03 * size * sin(coord$g$axis_tick$phi) * coord$g$p_circs[1, "radius"]
+    0.03 * size * size_tick_label * sin(coord$g$axis_tick$phi) * coord$g$p_circs[1, "radius"]
 
   tick_label_label <- as.character(formatC(tick, format = "fg"))
 
