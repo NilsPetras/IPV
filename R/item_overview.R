@@ -48,9 +48,8 @@ item_overview <- function(
 
   nested <- !is.null(data$global)
   if (is.null(color)) {
-    if (nested) {color <- c("#006666", "#33CCFF", "#66FF33")}
-    else {color <- c("#33CCFF", "#66FF33")}
-    # color <- gplots::col2hex(c("seagreen", "orchid4", "dodgerblue"))
+    if (nested) {color <- c("#0070c0", "#33ccff", "#d0cece")}
+    else {color <- c("#0070c0", "#33ccff")}
   }
 
 
