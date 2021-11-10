@@ -42,8 +42,8 @@
 #'@param file_height integer; file height in inches; defaults to 10.
 #'@param dpi integer; resolution in dots per inch for "png" and "jpeg" files;
 #'  defaults to 500.
-#'@param color_global global accent color; defaults to "black".
-#'@param color_nested nested accent color; defaults to "black".
+#'@param color_global global accent color; defaults to light blue ("#11C1FF").
+#'@param color_nested nested accent color; defaults to blue ("#007AD6").
 #'@param fade integer; brightness of the gray tones between 0 (black) and 100
 #'  (white) in steps of 1; defaults to 85.
 #'@param cor_spacing integer; if \code{correlations = TRUE}: width of the ring,
@@ -202,8 +202,8 @@ nested_chart <- function(
   zoom_x = NULL,
   zoom_y = NULL,
   dpi = 500,
-  color_global = "black",
-  color_nested = "black",
+  color_global = "#11C1FF",
+  color_nested = "#007AD6",
   fade = 85,
   cor_spacing = 0,
   tick = 0,
@@ -1118,7 +1118,7 @@ plot_nested <- function (
     # global center dot
     ggplot2::geom_point(
       ggplot2::aes(x = 0, y = 0),
-      size = 3 * size * width_axes) +
+      size = 2 * size * width_axes) +
 
     # nested outer axis segments
     ggplot2::geom_segment(
@@ -1131,13 +1131,13 @@ plot_nested <- function (
     ggplot2::geom_point(
       data = coord$g$c_circs[has_facets, ],
       ggplot2::aes_string(x = "x", y = "y"),
-      size = 1.5 * size * width_axes_inner) +
+      size = 1 * size * width_axes_inner) +
 
     # test circles
     ggforce::geom_circle(
       data = coord$g$c_circs[-1, ],
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
-      size = .5 * size * width_circles,
+      size = .6 * size * width_circles,
       color = color_global) +
 
     # nested tick
@@ -1151,7 +1151,7 @@ plot_nested <- function (
     ggforce::geom_circle(
       data = coord$g$nested$circles,
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
-      size = .25 * size * width_circles_inner,
+      size = .3 * size * width_circles_inner,
       color = color_nested,
       fill = "white") +
 
@@ -1159,14 +1159,14 @@ plot_nested <- function (
     ggplot2::geom_segment(
       data = coord$g$c_axes,
       ggplot2::aes_string(x = "x0", y = "y0", xend = "x1", yend = "y1"),
-      size = 2 * size * width_axes,
-      color = color_global) +
+      size = 1.5 * size * width_axes,
+      color = "black") +
 
     # facet circles
     ggforce::geom_circle(
       data = coord$g$nested$circles,
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
-      size = .25 * size * width_circles_inner,
+      size = .3 * size * width_circles_inner,
       color = color_nested) +
 
     # facet labels
@@ -1180,26 +1180,26 @@ plot_nested <- function (
     ggplot2::geom_segment(
       data = coord$g$nested$axes,
       ggplot2::aes_string(x = "x0", y = "y0", xend = "x1", yend = "y1"),
-      size = 1 * size * width_axes_inner,
-      color = color_nested) +
+      size = .75 * size * width_axes_inner,
+      color = "black") +
 
     # construct label
     ggplot2::geom_text(
       data = coord$g$construct_label,
       ggplot2::aes_string(x = "x", y = "y", label = "label"),
       family = font,
-      size = 6 * size * size_construct_label,
+      size = 5 * size * size_construct_label,
       fontface = "bold",
-      color = color_global) +
+      color = "black") +
 
     # test labels
     ggplot2::geom_text(
       data = coord$g$nested$test_label,
       ggplot2::aes_string(x = "x", y = "y", label = "label"),
       family = font,
-      size = 4 * size * size_test_labels,
+      size = 3.5 * size * size_test_labels,
       fontface = "bold",
-      color = color_nested)
+      color = "black")
 
 
   ## optional layers ----------------

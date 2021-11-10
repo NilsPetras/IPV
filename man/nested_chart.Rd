@@ -24,8 +24,8 @@ nested_chart(
   zoom_x = NULL,
   zoom_y = NULL,
   dpi = 500,
-  color_global = "black",
-  color_nested = "black",
+  color_global = "#11C1FF",
+  color_nested = "#007AD6",
   fade = 85,
   cor_spacing = 0,
   tick = 0,
@@ -117,9 +117,9 @@ section on the y-axis; defaults to NULL.}
 \item{dpi}{integer; resolution in dots per inch for "png" and "jpeg" files;
 defaults to 500.}
 
-\item{color_global}{global accent color; defaults to "black".}
+\item{color_global}{global accent color; defaults to light blue ("#11C1FF").}
 
-\item{color_nested}{nested accent color; defaults to "black".}
+\item{color_nested}{nested accent color; defaults to blue ("#007AD6").}
 
 \item{fade}{integer; brightness of the gray tones between 0 (black) and 100
 (white) in steps of 1; defaults to 85.}

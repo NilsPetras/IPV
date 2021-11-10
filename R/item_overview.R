@@ -9,12 +9,11 @@
 #' @param file_name character; name of the file to save. Supported formats are:
 #'   "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to
 #'   "none".
-#' @param pal character; name of color palette to use for bars (fill); defaults
-#'   to "Set1"
 #' @param dpi integer; resolution in dots per inch for "png" and "jpeg" files;
 #'   defaults to 500.
 #' @param color character; vector of hex codes for colors; defaults to the
-#'   colors "seagreen", "orchid4", and "dodgerblue"
+#'   colors "#DAD8D8" (gray), "#11C1FF" (light blue), and "#007AD6" (blue)
+#' @param font character; font of the plot labels; defaults to "mono"
 #'
 #' @return gg / ggplot object; plot grid with one bar plot per item showing
 #'   (squared) factor loadings of that item in all IPV models, arranged by
@@ -38,9 +37,9 @@ item_overview <- function(
   data,
   squared = TRUE,
   file_name = "none",
-  pal = "Set1",
   dpi = 500,
-  color = NULL) {
+  color = NULL,
+  font = "mono") {
 
 
 
@@ -48,8 +47,8 @@ item_overview <- function(
 
   nested <- !is.null(data$global)
   if (is.null(color)) {
-    if (nested) {color <- c("#0070c0", "#33ccff", "#d0cece")}
-    else {color <- c("#0070c0", "#33ccff")}
+    if (nested) {color <- c("#DAD8D8", "#11C1FF", "#007AD6")}
+    else {color <- c("#11C1FF", "#007AD6")}
   }
 
 
@@ -207,7 +206,6 @@ item_overview <- function(
             long[which(long$item == x), ]) +
 
             # initialize
-            # ggplot2::scale_fill_brewer(palette = palette(color)) +
             ggplot2::theme_minimal() +
             ggplot2::ylim(0,1) +
             ggplot2::theme(
@@ -268,7 +266,7 @@ item_overview <- function(
         vjust = 3,
         nrow = 1,
         label_size = 10,
-        label_fontfamily = "mono")
+        label_fontfamily = font)
     }
 
   # plot grid of facet plot grids for each test
@@ -277,7 +275,7 @@ item_overview <- function(
       labels = names(plots[[i]]),
       ncol = 1,
       vjust = -.5,
-      label_fontfamily = "mono")
+      label_fontfamily = font)
   }
 
   if(!is.null(data$global)) {
@@ -289,7 +287,7 @@ item_overview <- function(
       vjust = 5.5 * nrows + 1,
       rel_heights = nrows,
       scale = .8,
-      label_fontfamily = "mono") +
+      label_fontfamily = font) +
       ggplot2::theme(
         plot.margin = ggplot2::margin(l = 1.5, unit = "cm")
       )

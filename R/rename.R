@@ -8,8 +8,6 @@
 #'
 #' @return the same data with renamed values / variables
 #'
-#' @examples
-#'
 #' @export
 rename <- function(data, before, after) {
 

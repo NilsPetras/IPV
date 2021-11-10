@@ -19,7 +19,7 @@ facet_chart(
   zoom_x = NULL,
   zoom_y = NULL,
   dpi = 500,
-  color = "black",
+  color = "#007AD6",
   fade = 85,
   tick = 0,
   rotate_tick_label = 0,
@@ -80,7 +80,7 @@ section on the y-axis; defaults to NULL.}
 \item{dpi}{integer; resolution in dots per inch for "png" and "jpeg" files;
 defaults to 500.}
 
-\item{color}{accent color; defaults to "black".}
+\item{color}{accent color; defaults to blue ("#007AD6").}
 
 \item{fade}{integer; brightness of the gray tones between 0 = "black" and 100
 = "white" in steps of 1; defaults to 85.}

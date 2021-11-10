@@ -29,7 +29,7 @@
 #' @param file_height integer; file height in inches; defaults to 10.
 #' @param dpi integer; resolution in dots per inch for "png" and "jpeg" files;
 #'   defaults to 500.
-#' @param color accent color; defaults to "black".
+#' @param color accent color; defaults to blue ("#007AD6").
 #' @param fade integer; brightness of the gray tones between 0 = "black" and 100
 #'   = "white" in steps of 1; defaults to 85.
 #' @param tick numeric; axis tick position; defaults to 0, in which case an
@@ -105,7 +105,7 @@ facet_chart <- function(
   zoom_x = NULL,
   zoom_y = NULL,
   dpi = 500,
-  color = "black",
+  color = "#007AD6",
   fade = 85,
   tick = 0,
   rotate_tick_label = 0,
@@ -333,7 +333,7 @@ plot_facets <- function(
     ggforce::geom_circle(
       data = coord$c_circs[-1, ],
       ggplot2::aes_string(x0 = "x", y0 = "y", r = "radius"),
-      size = .5 * size * width_circles,
+      size = .6 * size * width_circles,
       color = color) +
 
     # facet labels
@@ -346,8 +346,8 @@ plot_facets <- function(
     ggplot2::geom_segment(
       data = coord$c_axes,
       ggplot2::aes_string(x = "x0", y = "y0", xend = "x1", yend = "y1"),
-      size = 2 * size * width_axes,
-      color = color) +
+      size = 1.5 * size * width_axes,
+      color = "black") +
 
     # test label
     ggplot2::geom_text(
@@ -356,7 +356,7 @@ plot_facets <- function(
       family = font,
       size = 8 * size * size_test_label,
       fontface = "bold",
-      color = color)
+      color = "black")
 
 
   ## optional layers ----------------

@@ -33,7 +33,7 @@ Date: 2021-01-20
 License: GPL-2
 LazyData: true
 Maintainer: Nils Petras <nils.petras@mailbox.org>
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 URL: https://github.com/NilsPetras/IPV
 BugReports: https://github.com/NilsPetras/IPV/issues
 Encoding: UTF-8

@@ -8,9 +8,9 @@ item_overview(
   data,
   squared = TRUE,
   file_name = "none",
-  pal = "Set1",
   dpi = 500,
-  color = NULL
+  color = NULL,
+  font = "mono"
 )
 }
 \arguments{
@@ -23,14 +23,13 @@ functions.}
 "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to
 "none".}
 
-\item{pal}{character; name of color palette to use for bars (fill); defaults
-to "Set1"}
-
 \item{dpi}{integer; resolution in dots per inch for "png" and "jpeg" files;
 defaults to 500.}
 
 \item{color}{character; vector of hex codes for colors; defaults to the
-colors "seagreen", "orchid4", and "dodgerblue"}
+colors "#DAD8D8" (gray), "#11C1FF" (light blue), and "#007AD6" (blue)}
+
+\item{font}{character; font of the plot labels; defaults to "mono"}
 }
 \value{
 gg / ggplot object; plot grid with one bar plot per item showing

@@ -19,6 +19,3 @@ the same data with renamed values / variables
 \description{
 Renames tests, facets, or items in IPV estimates
 }
-\examples{
-
-}
