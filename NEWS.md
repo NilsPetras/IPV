@@ -13,7 +13,7 @@
 * Set the order of tests for nested charts (parameter `test_order`).
 * Add an overall title for all chart types (parameter `title`).
 * Draw an xarrow in a nested chart that end on a test circle (instead of a facet circle) if `facet1`or `facet2` is specified as `NA` for that arrow.
-* Overhaul of the documentation in the Vignette.
+* Overhaul of the documentation in the vignette.
 
 ## Bugfixes
 * Standardized the default order of facets across facet charts and item charts. It is now consistently the order of the correlation matrix columns in `data = `.
