@@ -36,9 +36,11 @@
 #'
 #' @examples
 #' # an IPV that comprises the honesty/humility and the agreeableness factor of
-#' # the HEXACO
-#' res <- ipv_est(HEXACO[ ,c(2:41, 122:161)], "HA")
-#' # estimation with that many items takes some time
+#' # the HEXACO (reduced to first 5 items per facet and first 300 observations
+#' # to reduce runtime)
+#' res <- ipv_est(
+#'   HEXACO[1:300, grep("^H_.*[1-5]$|^A_.*[1-5]$", names(HEXACO))],
+#'   "HA")
 #' nested_chart(res$est)
 ipv_est <- function(
   dat,

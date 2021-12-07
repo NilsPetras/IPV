@@ -29,7 +29,11 @@
 #' # Honesty/Humility and Agreeableness items
 #' # the use of file output is recommended
 #' # to prevent irregular placement of plot labels
-#' res <- ipv_est(HEXACO[ ,c(2:41, 122:161)], "HA")
+#' res <- ipv_est(
+#'   HEXACO[1:300,grep("^H_.*[1-5]$|^A_.*[1-5]$", names(HEXACO))],
+#'   "HA")
+#' # reduced to first 5 items per facet and first 300 observations to reduce
+#' # runtime
 #' item_overview(res$est_raw)
 #'
 #'
