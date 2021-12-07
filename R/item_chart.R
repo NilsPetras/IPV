@@ -183,7 +183,8 @@ item_chart <- function(
 #'   \code{\link{coord_nested}}.
 #' @param size integer; changes the size of most chart objects simultaneously.
 #' @param file_name character; name of the file to save. Supported formats are:
-#'   "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".
+#'   "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to
+#'   "none".
 #' @param zoom_x integer; vector with two values, the edges of the zoomed
 #'   section on the x-axis; defaults to NULL.
 #' @param zoom_y integer; vector with two values, the edges of the zoomed

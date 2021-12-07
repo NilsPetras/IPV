@@ -192,7 +192,8 @@ rename_raw_simple <- function(data, before, after, regex = FALSE) {
 
 #' Rename Xarrow
 #'
-#' @param data IPV estimates for extra arrows (as provided e.g. by \code{ipv_est})
+#' @param data IPV estimates for extra arrows (as provided e.g. by
+#'   \code{ipv_est})
 #' @param before character; a vector of names to replace
 #' @param after character; a vector of replacement names
 #'

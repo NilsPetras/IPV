@@ -36,16 +36,38 @@ Note that the excel files need a very specific structure. Use the
   treated as having no facets.
 }
 \examples{
-# read data for a simple model by ignoring the "global" parameter of input_excel
-single_file <- system.file("extdata", "DSSEI.xlsx", package = "IPV", mustWork = TRUE)
+# read data for a simple model by ignoring the "global" parameter of
+# input_excel
+single_file <- system.file(
+  "extdata",
+  "DSSEI.xlsx",
+  package = "IPV",
+  mustWork = TRUE)
 x <- input_excel(tests = single_file)
 
 # read data for a nested model
-# note that the data needs to be split into several excel files as in the example
-global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
-tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
-             system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
-             system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
+# the estimates need to be split into several excel files as in the example
+global <- system.file(
+  "extdata",
+  "IPV_global.xlsx",
+  package = "IPV",
+  mustWork = TRUE)
+tests <- c(
+  system.file(
+    "extdata",
+    "IPV_DSSEI.xlsx",
+    package = "IPV",
+    mustWork = TRUE),
+  system.file(
+    "extdata",
+    "IPV_SMTQ.xlsx",
+    package = "IPV",
+    mustWork = TRUE),
+  system.file(
+    "extdata",
+    "IPV_RSES.xlsx",
+    package = "IPV",
+    mustWork = TRUE))
 x <- input_excel(global = global, tests = tests)
 
 }

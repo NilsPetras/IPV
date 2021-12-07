@@ -35,8 +35,10 @@
 #' @export
 #'
 #' @examples
-#' # an IPV that comprises the honesty/humility and the agreeableness factor of the HEXACO
-#' res <- ipv_est(HEXACO[ ,c(2:41, 122:161)], "HA") # estimation with that many items takes some time
+#' # an IPV that comprises the honesty/humility and the agreeableness factor of
+#' # the HEXACO
+#' res <- ipv_est(HEXACO[ ,c(2:41, 122:161)], "HA")
+#' # estimation with that many items takes some time
 #' nested_chart(res$est)
 ipv_est <- function(
   dat,
@@ -53,14 +55,14 @@ ipv_est <- function(
   # model estimation
   mods <- write_IPV_syntax(dat, name)
   if (length(mods) == 2) { # xarrows don't exist in simple models
-    include_xarrow = FALSE
+    include_xarrow <-  FALSE
   }
 
   fits <- lapply(mods, function(x) {
     lavaan::cfa(x, dat, estimator = estimator)
   })
 
-  loads <- lapply(fits, loads)
+  loads <- lapply(fits, floads)
   cors <- lapply(fits, cormat)
 
   # data formatting
@@ -95,8 +97,8 @@ ipv_est <- function(
           factor = as.factor(rep(i)),
           subfactor = as.factor(nam[nam$test == i, "facet"]),
           item = as.factor(nam[nam$test == i, "item"]),
-          factor_loading = loads(fits[[2]], i),
-          subfactor_loading = loads(fits[[3]], facets)),
+          factor_loading = floads(fits[[2]], i),
+          subfactor_loading = floads(fits[[3]], facets)),
         cors = cors[[3]][rownames(cors[[3]]) %in% facets,
                          colnames(cors[[3]]) %in% facets])
     }
@@ -165,7 +167,8 @@ write_IPV_syntax <- function(dat, name) {
     temp <- unlist(tapply(nam$facet, nam$test, unique))
     temp <- temp[temp != ""]
     if(any(duplicated(temp))) {
-      stop("The data contain a duplicate facet name across tests, please disambiguate.")
+      stop(
+        "The data contain a duplicate facet name across tests, please disambiguate.")
     }
     rm(temp)
   }
@@ -173,7 +176,8 @@ write_IPV_syntax <- function(dat, name) {
 
   # duplicated item label
   if (any(duplicated(names(dat)))) {
-    stop("The data contain a duplicate indicator variable name, please disambiguate.")
+    stop(
+      "The data contain a duplicate indicator variable name, please disambiguate.")
   }
 
   # construct model (nested case) / test model (simple case)
@@ -324,9 +328,9 @@ cormat <- function (fit) {
 #'   defaults to NULL, in which case all variables are considered
 #'
 #' @return numeric; vector of standardized factor loadings
-loads <- function(fit, vars = NULL) {
+floads <- function(fit, vars = NULL) {
 
-  x <- lavaan::standardizedsolution(fit)
+  x <- lavaan::standardizedSolution(fit)
   if(!is.null(vars)) {
     x <- x[x$lhs %in% vars, ]
   }

@@ -7,7 +7,8 @@
 rename_xarrow(data, before, after)
 }
 \arguments{
-\item{data}{IPV estimates for extra arrows (as provided e.g. by \code{ipv_est})}
+\item{data}{IPV estimates for extra arrows (as provided e.g. by
+\code{ipv_est})}
 
 \item{before}{character; a vector of names to replace}
 

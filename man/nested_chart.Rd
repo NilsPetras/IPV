@@ -263,11 +263,12 @@ nested_chart(self_confidence, subradius = .6)
 
 # adding xarrows, in this example for all cases where the correlation between
 # facets exceeds the correlation between their respective tests.
-x <- data.frame(test1 = rep(NA, 3),
-                        facet1 = NA,
-                        test2 = NA,
-                        facet2 = NA,
-                        value = NA)
+x <- data.frame(
+  test1 = rep(NA, 3),
+  facet1 = NA,
+  test2 = NA,
+  facet2 = NA,
+  value = NA)
 x[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
 x[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
 x[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
@@ -282,10 +283,12 @@ nested_chart(self_confidence,
 
 # test without facets
 
-global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
-tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
-           system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
-           NA)
+global <- system.file(
+  "extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
+tests <- c(
+  system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
+  system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
+  NA)
 x <- input_excel(global = global, tests = tests)
 nested_chart(x)
 

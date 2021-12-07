@@ -83,8 +83,9 @@ input_manual_process <- function(data) {
 
     mydata <- list()
     mydata$global <- input_manual_process_factor(data$global)
-    mydata$tests <- c(lapply(data$tests[!is.na(data$tests)], input_manual_process_factor),
-    data$tests[is.na(data$tests)])
+    mydata$tests <- c(
+      lapply(data$tests[!is.na(data$tests)], input_manual_process_factor),
+      data$tests[is.na(data$tests)])
 
 
   # simple case ----------------------------------------------------------------
@@ -132,7 +133,9 @@ input_manual_process_factor <- function(data) {
   mean_cds <- lapply(split(cds, cds$subfactor),
                      function (x) x$mean_cd <- mean(x$cd))
   aggregate_cds <- lapply(split(data$fls, data$fls$subfactor), function(x) {
-    x$aggregate_cd <- max(sum(x$subfactor_loading ^ 2) / sum(x$factor_loading ^ 2) - 1, 0)
+    x$aggregate_cd <- max(
+      sum(x$subfactor_loading ^ 2) / sum(x$factor_loading ^ 2) - 1,
+      0)
   })
   cds$mean_cd <- as.numeric(mean_cds[cds$subfactor])
   cds$aggregate_cd <- as.numeric(aggregate_cds[cds$subfactor])

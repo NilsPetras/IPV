@@ -69,7 +69,9 @@ item_overview <- function(
     loads$facet_loading <- NA
     loads <- loads[ ,c(1, 2, 6, 3, 4, 5, 7)]
     temp <- lapply(data$tests, '[[', 1)
-    temp[!is.na(temp)] <- lapply(temp[!is.na(temp)], function(x){ # rename items uniquely
+    temp[!is.na(temp)] <- lapply(
+      temp[!is.na(temp)],
+      function(x){ # rename items uniquely
       x$item <- as.character(paste(
         x$factor,
         sep = ".",
@@ -122,9 +124,11 @@ item_overview <- function(
     chunks <- split(
       chunks,
       f = chunks[ ,"test"],
-      drop = T)
-    for (i in 1:length(chunks)) {
-      chunks[[i]] <- split(chunks[[i]], f = droplevels(chunks[[i]][ ,"variable"]))
+      drop = TRUE)
+    for (i in seq_along(chunks)) {
+      chunks[[i]] <- split(
+        chunks[[i]],
+        f = droplevels(chunks[[i]][ ,"variable"]))
       chunks[[i]] <- lapply(chunks[[i]], '[[', 1)
     }
 
@@ -180,10 +184,12 @@ item_overview <- function(
     chunks <- split(
       chunks,
       f = chunks[ ,"test"],
-      drop = T)
+      drop = TRUE)
 
-    for (i in 1:length(chunks)) {
-      chunks[[i]] <- split(chunks[[i]], f = droplevels(chunks[[i]][ ,"variable"]))
+    for (i in seq_along(chunks)) {
+      chunks[[i]] <- split(
+        chunks[[i]],
+        f = droplevels(chunks[[i]][ ,"variable"]))
       chunks[[i]] <- lapply(chunks[[i]], '[[', 1)
     }
   }
@@ -248,10 +254,13 @@ item_overview <- function(
   facets <- chunks
   tests <- chunks
 
-  for (i in 1:length(chunks)) {
-    for (j in 1:length(chunks[[i]])) {
+  for (i in seq_along(chunks)) {
+    for (j in seq_along(chunks[[i]])) {
       if(nested) {
-        labels <- unlist(lapply(strsplit(names(plots[[i]][[j]]), split = "\\."), "[[", 2))
+        labels <- unlist(lapply(
+          strsplit(names(plots[[i]][[j]]), split = "\\."),
+          "[[",
+          2))
       } else {
         labels <- names(plots[[i]][[j]])
       }

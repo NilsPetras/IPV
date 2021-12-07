@@ -179,10 +179,11 @@ coord_items <- function (
 
   ## test label ---------------------
 
-  test_label <- data.frame(phi = mean(p_axes$phi[1] + pi / cplx) + rotate_test_label,
-                      rho = dist_test_label * axe_limit,
-                      label = data$cds$factor[1],
-                      x = NA, y = NA)
+  test_label <- data.frame(
+    phi = mean(p_axes$phi[1] + pi / cplx) + rotate_test_label,
+    rho = dist_test_label * axe_limit,
+    label = data$cds$factor[1],
+    x = NA, y = NA)
   test_label$x <- round(cos(test_label$phi) * test_label$rho, digits = 7)
   test_label$y <- round(sin(test_label$phi) * test_label$rho, digits = 7)
 

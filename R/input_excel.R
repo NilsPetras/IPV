@@ -25,16 +25,38 @@
 #'   \code{\link{nested_chart}}.
 #'
 #' @examples
-#' # read data for a simple model by ignoring the "global" parameter of input_excel
-#' single_file <- system.file("extdata", "DSSEI.xlsx", package = "IPV", mustWork = TRUE)
+#' # read data for a simple model by ignoring the "global" parameter of
+#' # input_excel
+#' single_file <- system.file(
+#'   "extdata",
+#'   "DSSEI.xlsx",
+#'   package = "IPV",
+#'   mustWork = TRUE)
 #' x <- input_excel(tests = single_file)
 #'
 #' # read data for a nested model
-#' # note that the data needs to be split into several excel files as in the example
-#' global <- system.file("extdata", "IPV_global.xlsx", package = "IPV", mustWork = TRUE)
-#' tests <- c(system.file("extdata", "IPV_DSSEI.xlsx", package = "IPV", mustWork = TRUE),
-#'              system.file("extdata", "IPV_SMTQ.xlsx", package = "IPV", mustWork = TRUE),
-#'              system.file("extdata", "IPV_RSES.xlsx", package = "IPV", mustWork = TRUE))
+#' # the estimates need to be split into several excel files as in the example
+#' global <- system.file(
+#'   "extdata",
+#'   "IPV_global.xlsx",
+#'   package = "IPV",
+#'   mustWork = TRUE)
+#' tests <- c(
+#'   system.file(
+#'     "extdata",
+#'     "IPV_DSSEI.xlsx",
+#'     package = "IPV",
+#'     mustWork = TRUE),
+#'   system.file(
+#'     "extdata",
+#'     "IPV_SMTQ.xlsx",
+#'     package = "IPV",
+#'     mustWork = TRUE),
+#'   system.file(
+#'     "extdata",
+#'     "IPV_RSES.xlsx",
+#'     package = "IPV",
+#'     mustWork = TRUE))
 #' x <- input_excel(global = global, tests = tests)
 #'
 #' @export
@@ -124,8 +146,8 @@ input_excel_factor <- function (file) {
   if (is.na(file)) return(NULL)
 
   # excel sheet 1 contains the center distances, 2 contains the correlations
-  sheet1 <- readxl::read_excel(file, sheet = 1, col_names = T)
-  sheet2 <- readxl::read_excel(file, sheet = 2, col_names = T)
+  sheet1 <- readxl::read_excel(file, sheet = 1, col_names = TRUE)
+  sheet2 <- readxl::read_excel(file, sheet = 2, col_names = TRUE)
 
 
   # checking and recalculating -------------------------------------------------
@@ -182,11 +204,13 @@ input_excel_factor <- function (file) {
     c("These subfactors only refer to a single item: ", bad))
 
   # checking for wrong column names
-  if (!isTRUE(all.equal(names(sheet1), c("factor",
-                                         "subfactor",
-                                         "item",
-                                         "factor_loading",
-                                         "subfactor_loading")))
+  if (!isTRUE(all.equal(
+    names(sheet1),
+    c("factor",
+      "subfactor",
+      "item",
+      "factor_loading",
+      "subfactor_loading")))
   ) stop ("Wrong or missing column names")
 
 

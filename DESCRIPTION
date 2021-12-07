@@ -29,7 +29,6 @@ Suggests:
     cowplot,
     gplots
 VignetteBuilder: knitr    
-Date: 2021-01-20
 License: GPL-2
 LazyData: true
 Maintainer: Nils Petras <nils.petras@mailbox.org>

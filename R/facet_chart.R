@@ -241,9 +241,11 @@ plot_facets <- function(
   tick <- signif(sqrt((coord$axis_tick$x ^ 2) + (coord$axis_tick$y ^ 2)), 1)
   tick_label_label <- as.character(formatC(tick, format = "fg"))
   tick_label_x <- coord$axis_tick$x +
-    0.03 * size * size_tick_label * cos(coord$axis_tick$phi) * coord$p_circs[1, "radius"]
+    0.03 * size * size_tick_label *
+    cos(coord$axis_tick$phi) * coord$p_circs[1, "radius"]
   tick_label_y <- coord$axis_tick$y +
-    0.03 * size * size_tick_label * sin(coord$axis_tick$phi) * coord$p_circs[1, "radius"]
+    0.03 * size * size_tick_label *
+    sin(coord$axis_tick$phi) * coord$p_circs[1, "radius"]
 
   # aspect ratio correction (to manage zoomed cases)
   if(!is.null(zoom_x) & !is.null(zoom_y)) {

@@ -56,7 +56,9 @@ the data given to \code{dat} have to conform to the following rules:
   of the test (not only at the level of the facet) See example
 }
 \examples{
-# an IPV that comprises the honesty/humility and the agreeableness factor of the HEXACO
-res <- ipv_est(HEXACO[ ,c(2:41, 122:161)], "HA") # estimation with that many items takes some time
+# an IPV that comprises the honesty/humility and the agreeableness factor of
+# the HEXACO
+res <- ipv_est(HEXACO[ ,c(2:41, 122:161)], "HA")
+# estimation with that many items takes some time
 nested_chart(res$est)
 }

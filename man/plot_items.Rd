@@ -37,7 +37,8 @@ plot_items(
 \item{size}{integer; changes the size of most chart objects simultaneously.}
 
 \item{file_name}{character; name of the file to save. Supported formats are:
-"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to "none".}
+"pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to
+"none".}
 
 \item{file_width}{integer; file width in inches; defaults to 12.}
 
