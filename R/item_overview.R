@@ -20,7 +20,8 @@
 #'   facets and tests
 #'
 #' @details File output produces much more reliable results than display within
-#'   R. Display within R may scatter elements of the chart.
+#'   R. Display within R may scatter elements of the chart and distort the
+#'   overall appearance.
 #'
 #'
 #' @export
@@ -30,11 +31,11 @@
 #' # the use of file output is recommended
 #' # to prevent irregular placement of plot labels
 #' res <- ipv_est(
-#'   HEXACO[1:300,grep("^H_.*[1-3]$|^A_.*[1-3]$", names(HEXACO))],
+#'   HEXACO[1:1000,grep("^H_.*[1-4]$|^A_.*[1-4]$", names(HEXACO))],
 #'   "HA")
-#' # reduced to first 3 items per facet and first 300 observations to reduce
+#' # reduced to first 4 items per facet and first 1000 observations to reduce
 #' # runtime
-#' item_overview(res$est_raw)
+#' item_overview(res$est_raw) # file output is recommended (see details)
 #'
 #'
 item_overview <- function(
