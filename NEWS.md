@@ -2,7 +2,7 @@
 
 ## Added Features
 * Package now works based on raw data with automated model estimation using lavaan (function `ipv_est`). This is now the recommended workflow!
-* New raw example data (`HEXACO`) from the open psychometrics project (\url{https://openpsychometrics.org/}) (see `?HEXACO`).
+* New raw example data (`HEXACO`) from the [open psychometrics project](https://openpsychometrics.org/) (see `?HEXACO`).
 * Create an overview over all (squared) factor loadings in all three models on which a nested chart is based (function `item_overview`).
 * Refined method available to compute center distances for groups of items (parameter `cd_method = "aggregate"`). This is now the default method!
 * Show only a section of a chart (parameters `zoom_x` and `zoom_y`)
@@ -12,7 +12,7 @@
 * Set the order of facets for all charts types (parameter `facet_order`).
 * Set the order of tests for nested charts (parameter `test_order`).
 * Add an overall title for all chart types (parameter `title`).
-* Draw an xarrow in a nested chart that end on a test circle (instead of a facet circle) if `facet1`or `facet2` is specified as `NA` for that arrow.
+* Draw xarrows in a nested chart that end on a test circle (instead of a facet circle) if `facet1`or `facet2` is specified as `NA` for that arrow.
 * Overhaul of the documentation in the vignette.
 
 ## Bugfixes
