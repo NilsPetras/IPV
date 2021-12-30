@@ -6,3 +6,4 @@
 ^README\.Rmd$
 ^CRAN-RELEASE$
 ^qpdf\.R$
+^CRAN-SUBMISSION$
