@@ -2,8 +2,7 @@
 #'
 #'Creates a nested chart, showing several tests and their facets.
 #'
-#'@param data SEM estimates in the appropriate format, given by the input
-#'  functions.
+#'@param data Object of class IPV as created by the function 'ipv_est'
 #'@param cd_method character; method to summarize center distances, either
 #'  "mean" or "aggregate", see details; defaults to "aggregate".
 #'@param test_order character; vector of test names in desired order
@@ -12,8 +11,7 @@
 #'@param facet_order character; vector of all facet names of all tests in
 #'  desired order (counter-clockwise); defaults to NULL, in which case the order
 #'  is based on the correlation matrix columns in 'data'.
-#'@param xarrows data frame containing information about additional correlation
-#'  arrows between facets of different tests; see examples.
+#'@param xarrows logical; should arrows between tests be displayed?; defaults to TRUE.
 #'@param subradius integer; same unit as center distances; radius of the facet
 #'  circles; defaults to 0, in which case an appropriate value is estimated.
 #'@param file_name character; name of the file to save. Supported formats are:
@@ -151,27 +149,11 @@
 #'
 #' @examples
 #' # as simple as that
-#' nested_chart(self_confidence, subradius = .6)
-#'
-#' # adding xarrows, in this example for all cases where the correlation between
-#' # facets exceeds the correlation between their respective tests.
-#' x <- data.frame(
-#'   test1 = rep(NA, 3),
-#'   facet1 = NA,
-#'   test2 = NA,
-#'   facet2 = NA,
-#'   value = NA)
-#' x[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
-#' x[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
-#' x[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
-#' nested_chart(self_confidence,
-#'              subradius = .6,
-#'              xarrows = x)
+#' nested_chart(self_confidence)
 #'
 #' # rotating the nested facet charts one by one
 #' nested_chart(self_confidence,
-#'              subradius = .6,
-#'              subrotate_radians = c(0, pi / 2, 0))
+#'              subrotate_radians = c(0, pi/2, 0))
 #'
 #' # test without facets
 #'
@@ -190,7 +172,7 @@ nested_chart <- function(
   cd_method = "aggregate",
   test_order = NULL,
   facet_order = NULL,
-  xarrows = NULL,
+  xarrows = TRUE,
   subradius = 0,
   file_name = "none",
   size = 1,
@@ -236,6 +218,10 @@ nested_chart <- function(
   width_xarrows = 1,
   size_xarrow_heads = 1,
   size_xarrow_labels = 1){
+
+  if(length(names(data$est$tests)) == 1) {
+    stop("The model is simple, not nested. Try facet_chart or item_chart.")
+  }
 
   coord <- coord_nested(
     data = data,
@@ -304,8 +290,7 @@ nested_chart <- function(
 #'
 #'Generates the coordinates for a nested chart and all other charts.
 #'
-#'@param data SEM estimates in the appropriate format, given by the input
-#'  functions.
+#'@param data Object of class IPV as created by the function 'ipv_est'
 #'@param cd_method character; method to summarize center distances, either
 #'  "mean" or "aggregate", see details; defaults to "aggregate".
 #'@param test_order character; vector of test names in desired order
@@ -358,8 +343,7 @@ nested_chart <- function(
 #'@param relative_scaling integer; relative size of the global chart scale
 #'  compared to the nested facet chart scales; defaults to 0, in which case an
 #'  appropriate value is estimated.
-#'@param xarrows data frame containing information about additional correlation
-#'  arrows between facets of different tests; see examples.
+#'@param xarrows logical; should arrows between tests be displayed?; defaults to TRUE.
 #'
 #'@details Use \code{\link{nested_chart}} to create nested charts.
 #'
@@ -388,12 +372,13 @@ coord_nested <- function (
   correlations = TRUE,
   cor_spacing = 0,
   relative_scaling = 0,
-  xarrows = NULL) {
+  xarrows = TRUE) {
 
 
   # helper variables -----------------------------------------------------------
 
-  cplx <- length(colnames(data$g$cors))
+
+  cplx <- length(colnames(data$est$g$cors))
 
   # a vector of subrotation values can be given,
   # to allign the nested facet charts
@@ -409,17 +394,17 @@ coord_nested <- function (
   }
 
   # default subradius needs to scale with the data to avoid messy results
-  def_subradius <- function (data) {
-    cplx <- length(colnames(data$cors))
-    if (cd_method == "aggregate") mcd <- data$cds$aggregate_cd
-    if (cd_method == "mean") mcd <- data$cds$mean_cd
+  def_subradius <- function (x) {
+    cplx <- length(colnames(x$cors))
+    if (cd_method == "aggregate") mcd <- x$cds$aggregate_cd
+    if (cd_method == "mean") mcd <- x$cds$mean_cd
     subradius <- max(mean(mcd), .25 * max(mcd)) *
       (5 / (3 + cplx)) *
       (.25 + .25 * (min(max(mean(mcd), .25 * max(mcd)) / stats::sd(mcd), 3)))
   }
   if (subradius == 0) {
     subradius <- min(unlist(lapply(
-      data$tests[!is.na(data$tests)],
+      data$est$tests[!is.na(data$est$tests)],
       def_subradius)))
     message(paste("Facet circle radius set to ",
                   signif(subradius, digits = 3),
@@ -430,9 +415,9 @@ coord_nested <- function (
   # nested facet charts --------------------------------------------------------
 
   factorcoords <- list()
-  for (i in seq_along(data$tests)) {
+  for (i in seq_along(data$est$tests)) {
     factorcoords[[i]] <- suppressMessages(coord_facets(
-      data$tests[[i]],
+      data$est$tests[[i]],
       cd_method = cd_method,
       facet_order = facet_order,
       subradius = subradius,
@@ -440,29 +425,29 @@ coord_nested <- function (
       rotate_test_label_radians = rotate_test_labels[i],
       dist_test_label = dist_test_labels[i]))
     if (is.na(factorcoords[[i]][["p_axes"]][1,"rho0"])) {
-      x <- names(data$tests)[i]
+      x <- names(data$est$tests)[i]
       row.names(factorcoords[[i]][["p_circs"]]) <- x
       row.names(factorcoords[[i]][["c_circs"]]) <- x
       factorcoords[[i]][["test_label"]]["label"] <- x
     }
   }
-  names(factorcoords) <- names(data$tests)
+  names(factorcoords) <- names(data$est$tests)
 
   # # this could be used for bulk processing of item charts in a future build
   # if (prepare_item_charts == TRUE) {
   #   itemcoords <- list()
-  #   for (i in 1:length(data$tests)) {
-  #     itemcoords[[i]] <- coord_items(data$tests[[i]],
+  #   for (i in 1:length(data$est$tests)) {
+  #     itemcoords[[i]] <- coord_items(data$est$tests[[i]],
   #                                    rotate_radians = subrotate[i])
   #   }
-  #   names(itemcoords) <- names(data$tests)
+  #   names(itemcoords) <- names(data$est$tests)
   # }
 
 
   # helper variables -----------------------------------------------------------
 
   if (is.null(test_order)) {
-    test_order <- colnames(data$g$cors)
+    test_order <- colnames(data$est$g$cors)
   }
   nam <- test_order
   rotate <- rotate_radians + rotate_degrees * pi / 180
@@ -485,11 +470,11 @@ coord_nested <- function (
   circsize <- circsize + correlations * cor_spacing
 
   if (cd_method == "aggregate") {
-    g_cds <- data.frame(lapply(split(data$g$cds, data$g$cds$subfactor),
+    g_cds <- data.frame(lapply(split(data$est$g$cds, data$est$g$cds$subfactor),
                                function (x) y <- x$aggregate_cd[1]))
   }
   if (cd_method == "mean") {
-    g_cds <- data.frame(lapply(split(data$g$cds, data$g$cds$subfactor),
+    g_cds <- data.frame(lapply(split(data$est$g$cds, data$est$g$cds$subfactor),
                                function (x) y <- x$mean_cd[1]))
   }
 
@@ -508,8 +493,8 @@ coord_nested <- function (
 
   # default axis tick also scales with the data, selected from a set of possible
   # ticks to avoid odd values
-  if (cd_method == "aggregate") tot_cd <- data$g$cds$aggregate_cd
-  if (cd_method == "mean") tot_cd <- data$g$cds$mean_cd
+  if (cd_method == "aggregate") tot_cd <- data$est$g$cds$aggregate_cd
+  if (cd_method == "mean") tot_cd <- data$est$g$cds$mean_cd
   if (tick == 0){
     tick <- signif(
       max(.15 * max(tot_cd),
@@ -546,7 +531,7 @@ coord_nested <- function (
   p_circs <- data.frame(phi = rep(NA, cplx + 1),
                         rho = 0,
                         radius = NA)
-  row.names(p_circs) <- c(levels(data$g$cds$factor), nam)
+  row.names(p_circs) <- c(levels(data$est$g$cds$factor), nam)
   p_circs[names(circsize), "radius"] <- circsize
   p_circs$radius[1] <- max(g_cds[nam, ] * rs + circsize[nam] * 2)
   p_circs[nam, "rho"] <- c(g_cds[nam, ] * rs + circsize[nam])
@@ -570,7 +555,7 @@ coord_nested <- function (
       phi = rep(NA, cplx + 1),
       rho = NA,
       radius = NA)
-    row.names(p_ring) <- c(levels(data$g$cds$factor), nam)
+    row.names(p_ring) <- c(levels(data$est$g$cds$factor), nam)
     p_ring[names(circsize), "radius"] <- circsize - correlations * cor_spacing
     p_ring[nam, "rho"] <- c(g_cds[nam, ] * rs + circsize[nam])
     p_ring$phi <- c(0, 2 * pi / cplx * c(1:cplx)) + rotate
@@ -668,7 +653,7 @@ coord_nested <- function (
   cors$V2 <- unlist(lapply(nam, rep, times = cplx - 1))
 
   for (k in 1:n) {
-    cors$label[k] <- data$g$cors[cors$V1[k], cors$V2[k]]
+    cors$label[k] <- data$est$g$cors[cors$V1[k], cors$V2[k]]
   }
   cors$label <- as.character(cors$label)
   # exclude leading 0's for aesthetic reasons
@@ -776,8 +761,8 @@ coord_nested <- function (
 
   ## arrows -------------------------
 
-  if (!is.null(xarrows)) {
-    n <- dim(xarrows)[1]
+  if (xarrows & !all(is.na(data$xarrow))) {
+    n <- dim(data$xarrow)[1]
     arrows <- data.frame(x1 = rep(NA, n),
                          x2 = NA,
                          y1 = NA,
@@ -785,34 +770,34 @@ coord_nested <- function (
                          label = NA,
                          xlabel = NA,
                          ylabel = NA)
-    arrows$label <- xarrows$value
+    arrows$label <- data$xarrow$value
     # facet circles are named as 'test.facet' within nested$circles
     # arrow ends on facets
-    arrows$x1 <- nested$circles[paste(xarrows$test1,
-                                      xarrows$facet1,
+    arrows$x1 <- nested$circles[paste(data$xarrow$test1,
+                                      data$xarrow$facet1,
                                       sep = "."),
                                 "x"]
-    arrows$y1 <- nested$circles[paste(xarrows$test1,
-                                      xarrows$facet1,
+    arrows$y1 <- nested$circles[paste(data$xarrow$test1,
+                                      data$xarrow$facet1,
                                       sep = "."),
                                 "y"]
-    arrows$x2 <- nested$circles[paste(xarrows$test2,
-                                      xarrows$facet2,
+    arrows$x2 <- nested$circles[paste(data$xarrow$test2,
+                                      data$xarrow$facet2,
                                       sep = "."),
                                 "x"]
-    arrows$y2 <- nested$circles[paste(xarrows$test2,
-                                      xarrows$facet2,
+    arrows$y2 <- nested$circles[paste(data$xarrow$test2,
+                                      data$xarrow$facet2,
                                       sep = "."),
                                 "y"]
 
     # arrow ends on tests
-    arrows[is.na(xarrows$facet1), c("x1", "y1")] <-
+    arrows[is.na(data$xarrow$facet1), c("x1", "y1")] <-
       c_circs[
-        xarrows[is.na(xarrows$facet1),"test1"],
+        data$xarrow[is.na(data$xarrow$facet1),"test1"],
         c("x", "y")]
-    arrows[is.na(xarrows$facet2), c("x2", "y2")] <-
+    arrows[is.na(data$xarrow$facet2), c("x2", "y2")] <-
       c_circs[
-        xarrows[is.na(xarrows$facet2),"test2"],
+        data$xarrow[is.na(data$xarrow$facet2),"test2"],
         c("x", "y")]
 
 
@@ -827,10 +812,10 @@ coord_nested <- function (
     xdist_big <- NULL
     ydist_big <- NULL
     for (i in 1:n) {
-      xdist_big[i] <- c_circs[xarrows$test2[i], "x"] -
-        c_circs[xarrows$test1[i], "x"]
-      ydist_big[i] <- c_circs[xarrows$test2[i], "y"] -
-        c_circs[xarrows$test1[i], "y"]
+      xdist_big[i] <- c_circs[data$xarrow$test2[i], "x"] -
+        c_circs[data$xarrow$test1[i], "x"]
+      ydist_big[i] <- c_circs[data$xarrow$test2[i], "y"] -
+        c_circs[data$xarrow$test1[i], "y"]
     }
     xdist_small <- arrows$x2 - arrows$x1
     ydist_small <- arrows$y2 - arrows$y1
@@ -841,16 +826,16 @@ coord_nested <- function (
     # points halfway between the big circles
     halfwaypoint <- data.frame(x = rep(NA, n), y = NA)
     for (i in 1:n) {
-      halfwaypoint$x[i] <- (c_circs[xarrows$test1[i], "x"] +
-                              c_circs[xarrows$test2[i], "x"]) / 2 +
+      halfwaypoint$x[i] <- (c_circs[data$xarrow$test1[i], "x"] +
+                              c_circs[data$xarrow$test2[i], "x"]) / 2 +
         xdist_big[i] / dist_big[i] /
-        2 * (c_circs[xarrows$test1[i], "radius"] -
-               c_circs[xarrows$test2[i], "radius"])
-      halfwaypoint$y[i] <- (c_circs[xarrows$test1[i], "y"] +
-                              c_circs[xarrows$test2[i], "y"]) / 2 +
+        2 * (c_circs[data$xarrow$test1[i], "radius"] -
+               c_circs[data$xarrow$test2[i], "radius"])
+      halfwaypoint$y[i] <- (c_circs[data$xarrow$test1[i], "y"] +
+                              c_circs[data$xarrow$test2[i], "y"]) / 2 +
         ydist_big[i] / dist_big[i] /
-        2 * (c_circs[xarrows$test1[i], "radius"] -
-               c_circs[xarrows$test2[i], "radius"])
+        2 * (c_circs[data$xarrow$test1[i], "radius"] -
+               c_circs[data$xarrow$test2[i], "radius"])
     }
     # placing the labels alongside the arrow on their final positions
     d <- NULL
@@ -875,11 +860,11 @@ coord_nested <- function (
     arrows$radius2 <- subradius
 
     # overwrite in case of arrows ending in test (instead of facet)
-    arrows[is.na(xarrows$facet1), "radius1"] <-
-      c_circs[xarrows[is.na(xarrows$facet1), "test1"],
+    arrows[is.na(data$xarrow$facet1), "radius1"] <-
+      c_circs[data$xarrow[is.na(data$xarrow$facet1), "test1"],
               "radius"]
-    arrows[is.na(xarrows$facet2), "radius2"] <-
-      c_circs[xarrows[is.na(xarrows$facet2), "test2"],
+    arrows[is.na(data$xarrow$facet2), "radius2"] <-
+      c_circs[data$xarrow[is.na(data$xarrow$facet2), "test2"],
               "radius"]
 
     arrows$x1new <- arrows$x1 + arrows$radius1 / dist_small * xdist_small

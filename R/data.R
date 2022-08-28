@@ -1,11 +1,87 @@
-#' Domain Specific Self-Esteem Inventory
+#'Self-Confidence
 #'
-#' A set of center distances and latent correlations for items and facets of the
-#' DSSEI, completed by 2272 german speaking participants using the german
-#' version of the questionnaire. SEM estimation performed on the DSSEI data
-#' alone (differing from the estimation in "self_confidence").
+#'A set of center distances and latent correlations for items and facets of the
+#'Domain Specific Self-Esteem Inventory (DSSEI), Sports Mental Toughness
+#'Questionnaire (SMTQ), and Rosenberg Self-Esteem Scale (RSES) completed by 2272
+#'german speaking participants using the german versions of the questionnaires.
+#'SEM estimation performed for all tests as one item pool.
 #'
-#' @section Items:
+#'
+#'@section Items:
+#'
+#'  _____ RSES _____
+#'
+#'  __ Positive Self-Esteem (Ps) __
+#'
+#'  1. On the whole, I am satisfied with myself.
+#'
+#'  3. I feel that I have a number of good qualities.
+#'
+#'  4. I am able to do things as well as most other people.
+#'
+#'  7.I feel that I'm a person of worth.
+#'
+#'  10. I take a positive attitude toward myself.
+#'
+#'  __ Lack of Negative Self-Esteem (Ns) __
+#'
+#'  2. At times I think I am no good at all.
+#'
+#'  5. I feel I do not have much to be proud of.
+#'
+#'  6. I certainly feel useless at times.
+#'
+#'  8. I wish I could have more respect for myself.
+#'
+#'  9. All in all, I am inclined to think that I am a failure.
+#'
+#'  (Rosenberg, M. (1965). Rosenberg self-esteem scale (RSE). Acceptance and
+#'  commitment therapy. Measures package, 61, 52.)
+#'
+#'  _____ SMTQ _____
+#'
+#'
+#'   __ Confidence (Cf) __
+#'
+#'   13. I interpret potential threats as positive opportunities
+#'
+#'   5.  I have an unshakeable confidence in my ability
+#'
+#'   11. I have qualities that set me apart from other competitors
+#'
+#'   6.  I have what it takes to perform well while under pressure
+#'
+#'   14. Under pressure, I am able to make decisions with confidence and
+#'   commitment
+#'
+#'   1.  I can regain my composure if I have momentarily lost it
+#'
+#'   __ Constancy (Cs) __
+#'
+#'   3.  I am committed to completing the tasks I have to do
+#'
+#'   12. I take responsibility for setting myself challenging targets
+#'
+#'   8.  I give up in difficult situations
+#'
+#'   10. I get distracted easily and lose my concentration
+#'
+#'   __ Control (Ct) __
+#'
+#'   2.  I worry about performing poorly
+#'
+#'   4.  I am overcome by self-doubt
+#'
+#'   9.  I get anxious by events I did not expect or cannot control
+#'
+#'   7.  I get angry and frustrated when things do not go my way
+#'
+#'   (Sheard, M., Golby, J., & Van Wersch, A. (2009). Progress toward construct
+#'   validation of the Sports Mental Toughness Questionnaire (SMTQ). European
+#'   Journal of Psychological Assessment, 25(3), 186-193.)
+#'
+#'  _____ DSSEI _____
+#'
 #'
 #'   __ Social Competence (So) __
 #'
@@ -62,133 +138,21 @@
 #'   Covariance structure analysis of latent variable models of self-conception.
 #'   Journal of Consulting and Clinical Psychology, 59(1), 67.)
 #'
-#' @source Dantlgraber, M., Stieger, S., & Reips, U. D. (2019). Introducing Item
-#'   Pool Visualization: A method for investigation of concepts in self-reports
-#'   and psychometric tests. Methodological Innovations, 12(3),
-#'   2059799119884283.
-#'
-"DSSEI"
-
-#'Self-Confidence
-#'
-#'A set of center distances and latent correlations for items and facets of the
-#'Domain Specific Self-Esteem Inventory (DSSEI), Sports Mental Toughness
-#'Questionnaire (SMTQ), and Rosenberg Self-Esteem Scale (RSES) completed by 2272
-#'german speaking participants using the german versions of the questionnaires.
-#'SEM estimation performed for all tests as one item pool.
-#'
-#'
-#'@section Items:
-#'
-#'  _____ RSES _____
-#'
-#'  __ Positive Self-Esteem (Ps) __
-#'
-#'  1. On the whole, I am satisfied with myself.
-#'
-#'  3. I feel that I have a number of good qualities.
-#'
-#'  4. I am able to do things as well as most other people.
-#'
-#'  7.I feel that I'm a person of worth.
-#'
-#'  10. I take a positive attitude toward myself.
-#'
-#'  __ Lack of Negative Self-Esteem (Ns) __
-#'
-#'  2. At times I think I am no good at all.
-#'
-#'  5. I feel I do not have much to be proud of.
-#'
-#'  6. I certainly feel useless at times.
-#'
-#'  8. I wish I could have more respect for myself.
-#'
-#'  9. All in all, I am inclined to think that I am a failure.
-#'
-#'  (Rosenberg, M. (1965). Rosenberg self-esteem scale (RSE). Acceptance and
-#'  commitment therapy. Measures package, 61, 52.)
-#'
-#'  _____ SMTQ _____
-#'
-#'  \code{\link{SMTQ}}
-#'
-#'  _____ DSSEI _____
-#'
-#'  \code{\link{DSSEI}}
-#'
 #'@source Dantlgraber, M., Stieger, S., & Reips, U. D. (2019). Introducing Item
 #'  Pool Visualization: A method for investigation of concepts in self-reports
 #'  and psychometric tests. Methodological Innovations, 12(3), 2059799119884283.
 #'
 "self_confidence"
 
-
-#' Sports Mental Toughness Questionnaire
-#'
-#' A set of center distances and latent correlations for items and facets of the
-#' SMTQ, completed by 2272 german speaking participants using the german version
-#' of the questionnaire. SEM estimation performed together with DSSEI and RSES
-#' (same as in "self_confidence").
-#'
-#' @section Items:
-#'
-#'   __ Confidence (Cf) __
-#'
-#'   13. I interpret potential threats as positive opportunities
-#'
-#'   5.  I have an unshakeable confidence in my ability
-#'
-#'   11. I have qualities that set me apart from other competitors
-#'
-#'   6.  I have what it takes to perform well while under pressure
-#'
-#'   14. Under pressure, I am able to make decisions with confidence and
-#'   commitment
-#'
-#'   1.  I can regain my composure if I have momentarily lost it
-#'
-#'   __ Constancy (Cs) __
-#'
-#'   3.  I am committed to completing the tasks I have to do
-#'
-#'   12. I take responsibility for setting myself challenging targets
-#'
-#'   8.  I give up in difficult situations
-#'
-#'   10. I get distracted easily and lose my concentration
-#'
-#'   __ Control (Ct) __
-#'
-#'   2.  I worry about performing poorly
-#'
-#'   4.  I am overcome by self-doubt
-#'
-#'   9.  I get anxious by events I did not expect or cannot control
-#'
-#'   7.  I get angry and frustrated when things do not go my way
-#'
-#'   (Sheard, M., Golby, J., & Van Wersch, A. (2009). Progress toward construct
-#'   validation of the Sports Mental Toughness Questionnaire (SMTQ). European
-#'   Journal of Psychological Assessment, 25(3), 186-193.)
-#'
-#' @source Dantlgraber, M., Stieger, S., & Reips, U. D. (2019). Introducing Item
-#'   Pool Visualization: A method for investigation of concepts in self-reports
-#'   and psychometric tests. Methodological Innovations, 12(3),
-#'   2059799119884283.
-#'
-"SMTQ"
-
 #' IPIP HEXACO Equivalent Scales
 #'
 #' Cleaned-up data from an ad-hoc online sample of n = 22786 participants on the
 #' 240 items of the IPIP HEXACO Equivalent Scales. Data were collected before
 #' 21st June 2014 within the Open-Source Psychometrics Project
-#' (\url{https://openpsychometrics.org/}). After listwise deletion of missing
-#' values and including only those participants who did at least "agree" on the
-#' items "I understand the instructions for this test." and "I have answered all
-#' of these questions as accurately as possible.", data on n = 20174
-#' participants remains.
+#' (\url{https://openpsychometrics.org/}). After including only those
+#' participants who did at least "agree" on the items "I understand the
+#' instructions for this test." and "I have answered all of these questions as
+#' accurately as possible.", data on n = 20365 participants remains.
 #'
 #' @section Items:
 #'
@@ -196,5 +160,10 @@
 #'
 #' @source:
 #'
-#'   \url{https://openpsychometrics.org/_rawdata/} (May 6th, 2020)
+#' \url{https://openpsychometrics.org/_rawdata/} (May 6th, 2020)
 "HEXACO"
+
+#' IPIP HEXACO Equivalent Scales (long format)
+#'
+#' See \code{\link{HEXACO}}
+"HEXACO_long"

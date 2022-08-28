@@ -9,7 +9,7 @@ nested_chart(
   cd_method = "aggregate",
   test_order = NULL,
   facet_order = NULL,
-  xarrows = NULL,
+  xarrows = TRUE,
   subradius = 0,
   file_name = "none",
   size = 1,
@@ -58,8 +58,7 @@ nested_chart(
 )
 }
 \arguments{
-\item{data}{SEM estimates in the appropriate format, given by the input
-functions.}
+\item{data}{Object of class IPV as created by the function 'ipv_est'}
 
 \item{cd_method}{character; method to summarize center distances, either
 "mean" or "aggregate", see details; defaults to "aggregate".}
@@ -72,8 +71,7 @@ the correlation matrix columns in 'data'.}
 desired order (counter-clockwise); defaults to NULL, in which case the order
 is based on the correlation matrix columns in 'data'.}
 
-\item{xarrows}{data frame containing information about additional correlation
-arrows between facets of different tests; see examples.}
+\item{xarrows}{logical; should arrows between tests be displayed?; defaults to TRUE.}
 
 \item{subradius}{integer; same unit as center distances; radius of the facet
 circles; defaults to 0, in which case an appropriate value is estimated.}
@@ -259,27 +257,11 @@ To summarize center distances (\code{cd_method}), the "mean" method
 }
 \examples{
 # as simple as that
-nested_chart(self_confidence, subradius = .6)
-
-# adding xarrows, in this example for all cases where the correlation between
-# facets exceeds the correlation between their respective tests.
-x <- data.frame(
-  test1 = rep(NA, 3),
-  facet1 = NA,
-  test2 = NA,
-  facet2 = NA,
-  value = NA)
-x[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67")
-x[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81")
-x[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76")
-nested_chart(self_confidence,
-             subradius = .6,
-             xarrows = x)
+nested_chart(self_confidence)
 
 # rotating the nested facet charts one by one
 nested_chart(self_confidence,
-             subradius = .6,
-             subrotate_radians = c(0, pi / 2, 0))
+             subrotate_radians = c(0, pi/2, 0))
 
 # test without facets
 

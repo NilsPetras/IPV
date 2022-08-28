@@ -31,7 +31,7 @@ The package is built to enable chart creation -- quick & dirty or highly customi
 
 The package contains two sets of example data:
 
-1. The model estimates from the original IPV paper `?self_confidence` `?DSSEI` `?SMTQ` (also available as excel spreadsheets, see Appendix)
+1. The model estimates from the original IPV paper `?self_confidence` (also available as excel spreadsheets, see Appendix)
 2. Raw data from the [Open-Source Psychometrics Project](https://openpsychometrics.org/) `?HEXACO`
 
 ### Terminology within the package
@@ -51,7 +51,7 @@ Minimal example:
 ```{r, eval = FALSE}
 mydata <- HEXACO[ ,c(2:41, 122:161)] # (1.) HEXACO is a data frame containing raw data
 res <- ipv_est(mydata, name = "HA") # (2.) produce a formatted bundle of estimates to use
-nested_chart(res$est, file_name = "test.pdf") # (3.) create a chart with default formatting
+nested_chart(res, file_name = "test.pdf") # (3.) create a chart with default formatting
 ```
 
 There are some additional helper functions, such as the `input_...` functions, which enable you to format already existing model estimates.
@@ -98,7 +98,7 @@ res_A <- ipv_est(dat = HEXACO[ ,c(122:161)], name = "A")
 
 If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning (or message) is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, check if you have properly recoded negatively keyed items. If there remain negative factor loadings, the data does not fulfill the requirements of IPV (Dantlgraber et al., 2019).
 
-Results are provided as a list with the following elements:
+Results are provided as an object of the class "IPV", which is a list with (some of) the following elements:
 
 - "lav": the lavaan object for each estimated model (optional)
 
@@ -106,7 +106,7 @@ Results are provided as a list with the following elements:
 
 - "est": pre-formatted list of center distances and latent correlations for IPV chart creation
 
-When creating IPV charts, you will work with "est". But you should always inspect the estimated models ("lav") to understand what is going on with your data. Use the lavaan functions (e.g. `lavaan::fitmeasures`, `lavaan::summary`, `lavaan::lavInspect`) for this purpose.
+You should always inspect the estimated models ("lav") to understand what is going on with your data. Use the lavaan functions (e.g. `lavaan::fitmeasures`, `lavaan::summary`, `lavaan::lavInspect`) for this purpose.
 
 A more thorough introduction to the formatting of the objects representing model estimates can be found in the section on the alternative workflow in the Appendix.
 
@@ -117,14 +117,14 @@ Use the chart functions (`item_chart`, `facet_chart`, `nested_chart`) to create 
 All three IPV chart types can be created by specifying `data = ` only:
 
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
-mychart <- item_chart(data = DSSEI)
+mychart <- item_chart(data = self_confidence, test = "DSSEI")
 mychart
 ```
 
 It is advisable to use vector-based .pdf graphics output using the `file_name = ` argument:
 
 ```{r, eval = FALSE}
-mychart <- item_chart(data = DSSEI, file_name = "DSSEI_item_chart.pdf")
+mychart <- item_chart(data = self_confidence, test = "DSSEI", file_name = "DSSEI_item_chart.pdf")
 ```
 
 .pdf files can be zoomed and scaled indefinitely without loss of quality. If you need .png or .jpeg graphics output, use the `dpi = ` argument to find a balance between quality and file size. The file format provided to `file_name = ` will be used. By default, no file is saved. Saving manually is not recommended.
@@ -146,7 +146,7 @@ The parameter `cd_method = ` allows to switch between aggregation methods for ce
 
 #### 4.2. Variable labels
 
-The function `rename()` can be used to change any item, facet, test, or construct name, using a before-after syntax (see documentation).
+The function `relabel()` can be used to change any item, facet, test, or construct name, using a before-after syntax (see documentation).
 
 #### 4.3. Size of chart elements {#size}
 
@@ -154,7 +154,7 @@ Most graphical parameters are size parameters for single elements of the chart, 
 
 #### 4.4 Output file properties
 
-The parameters `file_width = ` and `file_length = ` determine, how large the .pdf file will be, measured in inches (1 in = 2.54 cm). The size of .png or .jpeg files in pixels is determined by multiplying the size in inches with the dots per inch parameter value (`dpi = `).
+The parameters `file_width = ` and `file_height = ` determine, how large the .pdf file will be, measured in inches (1 in = 2.54 cm). The size of .png or .jpeg files in pixels is determined by multiplying the size in inches with the dots per inch parameter value (`dpi = `).
 
 #### 4.5 Showing sections of the chart ("Screenshots")
 
@@ -165,7 +165,7 @@ In some cases, it may be desirable to cut the chart to the informative area for 
 For all chart types, it is possible to rotate the whole chart, using `rotate_radians = ` (use fractions of $2\pi$) or `rotate_degrees = ` (use 0-360). In all charts, the parameter `facet_order = ` enables you to set the (counter-clockwise) order of facets. For example:
 
 ```{r, eval = FALSE}
-item_chart(DSSEI, facet_order = c("Ab", "So", "Ph", "Pb"))
+item_chart(self_confidence, test = "DSSEI", facet_order = c("Ab", "So", "Ph", "Pb"))
 ```
 
 In nested charts, `test_order = ` and `subrotate_degrees = `/`subrotate_radians = ` will function likewise. Several `rotate_... = ` parameters can be used to re-position single elements of the chart relative to the origin.
@@ -187,17 +187,17 @@ For the use of colours and gray tones, see [this guide](http://www.stat.columbia
 You can use different colors for every second item to increase readability of item charts:
 ```{r, eval=FALSE, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
 mychart <- item_chart(
-  data = DSSEI,
+  data = self_confidence, test = "DSSEI",
   color = "darkblue", color2 = "darkred")
 mychart
 ```
 
 The `dodge = ` parameter allows long facet labels to dodge the rest of the chart horizontally:
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", fig.show='hold', dev='png'}
-x <- DSSEI
-x <- rename(x, "So", "verylongname")
-mychart1 <- item_chart(data = x)
-mychart2 <- item_chart(data = x, dodge = 7)
+x <- self_confidence
+x <- relabel(x, "So", "verylongname")
+mychart1 <- item_chart(data = x, test = "DSSEI")
+mychart2 <- item_chart(data = x, test = "DSSEI", dodge = 7)
 mychart1
 mychart2
 ```
@@ -206,15 +206,17 @@ This works simultaneously for all labels. Labels at the top and bottom do not mo
 #### 4.11. Special options for facet charts
 
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
-mychart <- facet_chart(data = DSSEI)
+mychart <- facet_chart(data = self_confidence, test = "DSSEI")
 mychart
 ```
 As you can see in the output (and the message in the console), two parameter values (`subradius = ` , and `tick = ` ) have been generated automatically. These can be used to improve readability. `subradius = ` sets the size of the facet circles and `tick = ` sets the value at which a tick mark should be displayed.
 
 For a simplistic version of the chart, the correlations can be omitted, by setting `cor_labels = FALSE`.
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
-mychart <- facet_chart(data = DSSEI,
-                      cor_labels = FALSE)
+mychart <- facet_chart(
+  data = self_confidence,
+  test = "DSSEI",
+  cor_labels = FALSE)
 mychart
 ```
 
@@ -240,28 +242,24 @@ nested_chart(self_confidence, relative_scaling = 2, tick = 0.2, rotate_tick_labe
 
 In this particular case, the facet circles could be larger, including the font sizes within:
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
-mychart <- nested_chart(data = self_confidence,
-                        subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5)
+mychart <- nested_chart(
+  data = self_confidence,
+  subradius = .5,
+  size_facet_labels = 2,
+  size_cor_labels_inner = 1.5)
 mychart
 ```
 Note how the dynamic default for `relative_scaling = ` adapted to the changes, because the test circles became larger, due to the changes to `subradius = ` .
 
-The addition of correlation arrows between facets of different tests is indicated by the IPV authors as sensible, when the correlation between these facets exceed the correlation between the respective tests. In the current example, this would result in three extra arrows, that can be added by hand:
+The addition of correlation arrows between facets of different tests is indicated by the IPV authors as sensible, when the correlation between these facets exceed the correlation between the respective tests. The three arrows in the current example can also be omitted in the display:
 
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
-x <- data.frame(
-  test1 = rep(NA, 3), facet1 = NA,
-  test2 = NA, facet2 = NA,
-  value = NA)
-x[1, ] <- c("DSSEI", "Ab", "RSES", "Ps", ".67") # first arrow
-x[2, ] <- c("DSSEI", "Ab", "SMTQ", "Cs", ".81") # second arrow
-x[3, ] <- c("SMTQ", "Ct", "RSES", "Ns", ".76") # third arrow
-x
-
 mychart <- nested_chart(
   data = self_confidence,
-  subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5,
-  xarrows = x)
+  subradius = .5,
+  size_facet_labels = 2,
+  size_cor_labels_inner = 1.5,
+  xarrows = FALSE)
 mychart
 ```
 
@@ -274,9 +272,11 @@ The arrows create a lot of overlap and make the chart look messy. This problem c
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
 mychart <- nested_chart(
   data = self_confidence,
-  subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5,
-  xarrows = x,
-  subrotate_degrees = c(180, 270, 90), dist_construct_label = .7,
+  subradius = .5,
+  size_facet_labels = 2,
+  size_cor_labels_inner = 1.5,
+  subrotate_degrees = c(180, 270, 90),
+  dist_construct_label = .7,
   rotate_test_labels_degrees = c(0, 120, 0))
 mychart
 ```
@@ -286,9 +286,11 @@ The `cor_spacing = ` refers to the ring around the nested facet charts for each 
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
 mychart <- nested_chart(
   data = self_confidence,
-  subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5,
-  xarrows = x,
-  subrotate_degrees = c(180, 270, 90), dist_construct_label = .7,
+  subradius = .5,
+  size_facet_labels = 2,
+  size_cor_labels_inner = 1.5,
+  subrotate_degrees = c(180, 270, 90),
+  dist_construct_label = .7,
   rotate_test_labels_degrees = c(0, 120, 0),
   cor_labels_tests = FALSE)
 mychart
@@ -299,13 +301,19 @@ Color can be chosen for the global and the nested level independently. Increasin
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
 mychart <- nested_chart(
   data = self_confidence,
-  subradius = .5, size_facet_labels = 2, size_cor_labels_inner = 1.5,
-  xarrows = x,
-  subrotate_degrees = c(180, 270, 90), dist_construct_label = .7,
+  subradius = .5,
+  size_facet_labels = 2,
+  size_cor_labels_inner = 1.5,
+  subrotate_degrees = c(180, 270, 90),
+  dist_construct_label = .7,
   rotate_construct_label_degrees = -15,
   rotate_test_labels_degrees = c(0, 120, 0),
-  size_construct_label = 1.3, size_test_labels = 1.2,
-  width_circles_inner = 1.2, width_circles = 1.2, width_axes_inner = 1.2, width_axes = 1.2)
+  size_construct_label = 1.3,
+  size_test_labels = 1.2,
+  width_circles_inner = 1.2,
+  width_circles = 1.2,
+  width_axes_inner = 1.2,
+  width_axes = 1.2)
 mychart
 ```
 

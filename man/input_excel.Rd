@@ -34,6 +34,9 @@ Note that the excel files need a very specific structure. Use the
 
   If you specify an element in \code{tests} as \code{NA}, this test will be
   treated as having no facets.
+
+  Currently, any potential xarrows need to be added manually by changing the
+  list element \code{xarrow} in the output of this function.
 }
 \examples{
 # read data for a simple model by ignoring the "global" parameter of

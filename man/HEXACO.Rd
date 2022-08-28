@@ -5,12 +5,12 @@
 \alias{HEXACO}
 \title{IPIP HEXACO Equivalent Scales}
 \format{
-An object of class \code{data.frame} with 20174 rows and 245 columns.
+An object of class \code{data.frame} with 20365 rows and 244 columns.
 }
 \source{
 :
 
-  \url{https://openpsychometrics.org/_rawdata/} (May 6th, 2020)
+\url{https://openpsychometrics.org/_rawdata/} (May 6th, 2020)
 }
 \usage{
 HEXACO
@@ -19,11 +19,10 @@ HEXACO
 Cleaned-up data from an ad-hoc online sample of n = 22786 participants on the
 240 items of the IPIP HEXACO Equivalent Scales. Data were collected before
 21st June 2014 within the Open-Source Psychometrics Project
-(\url{https://openpsychometrics.org/}). After listwise deletion of missing
-values and including only those participants who did at least "agree" on the
-items "I understand the instructions for this test." and "I have answered all
-of these questions as accurately as possible.", data on n = 20174
-participants remains.
+(\url{https://openpsychometrics.org/}). After including only those
+participants who did at least "agree" on the items "I understand the
+instructions for this test." and "I have answered all of these questions as
+accurately as possible.", data on n = 20365 participants remains.
 }
 \section{Items}{
 

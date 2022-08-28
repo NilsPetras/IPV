@@ -26,12 +26,11 @@ coord_nested(
   correlations = TRUE,
   cor_spacing = 0,
   relative_scaling = 0,
-  xarrows = NULL
+  xarrows = TRUE
 )
 }
 \arguments{
-\item{data}{SEM estimates in the appropriate format, given by the input
-functions.}
+\item{data}{Object of class IPV as created by the function 'ipv_est'}
 
 \item{cd_method}{character; method to summarize center distances, either
 "mean" or "aggregate", see details; defaults to "aggregate".}
@@ -105,8 +104,7 @@ case an appropriate value is estimated.}
 compared to the nested facet chart scales; defaults to 0, in which case an
 appropriate value is estimated.}
 
-\item{xarrows}{data frame containing information about additional correlation
-arrows between facets of different tests; see examples.}
+\item{xarrows}{logical; should arrows between tests be displayed?; defaults to TRUE.}
 }
 \value{
 List containing coordinates of chart objects.

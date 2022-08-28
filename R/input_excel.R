@@ -20,6 +20,9 @@
 #'   If you specify an element in \code{tests} as \code{NA}, this test will be
 #'   treated as having no facets.
 #'
+#'   Currently, any potential xarrows need to be added manually by changing the
+#'   list element \code{xarrow} in the output of this function.
+#'
 #' @return List containing formatted data including center distances for
 #'   \code{\link{item_chart}}, \code{\link{facet_chart}}, and
 #'   \code{\link{nested_chart}}.
@@ -67,59 +70,80 @@ input_excel <- function(global = NULL, tests){
   # and the nested scale
 
   if (is.null(global)) { # simple case: just run the helper function
-    mydata <- input_excel_factor(tests)
+    est <- input_excel_factor(tests)
+    est_raw <- input_excel_factor(tests, raw = TRUE)
+
+    # build structure according to class "IPV"
+    mydata <- ipv_expand(est, est_raw)
+
   } else { # nested case
 
-    global_input <- input_excel_factor(global)
-
+    global_est <- input_excel_factor(global)
+    global_est_raw <- input_excel_factor(global, raw = TRUE)
 
     # check if all files are given
-    if (length(levels(global_input$cds$subfactor)) != length(tests)
+    if (length(levels(global_est$cds$subfactor)) != length(tests)
         ) stop ("Missing file")
 
-    tests_input <- lapply(tests, input_excel_factor)
+    tests_est <- lapply(tests, input_excel_factor)
+    tests_est_raw <- lapply(tests, input_excel_factor, raw = TRUE)
 
     # check matches between global and test level
       # factor names matching
-    x <- lapply(tests_input, `[[`, 1)
+    x <- lapply(tests_est, `[[`, 1)
 
     x <- sort(as.character(unlist(lapply(x, `[[`, "factor"))))
-    if (!isTRUE(all.equal(sort(as.character(global_input$cds$subfactor)), x)) &
+    if (!isTRUE(all.equal(sort(as.character(global_est$cds$subfactor)), x)) &
         !any(is.na(tests))
         ) stop ("Factor name or item per factor count mismatch between global
                 and tests")
 
       # item names and number of items matching
-    x <- lapply(tests_input, `[[`, 1)
+    x <- lapply(tests_est, `[[`, 1)
     x <- sort(as.character(unlist(lapply(x, `[[`, "item"))))
-    if (!isTRUE(all.equal(sort(as.character(global_input$cds$item)), x)) &
+    if (!isTRUE(all.equal(sort(as.character(global_est$cds$item)), x)) &
         !any(is.na(tests))
         ) stop ("Number of items or item name mismatch between global and
                 tests")
 
     # including the factor name in the item name to distinguish between items
     # from different tests but with the same name
-    global_input$cds$item <- paste(global_input$cds$subfactor,
-                                   global_input$cds$item,
-                                   sep = ".")
+    global_est$cds$item <- paste(
+      global_est$cds$subfactor,
+      global_est$cds$item,
+      sep = ".")
+    global_est_raw$fls$item <- paste(
+      global_est_raw$fls$subfactor,
+      global_est_raw$fls$item,
+      sep = ".")
 
     if (any(is.na(tests))) {
-      tests_input[which(is.na(tests))] <- NA
+      tests_est[which(is.na(tests))] <- NA
+      tests_est_raw[which(is.na(tests))] <- NA
     }
 
     for (i in which(!is.na(tests))) {
-      names(tests_input)[i] <- levels(tests_input[[c(i, 1)]]$factor)
+      names(tests_est)[i] <- names(tests_est_raw)[i] <-
+        levels(tests_est[[c(i, 1)]]$factor)
     }
 
     missing_tests <- setdiff(
-      levels(global_input$cds$subfactor),
-      stats::na.omit(names(tests_input))
+      levels(global_est$cds$subfactor),
+      stats::na.omit(names(tests_est))
     )
     if (any(is.na(tests))) {
-      names(tests_input)[[which(is.na(tests))]] <- missing_tests
+      names(tests_est)[[which(is.na(tests))]] <-
+        names(tests_est_raw)[[which(is.na(tests))]] <-
+        missing_tests
     }
 
-    mydata <- list(global = global_input, tests = tests_input)
+    est <- list(global = global_est, tests = tests_est)
+    est_raw <- list(global = global_est_raw, tests = tests_est_raw)
+    mydata <- list(
+      est = est,
+      est_raw = est_raw,
+      xarrow = NA)
+    class(mydata) <- c("IPV", "list")
   }
 
   return(mydata)
@@ -132,13 +156,16 @@ input_excel <- function(global = NULL, tests){
 #' Reads factor loadings and latent correlations from an excel file.
 #'
 #' @param file character; filename of the excel file
+#' @param raw logical; should raw factor loading estimates be returned instead?;
+#'   defaults to FALSE
 #'
 #' @details Helper function of \code{\link{input_excel}}.
 #'
 #' @return list containing formatted data including center distances for
-#'   \code{\link{item_chart}}, \code{\link{facet_chart}}
+#'   \code{\link{item_chart}}, \code{\link{facet_chart}} or factor loadings if
+#'   \code{raw = TRUE}.
 #' @seealso \code{\link{input_excel}}
-input_excel_factor <- function (file) {
+input_excel_factor <- function (file, raw = FALSE) {
 
 
   # file reading ---------------------------------------------------------------
@@ -214,29 +241,38 @@ input_excel_factor <- function (file) {
   ) stop ("Wrong or missing column names")
 
 
-  ## center distances ---------------
+  ## factor loadings or center distances ---------------
 
-  cds <- data.frame(
-    factor = sheet1$factor,
-    subfactor = sheet1$subfactor,
-    item = as.factor(sheet1$item),
-    cd = sheet1$subfactor_loading ^ 2 / sheet1$factor_loading ^ 2 - 1,
-    mean_cd = NA, stringsAsFactors = TRUE)
+  if(raw) {
+    fls <- data.frame(
+      factor = sheet1$factor,
+      subfactor = sheet1$subfactor,
+      item = as.factor(sheet1$item),
+      factor_loading = sheet1$factor_loading,
+      subfactor_loading = sheet1$subfactor_loading)
 
-  # negative center distances are adjusted to zero for chart clarity
-  bad <- min(cds$cd)
-  bad <- bad < 0
-  if (bad) message ("Negative center distance adjusted to 0")
-  cds$cd[cds$cd < 0] <- 0
+  } else {
+    cds <- data.frame(
+      factor = sheet1$factor,
+      subfactor = sheet1$subfactor,
+      item = as.factor(sheet1$item),
+      cd = sheet1$subfactor_loading ^ 2 / sheet1$factor_loading ^ 2 - 1,
+      mean_cd = NA, stringsAsFactors = TRUE)
 
-  mean_cds <- lapply(split(cds, cds$subfactor),
-                     function (x) x$mean_cd <- mean(x$cd))
-  aggregate_cds <- lapply(split(sheet1, sheet1$subfactor), function(x) {
-    x$aggregate_cd <- max(sum(x$subfactor_loading ^ 2) / sum(x$factor_loading ^ 2) - 1, 0)
-  })
-  cds$mean_cd <- as.numeric(mean_cds[cds$subfactor])
-  cds$aggregate_cd <- as.numeric(aggregate_cds[cds$subfactor])
+    # negative center distances are adjusted to zero for chart clarity
+    bad <- min(cds$cd)
+    bad <- bad < 0
+    if (bad) message ("Negative center distance adjusted to 0")
+    cds$cd[cds$cd < 0] <- 0
 
+    mean_cds <- lapply(split(cds, cds$subfactor),
+                       function (x) x$mean_cd <- mean(x$cd))
+    aggregate_cds <- lapply(split(sheet1, sheet1$subfactor), function(x) {
+      x$aggregate_cd <- max(sum(x$subfactor_loading ^ 2) / sum(x$factor_loading ^ 2) - 1, 0)
+    })
+    cds$mean_cd <- as.numeric(mean_cds[cds$subfactor])
+    cds$aggregate_cd <- as.numeric(aggregate_cds[cds$subfactor])
+  }
 
   ## correlations -------------------
 
@@ -271,9 +307,15 @@ input_excel_factor <- function (file) {
 
   # return ---------------------------------------------------------------------
 
-  mydata <- list(cds = cds,
-                 cors = cors)
-
+  if (raw) {
+    mydata <- list(
+      fls = fls,
+      cors = cors)
+  } else {
+    mydata <- list(
+      cds = cds,
+      cors = cors)
+  }
   return(mydata)
 }
 

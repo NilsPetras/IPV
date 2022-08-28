@@ -7,10 +7,12 @@
 ipv_est(
   dat,
   name,
-  estimator = "ML",
   include_raw = TRUE,
   include_lav = TRUE,
-  include_xarrow = TRUE
+  include_xarrow = TRUE,
+  id = "id",
+  value.var = "value",
+  ...
 )
 }
 \arguments{
@@ -18,9 +20,6 @@ ipv_est(
 
 \item{name}{character; name of the overall construct or test that comprises
 all items used}
-
-\item{estimator}{character; estimator used by lavaan; defaults to "ML"
-(Maximum Likelihood)}
 
 \item{include_raw}{logical; should raw estimates of factor loadings be
 included in the output?; defaults to TRUE}
@@ -30,6 +29,14 @@ included in the output?; defaults to TRUE}
 
 \item{include_xarrow}{logical; should an object for the drawing of arrows in
 nested plots be returned?; defaults to TRUE}
+
+\item{id}{character; name of the case identifying variable in long format; defaults to "id"}
+
+\item{value.var}{character; name of the variable in long format that contains
+measurement values; defaults to "value"}
+
+\item{...}{further arguments passed to lavaan::cfa (or one step further to
+lavaan::lavOptions).}
 }
 \value{
 list; \code{$est} includes the center distances and all necessary
@@ -47,20 +54,33 @@ list; \code{$est} includes the center distances and all necessary
 IPV estimation
 }
 \details{
-the data given to \code{dat} have to conform to the following rules:
-  * no additional variables / columns * variables are named according to the
+the data given to \code{dat} can be either in long or in wide
+  format.
+
+  If they are in wide format, they have to conform to the following rules: *
+  no additional variables / columns * variables are named according to the
   following pattern: \code{"test_facet_item"}. * If there is only one test in
   the data, the pattern is "facet_item". For tests without facets in a larger
   dataset also comprising tests with items, the pattern is "test_item". *
   Variable names have to be unique. Item names have to be unique at the level
   of the test (not only at the level of the facet) See example
+
+  If they are in long format, they have to include the columns "test",
+  "facet", and "item", as well as a case identifying variable (\code{id}) and the
+  measurement variable (\code{value.var}).
 }
 \examples{
 # an IPV that comprises the honesty/humility and the agreeableness factor of
-# the HEXACO (reduced to first 4 items per facet and first 1000 observations
-# to reduce runtime)
+# the HEXACO (reduced to first 500 observations to reduce runtime)
 res <- ipv_est(
-  HEXACO[1:500, grep("^H_.*[1-4]$|^A_.*[1-4]$", names(HEXACO))],
+  HEXACO[1:500, grep("^H|^A", names(HEXACO))],
   "HA")
-nested_chart(res$est)
+nested_chart(res)
+
+# Customize call to lavaan::cfa via ellipsis
+res <- ipv_est(
+  HEXACO_long[HEXACO_long$test \%in\% c("H", "A") & HEXACO_long$id \%in\% 1:500, ],
+  name = "HA", missing = "fiml")
+
+
 }

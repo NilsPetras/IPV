@@ -30,7 +30,7 @@
 #'   a nested chart. Use this to inspect the absolute values underlying the
 #'   charts.
 #'
-#'   The function \code{\link{rename}} enables quick changes of the labels for
+#'   The function \code{\link{relabel}} enables quick changes of the labels for
 #'   variables.
 #'
 #' @section Basic Workflow:

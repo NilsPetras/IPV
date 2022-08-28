@@ -2,8 +2,8 @@
 #'
 #' Creates an item chart, showing the items of a test arranged by facets.
 #'
-#' @param data SEM estimates in the appropriate format, given by the input
-#'   functions.
+#' @param data Object of class IPV as created by the function 'ipv_est'
+#' @param test character; name of the test to plot; defaults to the first in the list.
 #' @param facet_order character; vector of facet names in desired order
 #'   (counter-clockwise); defaults to NULL, in which case the order is based on
 #'   the correlation matrix columns in 'data'.
@@ -93,11 +93,12 @@
 #'
 #' @examples
 #' # as simple as that
-#' item_chart(SMTQ)
+#' item_chart(self_confidence, test = "SMTQ")
 #'
 #' @export
 item_chart <- function(
   data,
+  test = NULL,
   facet_order = NULL,
   file_name = "none",
   size = 1,
@@ -130,6 +131,14 @@ item_chart <- function(
   width_axes = 1,
   size_arrow_heads = 1,
   width_grid = 1){
+
+  if (is.null(test)) {
+    test <- names(data$est$tests)[1]
+  }
+  if (!test %in% names(data$est$tests)) {
+    stop(paste("There is no test called ", test, sep = ""))
+  }
+  data <- data$est$tests[[test]]
 
   coord <- coord_items(
     data = data,

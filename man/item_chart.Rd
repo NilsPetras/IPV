@@ -6,6 +6,7 @@
 \usage{
 item_chart(
   data,
+  test = NULL,
   facet_order = NULL,
   file_name = "none",
   size = 1,
@@ -41,8 +42,9 @@ item_chart(
 )
 }
 \arguments{
-\item{data}{SEM estimates in the appropriate format, given by the input
-functions.}
+\item{data}{Object of class IPV as created by the function 'ipv_est'}
+
+\item{test}{character; name of the test to plot; defaults to the first in the list.}
 
 \item{facet_order}{character; vector of facet names in desired order
 (counter-clockwise); defaults to NULL, in which case the order is based on
@@ -167,7 +169,7 @@ When changing the size of objects, consider the \code{size}
 }
 \examples{
 # as simple as that
-item_chart(SMTQ)
+item_chart(self_confidence, test = "SMTQ")
 
 }
 \seealso{

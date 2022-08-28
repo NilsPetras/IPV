@@ -81,17 +81,23 @@ input_manual_process <- function(data) {
 
     # processing -------------------------------------------
 
-    mydata <- list()
-    mydata$global <- input_manual_process_factor(data$global)
-    mydata$tests <- c(
+    est <- list()
+    est$global <- input_manual_process_factor(data$global)
+    est$tests <- c(
       lapply(data$tests[!is.na(data$tests)], input_manual_process_factor),
       data$tests[is.na(data$tests)])
+    mydata <- list(
+      est = est,
+      est_raw = data,
+      xarrow = NA
+    )
 
+    class(mydata) <- c("IPV", "list")
 
   # simple case ----------------------------------------------------------------
 
   } else {
-    mydata <- input_manual_process_factor(data)
+    mydata <- ipv_expand(input_manual_process_factor(data), data)
   }
 
 

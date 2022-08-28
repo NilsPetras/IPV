@@ -2,8 +2,8 @@
 #'
 #' Creates a facet chart, showing the facets of a test.
 #'
-#' @param data SEM estimates in the appropriate format, given by the input
-#'   functions.
+#' @param data Object of class IPV as created by the function 'ipv_est'
+#' @param test character; name of the test to plot; defaults to the first in the list.
 #' @param cd_method character; method to summarize center distances, either
 #'   "mean" or "aggregate", see details; defaults to "aggregate".
 #' @param facet_order character; vector of facet names in desired order
@@ -87,11 +87,12 @@
 #'
 #' @examples
 #' # as simple as that:
-#' facet_chart(SMTQ)
+#' facet_chart(self_confidence, test = "SMTQ")
 #'
 #' @export
 facet_chart <- function(
   data,
+  test = NULL,
   cd_method = "aggregate",
   facet_order = NULL,
   subradius = 0,
@@ -122,6 +123,14 @@ facet_chart <- function(
   width_circles = 1,
   width_tick = 1,
   size_tick_label = 1){
+
+  if (is.null(test)) {
+    test <- names(data$est$tests)[1]
+  }
+  if (!test %in% names(data$est$tests)) {
+    stop(paste("There is no test called ", test, sep = ""))
+  }
+  data <- data$est$tests[[test]]
 
   coord <- coord_facets(
     data = data,

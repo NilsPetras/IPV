@@ -1,3 +1,18 @@
+# IPV 1.0.0
+
+## Added features
+* Introduced class `"IPV"` for the output of the estimation function `ipv_est` and added first version of functions `is.IPV`, `validate_IPV`, and `new_IPV`.
+* Chart functions now all work (exclusively) on objects of class `"IPV"` with facet_chart and nested_chart having the user specify which of the tests should be plotted via the `test` argument in nested cases.
+* `ipv_est` and input functions now (exclusively) produce output of class `"IPV"`.
+* Estimation function `ipv_est` can now pass further arguments to the underlying lavaan estimation function `lavaan::cfa`. Among other things, this makes it possible to choose the estimator and treat missing values in various ways.
+* Changed example dataset `HEXACO` to also include cases with missing values.
+* Function `rename` renamed to `relabel` to avoid conflicts with other packages.
+* `ipv_est` now also works for data in long format.
+* Added example data in long format (`HEXACO_long`)
+
+
+## Bugfixes
+
 # IPV 0.2.0
 
 ## Added Features

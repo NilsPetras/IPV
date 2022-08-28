@@ -3,23 +3,33 @@
 #' @param dat data frame; raw data (see details)
 #' @param name character; name of the overall construct or test that comprises
 #'   all items used
-#' @param estimator character; estimator used by lavaan; defaults to "ML"
-#'   (Maximum Likelihood)
 #' @param include_raw logical; should raw estimates of factor loadings be
 #'   included in the output?; defaults to TRUE
 #' @param include_lav logical; should lavaan objects of the fitted models be
 #'   included in the output?; defaults to TRUE
 #' @param include_xarrow logical; should an object for the drawing of arrows in
 #'   nested plots be returned?; defaults to TRUE
+#' @param id character; name of the case identifying variable in long format; defaults to "id"
+#' @param value.var character; name of the variable in long format that contains
+#'   measurement values; defaults to "value"
+#' @param ... further arguments passed to lavaan::cfa (or one step further to
+#'   lavaan::lavOptions).
 #'
 #'
-#' @details the data given to \code{dat} have to conform to the following rules:
-#'   * no additional variables / columns * variables are named according to the
+#' @details the data given to \code{dat} can be either in long or in wide
+#'   format.
+#'
+#'   If they are in wide format, they have to conform to the following rules: *
+#'   no additional variables / columns * variables are named according to the
 #'   following pattern: \code{"test_facet_item"}. * If there is only one test in
 #'   the data, the pattern is "facet_item". For tests without facets in a larger
 #'   dataset also comprising tests with items, the pattern is "test_item". *
 #'   Variable names have to be unique. Item names have to be unique at the level
 #'   of the test (not only at the level of the facet) See example
+#'
+#'   If they are in long format, they have to include the columns "test",
+#'   "facet", and "item", as well as a case identifying variable (\code{id}) and the
+#'   measurement variable (\code{value.var}).
 #'
 #' @return list; \code{$est} includes the center distances and all necessary
 #'   input for the IPV chart functions, \code{$est_raw} includes the factor
@@ -36,19 +46,35 @@
 #'
 #' @examples
 #' # an IPV that comprises the honesty/humility and the agreeableness factor of
-#' # the HEXACO (reduced to first 4 items per facet and first 1000 observations
-#' # to reduce runtime)
+#' # the HEXACO (reduced to first 500 observations to reduce runtime)
 #' res <- ipv_est(
-#'   HEXACO[1:500, grep("^H_.*[1-4]$|^A_.*[1-4]$", names(HEXACO))],
+#'   HEXACO[1:500, grep("^H|^A", names(HEXACO))],
 #'   "HA")
-#' nested_chart(res$est)
+#' nested_chart(res)
+#'
+#' # Customize call to lavaan::cfa via ellipsis
+#' res <- ipv_est(
+#'   HEXACO_long[HEXACO_long$test %in% c("H", "A") & HEXACO_long$id %in% 1:500, ],
+#'   name = "HA", missing = "fiml")
+#'
+#'
 ipv_est <- function(
   dat,
   name,
-  estimator = "ML",
   include_raw = TRUE,
   include_lav = TRUE,
-  include_xarrow = TRUE) {
+  include_xarrow = TRUE,
+  id = "id",
+  value.var = "value",
+  ...) {
+
+  # convert from long to wide format if needed
+  if(any(c("facet", "item") %in% names(dat))) {
+    dat <- ipv_long_to_wide(
+      x = dat,
+      id = id,
+      value.var = value.var)
+    }
 
   # helper variables
   nam <- get_names(dat)
@@ -61,7 +87,7 @@ ipv_est <- function(
   }
 
   fits <- lapply(mods, function(x) {
-    lavaan::cfa(x, dat, estimator = estimator)
+    lavaan::cfa(x, dat, ...)
   })
 
   loads <- lapply(fits, floads)
@@ -107,12 +133,13 @@ ipv_est <- function(
 
     if (include_xarrow) {
       xarrow <- get_xarrows(cors = cors, design = unique(nam[ ,1:2]))
+      if(is.null(xarrow)) xarrow <- NA
     }
   }
 
 
   # calculation of center distances
-  est <- input_manual_process(est_raw)
+  est <- input_manual_process(est_raw)$est
 
 
   y <- list(est = est)
@@ -125,6 +152,9 @@ ipv_est <- function(
   if (include_xarrow) {
     y[["xarrow"]] <- xarrow
   }
+
+  class(y) <- c("IPV", "list")
+
   return(y)
 }
 
@@ -388,6 +418,44 @@ get_xarrows <- function (cors, design) {
   } else {
     y <- NULL
   }
+
+  return(y)
+}
+
+#' IPV long to wide
+#'
+#' Helper function to convert long format data into appropriate wide format for
+#' ipv_est
+#'
+#' @param x data frame; raw data in long format
+#' @param id character; name of case identifying variable
+#' @param value.var character; name of variable that contains measurement values
+ipv_long_to_wide <- function(x, id = "id", value.var = "value") {
+
+  check <- c("facet", "item")
+  if (any(!check %in% names(x))) {
+    stop(paste("x misses required column(s) ", check[!check %in% names(x)], sep = ""))
+  }
+
+  names(x)[which(names(x) == c(id, value.var))] <- c("id", "value")
+
+  # simple case
+  if(!"test" %in% names(x)) {
+    y <- reshape2::dcast(
+      x,
+      formula = id ~ facet + item,
+      value.var = "value")
+
+    # nested case
+  } else {
+    y <- reshape2::dcast(
+      x,
+      formula = id ~ test + facet + item,
+      value.var = "value")
+  }
+
+  row.names(y) <- y$id
+  y$id <- NULL
 
   return(y)
 }
