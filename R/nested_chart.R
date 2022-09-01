@@ -1015,10 +1015,10 @@ plot_nested <- function (
     row.names(coord$g$nested$axes)[is.na(coord$g$nested$axes$x0)])
   has_facets <- setdiff(names(coord$factor), facetless)
   coord$global$nested$cors <-
-    coord$g$n$cors[which(!row.names(coord$g$n$cors) == facetless), ]
+    coord$g$n$cors[which(!row.names(coord$g$n$cors) %in% facetless), ]
   coord$global$nested$axes <-
-    coord$g$n$axes[which(!row.names(coord$g$n$axes) == facetless), ]
-  cors_inner <- cors_inner[which(!row.names(cors_inner) == facetless), ]
+    coord$g$n$axes[which(!row.names(coord$g$n$axes) %in% facetless), ]
+  cors_inner <- cors_inner[which(!row.names(cors_inner) %in% facetless), ]
 
   # some calculations are not possible within aes_string(), so aesthetics are
   # prepared here
