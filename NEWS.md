@@ -1,5 +1,7 @@
 # IPV 1.0.0
 
+We thank an anonymous reviewer for suggesting many of the improvements in this version!
+
 ## Added features
 * Introduced class `"IPV"` for the output of the estimation function `ipv_est` and added first version of functions `is.IPV`, `validate_IPV`, and `new_IPV`.
 * Chart functions now all work (exclusively) on objects of class `"IPV"` with facet_chart and nested_chart having the user specify which of the tests should be plotted via the `test` argument in nested cases.
@@ -12,6 +14,7 @@
 
 
 ## Bugfixes
+* resolved a warning message for nested charts that include tests without facets (no effect on output)
 
 # IPV 0.2.0
 
