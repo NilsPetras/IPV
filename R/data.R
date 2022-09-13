@@ -162,8 +162,3 @@
 #'
 #' \url{https://openpsychometrics.org/_rawdata/} (May 6th, 2020)
 "HEXACO"
-
-#' IPIP HEXACO Equivalent Scales (long format)
-#'
-#' See \code{\link{HEXACO}}
-"HEXACO_long"

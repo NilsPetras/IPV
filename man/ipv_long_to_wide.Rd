@@ -13,9 +13,6 @@ ipv_long_to_wide(x, id = "id", value.var = "value")
 
 \item{value.var}{character; name of variable that contains measurement values}
 }
-\value{
-
-}
 \description{
 Helper function to convert long format data into appropriate wide format for
 ipv_est

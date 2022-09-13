@@ -182,7 +182,32 @@ To reduce the visibility of structural elements, the `fade_... = ` parameters ca
 
 For the use of colours and gray tones, see [this guide](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf). All charts functions have at least one colour parameter to increase visual contrast.
 
-#### 4.10. Special options for item charts
+#### 4.10 Additional plot layers
+
+The chart functions return a ggplot2 object, which can easily be combined with other geoms or entire plots. The following example uses this to show two facet charts side by side at the same scale:
+
+```{r}
+library(ggplot2)
+library(cowplot)
+x <- facet_chart(self_confidence) +
+  coord_fixed(
+    ratio = 1,
+    ylim = c(-3, 3),
+    xlim = c(-3, 3))
+y <- facet_chart(self_confidence, test = "RSES") +
+  coord_fixed(
+    ratio = 1,
+    ylim = c(-3, 3),
+    xlim = c(-3, 3))
+
+# Save as any other ggplot
+ggsave(filename = "test.pdf",
+       plot = plot_grid(plotlist = list(x, y), align = "h"),
+       width = 20, height = 10) # defaults are optimized for 10x10 in per chart
+```
+
+
+#### 4.11. Special options for item charts
 
 You can use different colors for every second item to increase readability of item charts:
 ```{r, eval=FALSE, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
@@ -203,7 +228,7 @@ mychart2
 ```
 This works simultaneously for all labels. Labels at the top and bottom do not move, labels on the right and left move the most.
 
-#### 4.11. Special options for facet charts
+#### 4.12. Special options for facet charts
 
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
 mychart <- facet_chart(data = self_confidence, test = "DSSEI")
@@ -220,7 +245,7 @@ mychart <- facet_chart(
 mychart
 ```
 
-#### 4.12. Special options for nested charts
+#### 4.13. Special options for nested charts
 
 Due to the complexity one should not rely on default values too much:
 
