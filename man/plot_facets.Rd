@@ -25,7 +25,8 @@ plot_facets(
   width_axes = 1,
   width_circles = 1,
   width_tick = 1,
-  size_tick_label = 1
+  size_tick_label = 1,
+  size_marker = 0.1
 )
 }
 \arguments{
@@ -79,6 +80,10 @@ facets; defaults to \code{TRUE}.}
 \item{width_tick}{integer; axis tick line width relative to default.}
 
 \item{size_tick_label}{integer; axis tick font size relative to default.}
+
+\item{size_marker}{integer; size (in inches) of the value marker  at the
+circle border that indicates the center distance, a value of 0 omits the
+marker; defaults to .1}
 }
 \value{
 Object of the class "ggplot".

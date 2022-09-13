@@ -1,7 +1,7 @@
 Package: IPV
 Title: Item Pool Visualization
 Type: Package
-Version: 0.2.0
+Version: 1.0.0
 Authors@R: c(
     person("Nils", "Petras", email = "nils.petras@mailbox.org",
     role = c("aut", "cre")),

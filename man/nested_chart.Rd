@@ -54,7 +54,9 @@ nested_chart(
   size_cor_labels_inner = 1,
   width_xarrows = 1,
   size_xarrow_heads = 1,
-  size_xarrow_labels = 1
+  size_xarrow_labels = 1,
+  size_marker = 0.1,
+  size_marker_inner = 0.05
 )
 }
 \arguments{
@@ -71,7 +73,8 @@ the correlation matrix columns in 'data'.}
 desired order (counter-clockwise); defaults to NULL, in which case the order
 is based on the correlation matrix columns in 'data'.}
 
-\item{xarrows}{logical; should arrows between tests be displayed?; defaults to TRUE.}
+\item{xarrows}{logical; should arrows between tests be displayed?; defaults to
+TRUE.}
 
 \item{subradius}{integer; same unit as center distances; radius of the facet
 circles; defaults to 0, in which case an appropriate value is estimated.}
@@ -106,11 +109,11 @@ rotate the nested facet charts counter-clockwise by.}
 
 \item{file_height}{integer; file height in inches; defaults to 10.}
 
-\item{zoom_x}{integer; vector with two values, the edges of the zoomed
-section on the x-axis; defaults to NULL.}
+\item{zoom_x}{integer; vector with two values, the edges of the zoomed section
+on the x-axis; defaults to NULL.}
 
-\item{zoom_y}{integer; vector with two values, the edges of the zoomed
-section on the y-axis; defaults to NULL.}
+\item{zoom_y}{integer; vector with two values, the edges of the zoomed section
+on the y-axis; defaults to NULL.}
 
 \item{dpi}{integer; resolution in dots per inch for "png" and "jpeg" files;
 defaults to 500.}
@@ -200,6 +203,14 @@ facets relative to default.}
 
 \item{size_xarrow_labels}{integer; font size of the correlations indicated by
 extra arrows relative to default.}
+
+\item{size_marker}{integer; size (in inches) of the value marker  at the
+circle border that indicates the center distance, a value of 0 omits the
+marker; defaults to .1}
+
+\item{size_marker_inner}{integer; size (in inches) of the nested value marker
+at the circle border that indicates the center distance, a value of 0 omits
+the marker; defaults to .05}
 }
 \value{
 Object of the class "ggplot".
@@ -210,11 +221,11 @@ Creates a nested chart, showing several tests and their facets.
 \details{
 To summarize center distances (\code{cd_method}), the "mean" method
  computes the average center distance (compute cds first, summarize across
- items second), while the "aggregate" method computes a center distance
- based on the sum of the squared loadings (summarize across items first,
- compute cds second). "Aggregate" (default) is recommended, because it is
- more meaningful in cases with heterogeneous factor loadings, while "mean"
- is the originally proposed method.
+ items second), while the "aggregate" method computes a center distance based
+ on the sum of the squared loadings (summarize across items first, compute
+ cds second). "Aggregate" (default) is recommended, because it is more
+ meaningful in cases with heterogeneous factor loadings, while "mean" is the
+ originally proposed method.
 
  To get tidy results, it is often required to use \code{rotate_} and
  \code{subrotate_} for better alignment.

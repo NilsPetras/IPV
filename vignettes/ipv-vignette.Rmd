@@ -245,6 +245,15 @@ mychart <- facet_chart(
 mychart
 ```
 
+It is possible to omit the markers for center distances:
+
+```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
+mychart <- facet_chart(
+  data = self_confidence,
+  size_marker = 0)
+```
+
+
 #### 4.13. Special options for nested charts
 
 Due to the complexity one should not rely on default values too much:

@@ -35,7 +35,9 @@ plot_nested(
   size_cor_labels_inner = 1,
   width_xarrows = 1,
   size_xarrow_heads = 1,
-  size_xarrow_labels = 1
+  size_xarrow_labels = 1,
+  size_marker = 0.1,
+  size_marker_inner = 0.05
 )
 }
 \arguments{
@@ -115,6 +117,14 @@ facets relative to default.}
 
 \item{size_xarrow_labels}{integer; font size of the correlations indicated by
 extra arrows relative to default.}
+
+\item{size_marker}{integer; size (in inches) of the value marker  at the
+circle border that indicates the center distance, a value of 0 omits the
+marker; defaults to .1}
+
+\item{size_marker_inner}{integer; size (in inches) of the nested value marker at the
+circle border that indicates the center distance, a value of 0 omits the
+marker; defaults to .05}
 }
 \value{
 Object of the class "ggplot" and, by default, the same object saved as
