@@ -47,9 +47,9 @@
 #'
 #' @examples
 #' # an IPV that comprises the honesty/humility and the agreeableness factor of
-#' # the HEXACO (reduced to first 500 observations to reduce runtime)
+#' # the HEXACO
 #' res <- ipv_est(
-#'   HEXACO[1:500, grep("^H|^A", names(HEXACO))],
+#'   HEXACO[ ,grep("^H|^A", names(HEXACO))],
 #'   "HA")
 #' nested_chart(res)
 #'
@@ -62,7 +62,7 @@
 #' HEXACO_long$variable <- NULL
 #' head(HEXACO_long)
 #' res <- ipv_est(
-#'   HEXACO_long[HEXACO_long$test %in% c("H", "A") & HEXACO_long$id %in% 1:500, ],
+#'   HEXACO_long[HEXACO_long$test %in% c("H", "A"), ],
 #'   name = "HA", missing = "fiml")
 #'
 #'

@@ -3,8 +3,11 @@
 #' Shows all (squared) factor loadings of all items in all models in a plot grid
 #' of bar plots.
 #'
-#' @param data raw SEM estimates in the appropriate format, given by the input
-#'   functions.
+#' @param data Object of class IPV as created by the function 'ipv_est'
+#' @param tests character; vector of tests to be included in the overview;
+#'   defaults to 'all', in which case all are displayed
+#' @param facets character; vector of facets to be included in the overview;
+#'   defaults to 'all', in which case all are displayed
 #' @param squared logical; should factor loadings be squared?; defaults to TRUE
 #' @param file_name character; name of the file to save. Supported formats are:
 #'   "pdf" (highest quality and smallest file size), "png", "jpeg"; defaults to
@@ -13,7 +16,12 @@
 #'   defaults to 500.
 #' @param color character; vector of hex codes for colors; defaults to the
 #'   colors "#DAD8D8" (gray), "#11C1FF" (light blue), and "#007AD6" (blue)
-#' @param font character; font of the plot labels; defaults to "mono"
+#' @param font character; font of the plot labels; defaults to "sans"
+#' @param size_font integer; size of the fonts relative to default; defaults to
+#'   1
+#' @param wrap integer; number of rows of plots per facet; defaults to 1
+#' @param width integer; factor to scale the overall width of the file with; defaults to 1
+#' @param height integer; factor to scale the overall height of the file with; defaults to 1
 #'
 #' @return gg / ggplot object; plot grid with one bar plot per item showing
 #'   (squared) factor loadings of that item in all IPV models, arranged by
@@ -31,22 +39,28 @@
 #' # the use of file output is recommended
 #' # to prevent irregular placement of plot labels
 #' res <- ipv_est(
-#'   HEXACO[1:1000,grep("^H_.*[1-4]$|^A_.*[1-4]$", names(HEXACO))],
+#'   HEXACO[ ,grep("^H|^A", names(HEXACO))],
 #'   "HA")
-#' # reduced to first 4 items per facet and first 1000 observations to reduce
-#' # runtime
-#' item_overview(res$est_raw) # file output is recommended (see details)
+#' item_overview(res) # file output is recommended (see details)
 #'
 #'
 item_overview <- function(
   data,
+  tests = "all",
+  facets = "all",
   squared = TRUE,
   file_name = "none",
   dpi = 500,
   color = NULL,
-  font = "mono") {
+  font = "sans",
+  size_font = 1,
+  wrap = 1,
+  width = 1,
+  height = 1) {
 
 
+  # throw away unnecessary information
+  data <- data$est_raw
 
   # helper variables -----------------------------------------------------------
 
@@ -84,11 +98,11 @@ item_overview <- function(
       return(x)
     })
     temp <- do.call("rbind", temp)
-    facets <- temp$subfactor
-    names(facets) <- temp$item
+    fcts <- temp$subfactor
+    names(fcts) <- temp$item
     facet_loadings <- temp$subfactor_loading
     names(facet_loadings) <- temp$item
-    loads$facet <- facets[as.character(loads$item)]
+    loads$facet <- fcts[as.character(loads$item)]
     loads$facet_loading <- facet_loadings[as.character(loads$item)]
 
     # set loadings < 0 to NA and throw warning if so
@@ -199,6 +213,17 @@ item_overview <- function(
     }
   }
 
+  # select requested tests and facets
+  if(all(!tests == "all")) {
+    chunks <- chunks[names(chunks) %in% tests]
+  }
+
+  if(all(!facets == "all")) {
+    chunks <- lapply(chunks, function(x) {
+      y <- x[names(x) %in% facets]
+      return(y)
+    })
+  }
 
   # plot creation --------------------------------------------------------------
 
@@ -228,8 +253,12 @@ item_overview <- function(
               axis.title.x       = ggplot2::element_blank(),
               axis.title.y       = ggplot2::element_blank(),
               plot.margin        = grid::unit(c(0, 0, .5, 0), "in"),
-              axis.text          = ggplot2::element_text(size = 6),
-              axis.text.y        = ggplot2::element_text(color = "gray")) +
+              axis.text          = ggplot2::element_text(size = 6 * size_font),
+              axis.text.y        = ggplot2::element_text(color = "gray", size = 6 * size_font),
+              plot.title         = ggplot2::element_text(
+                hjust = .5,
+                vjust = -8 / size_font,
+                size = 11 * size_font)) +
 
             # bar plot
             ggplot2::geom_col(
@@ -237,7 +266,9 @@ item_overview <- function(
                 x = long[which(long$item == x), ]$variable,
                 y = long[which(long$item == x), ]$value),
               width = .99,
-              fill = color)
+              fill = color) +
+            ggplot2::ggtitle(
+              strsplit(as.character(x), split = "\\.")[[1]][2])
 
           # one y-axis text per row looks cleaner
           if (which(chunks[[i]][[j]] == x) > 1) {
@@ -255,58 +286,45 @@ item_overview <- function(
     ## plot grid --------------------
 
   nrows <- unlist(lapply(plots, length))
-  width <- max(unlist(lapply(plots, function(x) lapply(x, length))))
-  facets <- chunks
-  tests <- chunks
+  wdth <- max(unlist(lapply(plots, function(x) lapply(x, length))))
+  fcts <- chunks
+  tsts <- chunks
 
   for (i in seq_along(chunks)) {
     for (j in seq_along(chunks[[i]])) {
-      if(nested) {
-        labels <- unlist(lapply(
-          strsplit(names(plots[[i]][[j]]), split = "\\."),
-          "[[",
-          2))
-      } else {
-        labels <- names(plots[[i]][[j]])
-      }
-      # adjust labels based on string length to center in plot
-      hjust <- -8 / nchar(labels)
 
   # plot grid of item plots for each facet
-      facets[[i]][[j]] <- cowplot::plot_grid(
-        plotlist = plots[[i]][[j]][1:width], # adds empty plots at the rear
-        labels = labels,
-        hjust = hjust,
-        vjust = 3,
-        nrow = 1,
-        label_size = 10,
-        label_fontfamily = font)
+      fcts[[i]][[j]] <- cowplot::plot_grid(
+        plotlist = plots[[i]][[j]][1:wdth], # adds empty plots at the rear
+        nrow = wrap)
     }
 
   # plot grid of facet plot grids for each test
-    tests[[i]] <- cowplot::plot_grid(
-      plotlist = facets[[i]],
+    tsts[[i]] <- cowplot::plot_grid(
+      plotlist = fcts[[i]],
       labels = names(plots[[i]]),
       ncol = 1,
-      vjust = -.5,
+      vjust = -.5 / size_font,
+      label_size = 14 * size_font,
       label_fontfamily = font)
   }
 
   if(!is.null(data$global)) {
     # overall plot grid of test plot grids
     grd <- cowplot::plot_grid(
-      plotlist = tests,
+      plotlist = tsts,
       labels = names(plots),
       ncol = 1,
-      vjust = 5.5 * nrows + 1,
+      vjust = (5.5 * nrows + 1) / size_font,
       rel_heights = nrows,
       scale = .8,
+      label_size = 14 * size_font,
       label_fontfamily = font) +
       ggplot2::theme(
         plot.margin = ggplot2::margin(l = 1.5, unit = "cm")
       )
   } else {
-    grd <- tests[[1]] +
+    grd <- tsts[[1]] +
       ggplot2::theme(
         plot.margin = ggplot2::margin(t = 1.5, r = 1.5, l = 1.5, unit = "cm")
       )
@@ -320,8 +338,8 @@ item_overview <- function(
   if (substring(file_name, nchar(file_name) - 3 + 1) == "pdf") {
     ggplot2::ggsave(file_name,
                     grd,
-                    width = 2 * width, # * size,
-                    height = 2 * (sum(nrows) + length(nrows) - 1), # * size,
+                    width = width * 2 * wdth, # * size,
+                    height = height * 2 * (sum(nrows) + length(nrows) - 1) * wrap, # * size,
                     units = "in",
                     dpi = dpi,
                     limitsize = FALSE)
@@ -333,8 +351,8 @@ item_overview <- function(
   if (substring(file_name, nchar(file_name) - 3 + 1) == "png") {
     ggplot2::ggsave(file_name,
                     grd,
-                    width = 2 * width, # * size,
-                    height = 2 * (sum(nrows) + length(nrows) - 1), # * size,
+                    width = width * 2 * wdth, # * size,
+                    height = height * 2 * (sum(nrows) + length(nrows) - 1) * wrap, # * size,
                     units = "in",
                     dpi = dpi,
                     limitsize = FALSE)
@@ -346,8 +364,8 @@ item_overview <- function(
   if (substring(file_name, nchar(file_name) - 3 + 1) == "peg") {
     ggplot2::ggsave(file_name,
                     grd,
-                    width = 2 * width, # * size,
-                    height = 2 * (sum(nrows) + length(nrows) - 1), # * size,
+                    width = width * 2 * wdth, # * size,
+                    height = height * 2 * (sum(nrows) + length(nrows) - 1) * wrap, # * size,
                     units = "in",
                     dpi = dpi,
                     limitsize = FALSE)

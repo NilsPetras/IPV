@@ -6,16 +6,27 @@
 \usage{
 item_overview(
   data,
+  tests = "all",
+  facets = "all",
   squared = TRUE,
   file_name = "none",
   dpi = 500,
   color = NULL,
-  font = "mono"
+  font = "sans",
+  size_font = 1,
+  wrap = 1,
+  width = 1,
+  height = 1
 )
 }
 \arguments{
-\item{data}{raw SEM estimates in the appropriate format, given by the input
-functions.}
+\item{data}{Object of class IPV as created by the function 'ipv_est'}
+
+\item{tests}{character; vector of tests to be included in the overview;
+defaults to 'all', in which case all are displayed}
+
+\item{facets}{character; vector of facets to be included in the overview;
+defaults to 'all', in which case all are displayed}
 
 \item{squared}{logical; should factor loadings be squared?; defaults to TRUE}
 
@@ -29,7 +40,16 @@ defaults to 500.}
 \item{color}{character; vector of hex codes for colors; defaults to the
 colors "#DAD8D8" (gray), "#11C1FF" (light blue), and "#007AD6" (blue)}
 
-\item{font}{character; font of the plot labels; defaults to "mono"}
+\item{font}{character; font of the plot labels; defaults to "sans"}
+
+\item{size_font}{integer; size of the fonts relative to default; defaults to
+1}
+
+\item{wrap}{integer; number of rows of plots per facet; defaults to 1}
+
+\item{width}{integer; factor to scale the overall width of the file with; defaults to 1}
+
+\item{height}{integer; factor to scale the overall height of the file with; defaults to 1}
 }
 \value{
 gg / ggplot object; plot grid with one bar plot per item showing
@@ -50,11 +70,9 @@ File output produces much more reliable results than display within
 # the use of file output is recommended
 # to prevent irregular placement of plot labels
 res <- ipv_est(
-  HEXACO[1:1000,grep("^H_.*[1-4]$|^A_.*[1-4]$", names(HEXACO))],
+  HEXACO[ ,grep("^H|^A", names(HEXACO))],
   "HA")
-# reduced to first 4 items per facet and first 1000 observations to reduce
-# runtime
-item_overview(res$est_raw) # file output is recommended (see details)
+item_overview(res) # file output is recommended (see details)
 
 
 }
