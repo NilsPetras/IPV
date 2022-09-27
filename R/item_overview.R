@@ -64,7 +64,7 @@ item_overview <- function(
 
   # helper variables -----------------------------------------------------------
 
-  nested <- !is.null(data$global)
+  nested <- length(levels(data$global$fls$subfactor)) > 1
   if (is.null(color)) {
     if (nested) {color <- c("#DAD8D8", "#11C1FF", "#007AD6")}
     else {color <- c("#11C1FF", "#007AD6")}
@@ -156,7 +156,7 @@ item_overview <- function(
   } else {
 
     # collect factor loadings
-    loads <- data$fls
+    loads <- data$tests[[1]]$fls
     names(loads) <- c(
       "test",
       "facet",
@@ -238,6 +238,7 @@ item_overview <- function(
       plots[[i]][[j]] <- lapply(
         as.list(chunks[[i]][[j]]),
         function(x) {
+          title <-
           p <- ggplot2::ggplot(
             long[which(long$item == x), ]) +
 
@@ -268,7 +269,7 @@ item_overview <- function(
               width = .99,
               fill = color) +
             ggplot2::ggtitle(
-              strsplit(as.character(x), split = "\\.")[[1]][2])
+              utils::tail(strsplit(as.character(x), split = "\\.")[[1]], 1))
 
           # one y-axis text per row looks cleaner
           if (which(chunks[[i]][[j]] == x) > 1) {

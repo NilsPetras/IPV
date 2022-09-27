@@ -1,7 +1,7 @@
 ---
 title: "cran-comments"
 author: "Nils Petras"
-date: "2021 M12 08"
+date: "2022 M09 27"
 output: html_document
 ---
 
@@ -9,24 +9,26 @@ output: html_document
 New features and fixed bugs
 
 ## Test environments
-* local Windows 10, release (4.1.2), devel (2021-12-04 r81290)
-* Windows 10, devel (via devtools::check_win_devel; 2021-12-03 r81290)
-* Ubuntu Linux 16.04.7 LTS (via travis-ci.com)
+* local Windows 11, release (4.2.1), devel (2022-09-26 r82921 ucrt)
+* Linux (x86_64-pc-linux-gnu (64-bit); via rhub), devel  (4.2.1 (2022-06-23))
 
 ## R CMD check results
 There were no ERRORs, WARNINGs.
 
-There was 1 NOTE:
+There was 2 NOTEs:
 
-Examples with CPU (user + system) or elapsed time > 10s
-              user system elapsed
-item_overview 15.6    0.1   15.92
+* checking for future file timestamps ... NOTE
+  unable to verify current time
+  
+This is likely due to the unavailability of worldclockapi.com, see https://stackoverflow.com/questions/63613301/
 
-This is the slowest test run (via check_win_devel), on other machines this runs
-faster (~1.9s on local laptop). It is a much reduced version of the actual
-example on the full data (40% of variables, 5% of cases). Further simplification
-lead to irregular estimates.
+*  checking examples ... [112s] OK (1m 52.6s)
+   Examples with CPU (user + system) or elapsed time > 5s
+                  user system elapsed
+   ipv_est       82.56   6.98   89.63
+   item_overview 18.89   0.62   19.53
 
+Reaching a time below 5s proved only feasible by removing lots of indicator variables of the factor models, making them uninterpretable. The computation time is high due to model estimation via the lavaan package.
 
 ## Downstream dependencies
 There are currently no downstream dependencies for this package.

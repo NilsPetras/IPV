@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 ## About this package
 
 The IPV package is a tool to create IPV charts. The original work on IPV, including the chart concepts, can be found in:
-[Dantlgraber, M., Stieger, S., & Reips, U. D. (2019). Introducing Item Pool Visualization: A method for investigation of concepts in self-reports and psychometric tests. Methodological Innovations, 12(3), 2059799119884283.](https://doi.org/10.1177/2059799119884283). Please cite this paper, as well as this package (Petras, N., & Dantlgraber, M. (2020). IPV: Item Pool visualization. R Package Version 0.1.2) when using the package.
+[Dantlgraber, M., Stieger, S., & Reips, U. D. (2019). Introducing Item Pool Visualization: A method for investigation of concepts in self-reports and psychometric tests. Methodological Innovations, 12(3), 2059799119884283.](https://doi.org/10.1177/2059799119884283). Please cite this paper, as well as this package (Petras, N., & Dantlgraber, M. (2022). IPV: Item Pool visualization. R Package Version 1.0.0) when using the package.
 The package is built to enable chart creation -- quick & dirty or highly customized. Please raise an [issue on github](https://github.com/NilsPetras/IPV/issues) in case of bugs or to make suggestions.
 
 ### Example data
@@ -64,13 +64,30 @@ The `ipv_est()` function is recommended for model estimation, because it only ne
 
 To use this function, your data needs to be formatted as follows:
 
-- all items (indicator variables) are (numeric) columns of a data frame
-- the data frame contains only those variables used in the models (or use indexing as in the example)
-- all columns are named according to the pattern "test_facet_item"
-- all variable names are unique
-- all item names ("..._..._item") are unique at the level of the test (not only at the level of the facet!)
-- tests without facets use the pattern "test_item"
-- in the simple case of a single test, the pattern is "facet_item"
+* long format: 
+  + columns called "test", "facet", and "item", where each item is uniquely allocated to one facet of one test and each item name is unique
+  + a case identifying column (e.g. "id")
+  + a column containing the (numeric) measurement values
+  + tests without facets are currently only supported in wide format
+
+For example:
+```{r, echo = FALSE}
+HEXACO_long <- reshape2::melt(cbind(id = row.names(HEXACO), HEXACO[ ,1:240]), id.vars = "id")
+HEXACO_long$test <- substr(HEXACO_long$variable, 1, 1)
+HEXACO_long$facet <- substr(HEXACO_long$variable, 3, 6)
+HEXACO_long$item <- substr(HEXACO_long$variable, 8, 13)
+HEXACO_long$variable <- NULL
+head(HEXACO_long)
+```
+  
+* wide format:
+  + all items (indicator variables) are (numeric) columns of a data frame
+  + the data frame contains only those variables used in the models (or use indexing as in the example)
+  + all columns are named according to the pattern "test_facet_item"
+  + all variable names are unique
+  + all item names ("..._..._item") are unique at the level of the test (not only at the level of the facet!)
+  + tests without facets use the pattern "test_item"
+  + in the simple case of a single test, the pattern is "facet_item"
 
 For example:
 ```{r, echo = FALSE}
@@ -81,11 +98,11 @@ H = honesty/humility ("test")
 
 Sinc = sincerity (a "facet" of honesty/humility)
 
-Sinc_1 = first "item" of the sincerity facet
+Sinc1 = first "item" of the sincerity facet
 
 ### 2. Generate model estimates
 
-`ipv_est()` automatically determines which models to estimate, uses the [lavaan package](https://lavaan.ugent.be/) to estimate them, and provides formatted results.
+`ipv_est()` automatically determines if the data are in wide or long format, which models to estimate, uses the [lavaan package](https://lavaan.ugent.be/) to estimate them, and returns an object of class "IPV" with formatted results.
 
 
 ```{r, eval = FALSE}
@@ -98,7 +115,7 @@ res_A <- ipv_est(dat = HEXACO[ ,c(122:161)], name = "A")
 
 If any factor loading is below .1 or any center distance below 0, it is set to that value and a warning (or message) is displayed. IPV does not allow negative factor loadings, which is indicated by an error. In this case, check if you have properly recoded negatively keyed items. If there remain negative factor loadings, the data does not fulfill the requirements of IPV (Dantlgraber et al., 2019).
 
-Results are provided as an object of the class "IPV", which is a list with (some of) the following elements:
+Results are provided as an object of the class "IPV", which is a list containing (some of) the following elements:
 
 - "lav": the lavaan object for each estimated model (optional)
 
@@ -117,9 +134,11 @@ Use the chart functions (`item_chart`, `facet_chart`, `nested_chart`) to create 
 All three IPV chart types can be created by specifying `data = ` only:
 
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
-mychart <- item_chart(data = self_confidence, test = "DSSEI")
+mychart <- item_chart(data = self_confidence)
 mychart
 ```
+
+If the `test = ` argument is unspecified, the first test will automatically be chosen.
 
 It is advisable to use vector-based .pdf graphics output using the `file_name = ` argument:
 
@@ -200,10 +219,13 @@ y <- facet_chart(self_confidence, test = "RSES") +
     ylim = c(-3, 3),
     xlim = c(-3, 3))
 
-# Save as any other ggplot
+```
+
+```{r, eval = FALSE}
+# Save just as any other ggplot
 ggsave(filename = "test.pdf",
        plot = plot_grid(plotlist = list(x, y), align = "h"),
-       width = 20, height = 10) # defaults are optimized for 10x10 in per chart
+       width = 20, height = 10) # defaults are optimized for 10x10 inches per chart
 ```
 
 
@@ -236,23 +258,16 @@ mychart
 ```
 As you can see in the output (and the message in the console), two parameter values (`subradius = ` , and `tick = ` ) have been generated automatically. These can be used to improve readability. `subradius = ` sets the size of the facet circles and `tick = ` sets the value at which a tick mark should be displayed.
 
-For a simplistic version of the chart, the correlations can be omitted, by setting `cor_labels = FALSE`.
+For a simplistic version of the chart, the correlations can be omitted, by setting `cor_labels = FALSE`. It is also possible to omit the tick marks emphasizing the center distances by setting `size_marker = 0`.
+
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
 mychart <- facet_chart(
   data = self_confidence,
   test = "DSSEI",
-  cor_labels = FALSE)
+  cor_labels = FALSE,
+  size_marker = 0)
 mychart
 ```
-
-It is possible to omit the markers for center distances:
-
-```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
-mychart <- facet_chart(
-  data = self_confidence,
-  size_marker = 0)
-```
-
 
 #### 4.13. Special options for nested charts
 
@@ -315,7 +330,7 @@ mychart <- nested_chart(
 mychart
 ```
 
-The `cor_spacing = ` refers to the ring around the nested facet charts for each test, in which the correlations between the tests are displayed. It should be large enough for the correlation labels, but not too large. If the correlations are omitted (`cor_labels_tests = FALSE`), this ring is also omitted:
+The `cor_spacing = ` refers to the ring around the nested facet charts for each test, in which the correlations between the tests are displayed. It should be large enough for the correlation labels, but not too large to skew proportions. If the correlations are omitted (`cor_labels_tests = FALSE`), this ring is also omitted:
 
 ```{r, fig.width=10, fig.height=10, out.height="685px", out.width="685px", dev='png'}
 mychart <- nested_chart(
@@ -353,7 +368,7 @@ mychart
 
 ## Object structure within the package
 
-This is an example for the data format, that is required by the chart functions and produced by `ipv_est()`:
+This is an example of the data format of the class "IPV", which is required for the use of the chart functions and produced by `ipv_est()`:
 
 ```{r}
 str(self_confidence, 2)
