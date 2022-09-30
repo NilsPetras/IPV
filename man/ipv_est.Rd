@@ -71,16 +71,16 @@ the data given to \code{dat} can be either in long or in wide
   the measurement variable (\code{value.var}).
 }
 \examples{
-# an IPV that comprises the honesty/humility and the agreeableness factor of
-# the HEXACO
-res <- ipv_est(
+# An IPV that comprises the honesty/humility and the agreeableness factor of
+# the HEXACO. Estimation takes some time.
+\dontrun{res <- ipv_est(
   HEXACO[ ,grep("^H|^A", names(HEXACO))],
   "HA")
-nested_chart(res)
+nested_chart(res)}
 
 # Customize call to lavaan::cfa via ellipsis to treat missing data and use long format
-
-HEXACO_long <- reshape2::melt(
+# Estimation takes some time.
+\dontrun{HEXACO_long <- reshape2::melt(
   cbind(id = row.names(HEXACO)[1:1000],
   HEXACO[1:1000,1:240]),
  id.vars = "id")
@@ -91,7 +91,7 @@ HEXACO_long$variable <- NULL
 head(HEXACO_long)
 res <- ipv_est(
   HEXACO_long[HEXACO_long$test \%in\% c("H", "A"), ],
-  name = "HA", missing = "fiml")
+  name = "HA", missing = "fiml")}
 
 
 }

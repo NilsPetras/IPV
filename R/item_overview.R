@@ -38,10 +38,11 @@
 #' # Honesty/Humility and Agreeableness items
 #' # the use of file output is recommended
 #' # to prevent irregular placement of plot labels
-#' res <- ipv_est(
+#' # Estimation takes some time.
+#' \dontrun{res <- ipv_est(
 #'   HEXACO[ ,grep("^H|^A", names(HEXACO))],
 #'   "HA")
-#' item_overview(res) # file output is recommended (see details)
+#' item_overview(res)} # file output is recommended (see details)
 #'
 #'
 item_overview <- function(
