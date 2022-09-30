@@ -80,7 +80,10 @@ nested_chart(res)
 
 # Customize call to lavaan::cfa via ellipsis to treat missing data and use long format
 
-HEXACO_long <- reshape2::melt(cbind(id = row.names(HEXACO), HEXACO[ ,1:240]), id.vars = "id")
+HEXACO_long <- reshape2::melt(
+  cbind(id = row.names(HEXACO)[1:1000],
+  HEXACO[1:1000,1:240]),
+ id.vars = "id")
 HEXACO_long$test <- substr(HEXACO_long$variable, 1, 1)
 HEXACO_long$facet <- substr(HEXACO_long$variable, 3, 6)
 HEXACO_long$item <- substr(HEXACO_long$variable, 8, 13)
