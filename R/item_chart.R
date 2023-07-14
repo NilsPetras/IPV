@@ -3,7 +3,9 @@
 #' Creates an item chart, showing the items of a test arranged by facets.
 #'
 #' @param data Object of class IPV as created by the function 'ipv_est'
-#' @param test character; name of the test to plot; defaults to the first in the list.
+#' @param test character; name of the test to plot, "all" plots the global level
+#'   of a nested case, sorting all items by test; defaults to the first in the
+#'   list.
 #' @param facet_order character; vector of facet names in desired order
 #'   (counter-clockwise); defaults to NULL, in which case the order is based on
 #'   the correlation matrix columns in 'data'.
@@ -135,10 +137,14 @@ item_chart <- function(
   if (is.null(test)) {
     test <- names(data$est$tests)[1]
   }
-  if (!test %in% names(data$est$tests)) {
+  if (!test %in% c(names(data$est$tests), "all")) {
     stop(paste("There is no test called ", test, sep = ""))
   }
-  data <- data$est$tests[[test]]
+  if (test == "all") {
+    data <- data$est$global
+  } else {
+    data <- data$est$tests[[test]]
+  }
 
   coord <- coord_items(
     data = data,

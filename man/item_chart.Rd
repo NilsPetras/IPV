@@ -44,7 +44,9 @@ item_chart(
 \arguments{
 \item{data}{Object of class IPV as created by the function 'ipv_est'}
 
-\item{test}{character; name of the test to plot; defaults to the first in the list.}
+\item{test}{character; name of the test to plot, "all" plots the global level
+of a nested case, sorting all items by test; defaults to the first in the
+list.}
 
 \item{facet_order}{character; vector of facet names in desired order
 (counter-clockwise); defaults to NULL, in which case the order is based on

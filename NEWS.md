@@ -1,3 +1,9 @@
+# IPV 1.0.1
+
+## Added features
+
+* Specifying `test = "all"` in `item_chart` or `facet_chart` plots the global level of a nested case.
+
 # IPV 1.0.0
 
 We thank an anonymous reviewer for suggesting many of the improvements in this version!

@@ -3,7 +3,8 @@
 #' Creates a facet chart, showing the facets of a test.
 #'
 #' @param data Object of class IPV as created by the function 'ipv_est'
-#' @param test character; name of the test to plot; defaults to the first in the
+#' @param test character; name of the test to plot, "all" plots the global level
+#'   of a nested case, sorting all items by test; defaults to the first in the
 #'   list.
 #' @param cd_method character; method to summarize center distances, either
 #'   "mean" or "aggregate", see details; defaults to "aggregate".
@@ -132,10 +133,14 @@ facet_chart <- function(
   if (is.null(test)) {
     test <- names(data$est$tests)[1]
   }
-  if (!test %in% names(data$est$tests)) {
+  if (!test %in% c(names(data$est$tests), "all")) {
     stop(paste("There is no test called ", test, sep = ""))
   }
-  data <- data$est$tests[[test]]
+  if (test == "all") {
+    data <- data$est$global
+  } else {
+    data <- data$est$tests[[test]]
+  }
 
   coord <- coord_facets(
     data = data,

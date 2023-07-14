@@ -43,7 +43,8 @@ facet_chart(
 \arguments{
 \item{data}{Object of class IPV as created by the function 'ipv_est'}
 
-\item{test}{character; name of the test to plot; defaults to the first in the
+\item{test}{character; name of the test to plot, "all" plots the global level
+of a nested case, sorting all items by test; defaults to the first in the
 list.}
 
 \item{cd_method}{character; method to summarize center distances, either
